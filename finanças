@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORST Gestão de Finanças</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ORST Finanças">
+<meta name="theme-color" content="#0d2d4f">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, getDocs, deleteDoc, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ============================================================
+// ⚠️  SUBSTITUA PELOS SEUS DADOS DO FIREBASE CONSOLE
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBsbhLaj1_LsAkETAhzEHM5KIJWB-7Zjkw",
+  authDomain: "orst-financas.firebaseapp.com",
+  projectId: "orst-financas",
+  storageBucket: "orst-financas.firebasestorage.app",
+  messagingSenderId: "26142326621",
+  appId: "1:26142326621:web:c1fd54a75aecdb3ae7b2b4"
+};
+// ============================================================
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Estado global
+window.ORST = {
+  user: null,
+  role: 'free',
+  db, auth,
+  signOut: () => signOut(auth),
+  updateUserRole: async (uid, newRole) => {
+    await updateDoc(doc(db, 'users', uid), { role: newRole });
+  }
+};
+
+// Permissões por role
+const PERMISSIONS = {
+  free:    ['dashboard','lancamentos','contas','apagar','parceladas'],
+  premium: ['dashboard','lancamentos','contas','apagar','parceladas','metas','investimentos','anual','patrimonio','categorias','areceber'],
+  admin:   ['dashboard','lancamentos','contas','apagar','parceladas','metas','investimentos','anual','patrimonio','categorias','areceber','admin-panel']
+};
+
+function canAccess(page) {
+  const role = window.ORST.role;
+  return (PERMISSIONS[role] || PERMISSIONS.free).includes(page);
+}
+window.canAccess = canAccess;
+
+// Auth listener
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    window.ORST.user = user;
+    // Busca role no Firestore
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists()) {
+        window.ORST.role = snap.data().role || 'free';
+      } else {
+        // Primeiro acesso — cria doc do usuário
+        await setDoc(doc(db, 'users', user.uid), {
+          email: user.email,
+          role: 'free',
+          createdAt: new Date().toISOString()
+        });
+        window.ORST.role = 'free';
+      }
+    } catch(e) { window.ORST.role = 'free'; }
+
+    hideLogin();
+    initApp();
+    renderUserInfo();
+  } else {
+    window.ORST.user = null;
+    window.ORST.role = 'free';
+    showLogin();
+  }
+});
+
+// LOGIN
+window.doLogin = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const err   = document.getElementById('login-error');
+  err.textContent = '';
+  if(!email || !pass){ err.textContent = 'Preencha email e senha.'; return; }
+  try {
+    document.getElementById('btn-login').textContent = 'Entrando...';
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    document.getElementById('btn-login').textContent = 'Entrar';
+    err.textContent = e.code === 'auth/invalid-credential' ? 'Email ou senha incorretos.' :
+                      e.code === 'auth/too-many-requests'  ? 'Muitas tentativas. Aguarde.' : 'Erro: ' + e.message;
+  }
+};
+
+window.doRegister = async () => {
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  const name  = document.getElementById('reg-name').value.trim();
+  const err   = document.getElementById('reg-error');
+  err.textContent = '';
+  if(!email||!pass||!name){ err.textContent = 'Preencha todos os campos.'; return; }
+  if(pass.length < 6){ err.textContent = 'Senha mínimo 6 caracteres.'; return; }
+  try {
+    document.getElementById('btn-register').textContent = 'Criando...';
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      email, name, role: 'free', createdAt: new Date().toISOString()
+    });
+  } catch(e) {
+    document.getElementById('btn-register').textContent = 'Criar conta';
+    err.textContent = e.code === 'auth/email-already-in-use' ? 'Email já cadastrado.' : 'Erro: ' + e.message;
+  }
+};
+
+window.doResetPassword = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  if(!email){ document.getElementById('login-error').textContent = 'Digite o email para recuperar.'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    document.getElementById('login-error').style.color = '#1a8c5e';
+    document.getElementById('login-error').textContent = 'Email de recuperação enviado!';
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Erro ao enviar email.';
+  }
+};
+
+// LANÇAMENTOS no Firestore
+window.saveLancamento = async (data) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  return await addDoc(collection(db, 'users', uid, 'lancamentos'), data);
+};
+
+window.getLancamentos = async () => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return [];
+  try {
+    const q = query(collection(db, 'users', uid, 'lancamentos'), orderBy('data','desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch(e) { return []; }
+};
+
+window.deleteLancamentoFS = async (id) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  await deleteDoc(doc(db, 'users', uid, 'lancamentos', id));
+};
+
+// PARCELADAS
+window.saveParcelada = async (data) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  return await addDoc(collection(db, 'users', uid, 'parceladas'), data);
+};
+
+window.getParceladas = async () => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return [];
+  try {
+    const snap = await getDocs(collection(db, 'users', uid, 'parceladas'));
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch(e) { return []; }
+};
+
+window.deleteParceladaFS = async (id) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  await deleteDoc(doc(db, 'users', uid, 'parceladas', id));
+};
+
+window.updateParcelaStatus = async (parceladaId, parcelaIdx, status) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  const ref = doc(db, 'users', uid, 'parceladas', parceladaId);
+  const snap = await getDoc(ref);
+  if(snap.exists()) {
+    const parcelas = snap.data().parcelas || [];
+    parcelas[parcelaIdx].status = status;
+    await updateDoc(ref, { parcelas });
+  }
+};
+
+// METAS
+window.saveMeta = async (data) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  return await addDoc(collection(db, 'users', uid, 'metas'), data);
+};
+
+window.getMetas = async () => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return [];
+  try {
+    const snap = await getDocs(collection(db, 'users', uid, 'metas'));
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch(e) { return []; }
+};
+
+window.deleteMetaFS = async (id) => {
+  const uid = window.ORST.user?.uid;
+  if(!uid) return;
+  await deleteDoc(doc(db, 'users', uid, 'metas', id));
+};
+
+// ADMIN: lista usuários
+window.loadAllUsers = async () => {
+  if(window.ORST.role !== 'admin') return [];
+  try {
+    const snap = await getDocs(collection(db, 'users'));
+    return snap.docs.map(d => ({uid: d.id, ...d.data()}));
+  } catch(e) { return []; }
+};
+
+function renderUserInfo() {
+  const u = window.ORST.user;
+  const role = window.ORST.role;
+  document.getElementById('user-email').textContent = u?.email || '';
+  document.getElementById('user-role-badge').textContent =
+    role === 'admin' ? '👑 Admin' : role === 'premium' ? '⭐ Premium' : '🔒 Free';
+  document.getElementById('user-role-badge').className =
+    'role-badge role-' + role;
+
+  // Sidebar: ocultar/mostrar por role
+  document.querySelectorAll('[data-role]').forEach(el => {
+    const required = el.dataset.role.split(',');
+    el.style.display = required.includes(role) || required.includes('all') ? '' : 'none';
+  });
+
+  // Itens bloqueados pro free
+  document.querySelectorAll('[data-premium]').forEach(el => {
+    if(role === 'free') {
+      el.classList.add('nav-locked');
+      el.title = 'Disponível no plano Premium';
+    } else {
+      el.classList.remove('nav-locked');
+    }
+  });
+}
+</script>
+
+<style>
+:root {
+  --navy: #0d2d4f;
+  --navy2: #0f3460;
+  --cream: #f0ead8;
+  --cream2: rgba(240,234,216,0.65);
+  --cream3: rgba(240,234,216,0.3);
+  --accent: #3a9fd4;
+  --green: #1a8c5e; --green-bg: #e0f4ec; --green-t: #0b5c3a;
+  --red: #c94040;   --red-bg: #fce8e8;   --red-t: #7a2020;
+  --blue: #1e6faa;  --blue-bg: #e6f0fb;  --blue-t: #0c3f6e;
+  --amber:#9a6010;  --amber-bg:#fef3e0;  --amber-t:#6b3e06;
+  --purple:#7c3aed; --purple-bg:#f0ebff; --purple-t:#4c1d95;
+  --bg: #f2f0eb; --surface: #fff; --surface2: #f8f7f4;
+  --border: rgba(0,0,0,0.07); --border2: rgba(0,0,0,0.12);
+  --text: #1a1a18; --text2: #555550; --text3: #999990;
+  --radius: 12px; --radius-sm: 7px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
+
+/* LOGIN SCREEN */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 100%);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.login-screen.hidden{display:none;}
+.login-box{background:var(--surface);border-radius:var(--radius);padding:36px;width:400px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.login-logo img{width:48px;height:48px;border-radius:10px;object-fit:cover;}
+.login-brand{font-size:20px;font-weight:700;color:var(--navy);letter-spacing:0.04em;}
+.login-brand span{display:block;font-size:11px;color:var(--text3);font-weight:400;letter-spacing:0.06em;margin-top:1px;}
+.login-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.login-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.login-tab.active{color:var(--navy);border-bottom-color:var(--accent);}
+.login-panel{display:none;}
+.login-panel.active{display:block;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;}
+.form-input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;color:var(--text);}
+.form-input:focus{outline:none;border-color:var(--accent);}
+.login-error{font-size:12px;min-height:18px;margin-top:-8px;margin-bottom:10px;}
+.btn-login-action{width:100%;padding:10px;border-radius:var(--radius-sm);border:none;background:var(--navy);color:var(--cream);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.03em;}
+.btn-login-action:hover{background:var(--navy2);}
+.login-forgot{font-size:12px;color:var(--accent);cursor:pointer;text-align:center;margin-top:12px;}
+.login-forgot:hover{text-decoration:underline;}
+
+/* APP */
+.app{display:flex;height:100vh;overflow:hidden;}
+.app.hidden{display:none;}
+.sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.brand{padding:18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.brand img{width:34px;height:34px;border-radius:8px;object-fit:cover;}
+.brand-name{font-size:16px;font-weight:700;color:var(--cream);letter-spacing:.05em;}
+.brand-sub{font-size:9px;color:var(--cream3);letter-spacing:.06em;margin-top:1px;}
+.nav-group{padding:10px 0 2px;}
+.nav-label{font-size:9px;color:rgba(255,255,255,0.25);padding:0 16px 5px;letter-spacing:.1em;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;font-size:12.5px;color:var(--cream2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none;}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:var(--cream);}
+.nav-item.active{background:rgba(58,159,212,0.18);color:var(--cream);border-left-color:var(--accent);font-weight:500;}
+.nav-item.nav-locked{opacity:.45;cursor:not-allowed;}
+.nav-item.nav-locked:hover{background:none;}
+.nav-icon{font-size:13px;width:16px;text-align:center;opacity:.8;flex-shrink:0;}
+.nav-item.active .nav-icon{opacity:1;}
+.lock-icon{margin-left:auto;font-size:10px;opacity:.6;}
+.sidebar-footer{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.08);}
+.user-card{display:flex;align-items:center;gap:9px;}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-email{font-size:11px;color:var(--cream2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+.role-badge{font-size:9px;padding:1px 6px;border-radius:100px;font-weight:600;display:inline-block;margin-top:2px;}
+.role-admin{background:#fef3e0;color:#7a4a08;}
+.role-premium{background:#f0ebff;color:#4c1d95;}
+.role-free{background:rgba(255,255,255,0.15);color:var(--cream2);}
+.btn-logout{background:none;border:none;color:var(--cream3);font-size:11px;cursor:pointer;margin-top:8px;padding:0;}
+.btn-logout:hover{color:var(--cream);}
+
+/* TOPBAR */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow);}
+.topbar-title{font-size:15px;font-weight:500;}
+.topbar-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.topbar-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:7px 14px;border-radius:var(--radius-sm);font-size:12.5px;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-weight:500;transition:all .15s;}
+.btn:hover{background:var(--surface2);}
+.btn-primary{background:var(--navy);color:var(--cream);border-color:var(--navy);}
+.btn-primary:hover{background:var(--navy2);}
+.btn-danger{background:var(--red);color:#fff;border-color:var(--red);}
+.btn-success{background:var(--green);color:#fff;border-color:var(--green);}
+.content{flex:1;overflow-y:auto;padding:22px;}
+
+/* PAGES */
+.page{display:none;flex-direction:column;gap:16px;animation:fadeIn .2s ease;}
+.page.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* UPGRADE BANNER */
+.upgrade-banner{background:linear-gradient(135deg,var(--navy),#1a4a7a);border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;color:var(--cream);}
+.upgrade-banner h3{font-size:15px;margin-bottom:4px;}
+.upgrade-banner p{font-size:12px;opacity:.75;}
+.btn-upgrade{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
+.metric-card.hl{border-left:3px solid var(--accent);}
+.mc-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.mc-value{font-size:21px;font-weight:500;}
+.mc-value.g{color:var(--green)}.mc-value.r{color:var(--red)}.mc-value.b{color:var(--blue)}.mc-value.a{color:var(--amber)}
+.mc-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* PANELS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.panel-title{font-size:13px;font-weight:500;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* TX */
+.tx-list{display:flex;flex-direction:column;}
+.tx-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.tx-item:last-child{border-bottom:none;}
+.tx-left{display:flex;align-items:center;gap:10px;}
+.tx-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.tx-name{font-size:13px;font-weight:500;}
+.tx-det{font-size:11px;color:var(--text3);margin-top:1px;}
+.tx-right{display:flex;align-items:center;gap:8px;}
+.tx-val{font-size:13px;font-weight:500;min-width:80px;text-align:right;}
+.tx-val.pos{color:var(--green)}.tx-val.neg{color:var(--red)}
+.badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;}
+.bg{background:var(--green-bg);color:var(--green-t)}
+.br{background:var(--red-bg);color:var(--red-t)}
+.ba{background:var(--amber-bg);color:var(--amber-t)}
+.bb{background:var(--blue-bg);color:var(--blue-t)}
+.bp{background:var(--purple-bg);color:var(--purple-t)}
+
+/* PROGRESS */
+.goal-item{margin-bottom:14px;}
+.goal-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+.goal-name{font-size:13px;font-weight:500;}
+.goal-info{font-size:11px;color:var(--text3);}
+.pbar{height:6px;border-radius:100px;background:var(--surface2);overflow:hidden;}
+.pfill{height:100%;border-radius:100px;transition:width .5s ease;}
+.goal-bot{display:flex;justify-content:space-between;margin-top:3px;font-size:11px;color:var(--text3);}
+
+/* FORM */
+.form-group2{display:flex;flex-direction:column;gap:4px;margin-bottom:14px;}
+.form-label2{font-size:12px;color:var(--text2);font-weight:500;}
+.form-input2{padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;color:var(--text);background:var(--surface);width:100%;}
+.form-input2:focus{outline:none;border-color:var(--accent);}
+.form-select2{padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;color:var(--text);background:var(--surface);width:100%;cursor:pointer;}
+.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:200;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius);padding:26px;width:500px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-size:15px;font-weight:500;}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.tab{padding:8px 16px;font-size:13px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.tab.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:500;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* PARCELADAS */
+.parcela-group{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;overflow:hidden;}
+.parcela-header{background:var(--surface2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.parcela-name{font-size:13px;font-weight:500;}
+.parcela-info{font-size:11px;color:var(--text3);margin-top:2px;}
+.parcela-body{padding:0 14px;}
+.parcela-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.parcela-item:last-child{border-bottom:none;}
+.parcela-num{width:40px;color:var(--text3);flex-shrink:0;}
+.parcela-data{flex:1;color:var(--text2);}
+.parcela-val{width:80px;text-align:right;font-weight:500;}
+.parcela-toggle{margin-left:8px;}
+
+/* ADMIN */
+.admin-table{width:100%;border-collapse:collapse;}
+.admin-table th{text-align:left;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;padding:8px 12px;border-bottom:1px solid var(--border);}
+.admin-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;}
+.admin-table tr:last-child td{border-bottom:none;}
+
+/* MONETIZAÇÃO */
+.plan-card{border:2px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;transition:all .2s;}
+.plan-card.featured{border-color:var(--accent);background:linear-gradient(135deg,rgba(58,159,212,0.05),rgba(13,45,79,0.05));}
+.plan-name{font-size:18px;font-weight:700;margin-bottom:6px;}
+.plan-price{font-size:32px;font-weight:700;color:var(--navy);margin:12px 0;}
+.plan-price span{font-size:13px;color:var(--text3);font-weight:400;}
+.plan-feature{font-size:12.5px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);}
+.plan-feature:last-child{border-bottom:none;}
+.plan-feature.ok::before{content:"✓ ";color:var(--green);font-weight:700;}
+.plan-feature.no{opacity:.4;}
+.plan-feature.no::before{content:"✗ ";color:var(--red);}
+
+/* CHART */
+.chart-wrap{position:relative;width:100%;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{width:56px;}
+  .brand-name,.brand-sub,.nav-label,.nav-item>span:not(.nav-icon),.nav-item .lock-icon,.user-email,.role-badge,.btn-logout{display:none;}
+  .brand{justify-content:center;}
+  .nav-item{justify-content:center;padding:10px;}
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+}
+@media(max-width:580px){
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .form-grid2{grid-template-columns:1fr;}
+  .content{padding:14px;}
+  .topbar{padding:0 14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- =================== LOGIN SCREEN =================== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div style="width:52px;height:52px;background:var(--navy);border-radius:12px;display:flex;align-items:center;justify-content:center">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none">
+          <path d="M50 16C67 16 83 30 84 49C85 66 73 80 57 83C41 86 25 76 19 60C13 44 23 26 38 20" stroke="#f0ead8" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <path d="M50 24C64 24 77 36 77 51C77 65 66 75 52 76C38 77 27 66 27 52C27 38 37 24 50 24" stroke="#f0ead8" stroke-width="4.5" stroke-linecap="round" fill="none" opacity=".65"/>
+          <path d="M50 33C61 33 69 42 69 53C69 63 61 70 51 70C41 70 34 62 35 52C36 42 43 33 50 33" stroke="#f0ead8" stroke-width="3" stroke-linecap="round" fill="none" opacity=".4"/>
+          <circle cx="33" cy="20" r="3" fill="#f0ead8" opacity=".85"/>
+          <circle cx="24" cy="29" r="2.2" fill="#f0ead8" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="login-brand">ORST <span>Gestão de Finanças</span></div>
+      </div>
+    </div>
+    <div class="login-tabs">
+      <div class="login-tab active" onclick="switchLoginTab('login')">Entrar</div>
+      <div class="login-tab" onclick="switchLoginTab('register')">Criar conta</div>
+    </div>
+
+    <!-- ENTRAR -->
+    <div class="login-panel active" id="panel-login">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="login-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input type="password" class="form-input" id="login-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="login-error" id="login-error" style="color:var(--red)"></div>
+      <button class="btn-login-action" id="btn-login" onclick="doLogin()">Entrar</button>
+      <div class="login-forgot" onclick="doResetPassword()">Esqueci minha senha</div>
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="login-panel" id="panel-register">
+      <div class="form-group">
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-input" id="reg-name" placeholder="Seu nome">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input type="password" class="form-input" id="reg-pass" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="login-error" id="reg-error" style="color:var(--red)"></div>
+      <button class="btn-login-action" id="btn-register" onclick="doRegister()">Criar conta grátis</button>
+      <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:10px">Conta gratuita — sem cartão de crédito</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== APP =================== -->
+<div class="app hidden" id="main-app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 100 100" fill="none">
+        <path d="M50 16C67 16 83 30 84 49C85 66 73 80 57 83C41 86 25 76 19 60C13 44 23 26 38 20" stroke="#f0ead8" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <path d="M50 24C64 24 77 36 77 51C77 65 66 75 52 76C38 77 27 66 27 52C27 38 37 24 50 24" stroke="#f0ead8" stroke-width="4.5" stroke-linecap="round" fill="none" opacity=".65"/>
+        <circle cx="33" cy="20" r="3" fill="#f0ead8" opacity=".85"/>
+        <circle cx="24" cy="29" r="2.2" fill="#f0ead8" opacity=".6"/>
+      </svg>
+      <div><div class="brand-name">ORST</div><div class="brand-sub">Gestão de Finanças</div></div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Principal</div>
+      <div class="nav-item active" onclick="goPage('dashboard',this)">
+        <span class="nav-icon">⊞</span><span>Dashboard</span>
+      </div>
+      <div class="nav-item" onclick="goPage('lancamentos',this)">
+        <span class="nav-icon">⇅</span><span>Lançamentos</span>
+      </div>
+      <div class="nav-item" onclick="goPage('contas',this)">
+        <span class="nav-icon">◧</span><span>Contas</span>
+      </div>
+      <div class="nav-item" onclick="goPage('parceladas',this)">
+        <span class="nav-icon">📋</span><span>Parceladas</span>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Planejamento</div>
+      <div class="nav-item" data-premium onclick="goPage('metas',this)">
+        <span class="nav-icon">◎</span><span>Metas</span><span class="lock-icon">🔒</span>
+      </div>
+      <div class="nav-item" onclick="goPage('apagar',this)">
+        <span class="nav-icon">⏱</span><span>A pagar</span>
+      </div>
+      <div class="nav-item" data-premium onclick="goPage('areceber',this)">
+        <span class="nav-icon">↙</span><span>A receber</span><span class="lock-icon">🔒</span>
+      </div>
+      <div class="nav-item" data-premium onclick="goPage('investimentos',this)">
+        <span class="nav-icon">↗</span><span>Investimentos</span><span class="lock-icon">🔒</span>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Análise</div>
+      <div class="nav-item" data-premium onclick="goPage('anual',this)">
+        <span class="nav-icon">▦</span><span>Visão anual</span><span class="lock-icon">🔒</span>
+      </div>
+      <div class="nav-item" data-premium onclick="goPage('patrimonio',this)">
+        <span class="nav-icon">◈</span><span>Patrimônio</span><span class="lock-icon">🔒</span>
+      </div>
+      <div class="nav-item" onclick="goPage('planos',this)">
+        <span class="nav-icon">⭐</span><span>Planos</span>
+      </div>
+    </div>
+
+    <div class="nav-group" id="nav-admin" style="display:none">
+      <div class="nav-label">Admin</div>
+      <div class="nav-item" onclick="goPage('admin-panel',this)">
+        <span class="nav-icon">👑</span><span>Painel Admin</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-av" id="user-av">U</div>
+        <div>
+          <div class="user-email" id="user-email"></div>
+          <div id="user-role-badge" class="role-badge role-free">Free</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="window.ORST.signOut()">← Sair</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="topbar-sub" id="topbar-sub">Bem-vindo ao ORST</div>
+      </div>
+      <div class="topbar-actions">
+        <select id="month-sel" onchange="loadDashboard()" style="border:1px solid var(--border2);border-radius:var(--radius-sm);padding:5px 10px;font-size:12px;background:var(--surface)">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option>
+          <option value="2">Março</option><option value="3" selected>Abril</option>
+          <option value="4">Maio</option><option value="5">Junho</option>
+          <option value="6">Julho</option><option value="7">Agosto</option>
+          <option value="8">Setembro</option><option value="9">Outubro</option>
+          <option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+        <button class="btn btn-primary" onclick="openModal('modal-lancamento')">+ Lançamento</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="cards-grid">
+          <div class="metric-card hl">
+            <div class="mc-label">Entradas</div>
+            <div class="mc-value g" id="d-entradas">R$ 0</div>
+            <div class="mc-sub" id="d-entradas-sub">Este mês</div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">Saídas</div>
+            <div class="mc-value r" id="d-saidas">R$ 0</div>
+            <div class="mc-sub">Este mês</div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">Saldo mensal</div>
+            <div class="mc-value b" id="d-saldo">R$ 0</div>
+            <div class="mc-sub">Entradas − Saídas</div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">Parcelas pendentes</div>
+            <div class="mc-value a" id="d-parcelas">R$ 0</div>
+            <div class="mc-sub" id="d-parcelas-sub">Este mês</div>
+          </div>
+        </div>
+
+        <div id="free-banner" style="display:none">
+          <div class="upgrade-banner">
+            <div>
+              <h3>🚀 Desbloqueie o plano Premium</h3>
+              <p>Acesse Metas, Investimentos, Visão Anual, Patrimônio e muito mais</p>
+            </div>
+            <button class="btn-upgrade" onclick="goPage('planos',null)">Ver planos</button>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Evolução 2025</div>
+            </div>
+            <div class="chart-wrap" style="height:200px">
+              <canvas id="lineChart"></canvas>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Categorias</div></div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <div class="chart-wrap" style="height:150px;width:150px;flex-shrink:0">
+                <canvas id="pieChart"></canvas>
+              </div>
+              <div id="pie-legend" style="flex:1;font-size:12px;display:flex;flex-direction:column;gap:6px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Últimas transações</div>
+            <button class="btn" onclick="goPage('lancamentos',null)">Ver todas</button>
+          </div>
+          <div class="tx-list" id="dash-tx"></div>
+        </div>
+      </div>
+
+      <!-- LANÇAMENTOS -->
+      <div class="page" id="page-lancamentos">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="form-select2" style="width:auto" id="f-tipo">
+            <option value="">Todos os tipos</option>
+            <option>Entrada</option><option>Saída</option>
+          </select>
+          <select class="form-select2" style="width:auto" id="f-cat">
+            <option value="">Todas categorias</option>
+            <option>Alimentação</option><option>Moradia</option><option>Transporte</option>
+            <option>Lazer</option><option>Saúde</option><option>Receita</option><option>Outros</option>
+          </select>
+          <select class="form-select2" style="width:auto" id="f-status">
+            <option value="">Todos status</option><option>Pago</option><option>Pendente</option>
+          </select>
+          <button class="btn" onclick="renderLancamentos()">Filtrar</button>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Transações</div>
+            <span style="font-size:12px;color:var(--text3)" id="lanc-count"></span>
+          </div>
+          <div class="tx-list" id="lanc-list"><div style="text-align:center;padding:20px;color:var(--text3)">Carregando...</div></div>
+        </div>
+      </div>
+
+      <!-- CONTAS -->
+      <div class="page" id="page-contas">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+          <div class="metric-card"><div class="mc-label">Nubank</div><div class="mc-value b">R$ 3.200</div></div>
+          <div class="metric-card"><div class="mc-label">Sicoob</div><div class="mc-value b">R$ 8.100</div></div>
+          <div class="metric-card"><div class="mc-label">Mercado Pago</div><div class="mc-value b">R$ 540</div></div>
+          <div class="metric-card"><div class="mc-label">Caixa físico</div><div class="mc-value a">R$ 200</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Transferência entre contas</div></div>
+          <div class="form-grid2">
+            <div class="form-group2"><label class="form-label2">Origem</label>
+              <select class="form-select2"><option>Nubank</option><option>Sicoob</option><option>Mercado Pago</option></select></div>
+            <div class="form-group2"><label class="form-label2">Destino</label>
+              <select class="form-select2"><option>Sicoob</option><option>Nubank</option></select></div>
+            <div class="form-group2"><label class="form-label2">Valor</label>
+              <input type="number" class="form-input2" placeholder="0,00"></div>
+            <div class="form-group2"><label class="form-label2">Data</label>
+              <input type="date" class="form-input2"></div>
+          </div>
+          <button class="btn btn-primary">Registrar transferência</button>
+        </div>
+      </div>
+
+      <!-- PARCELADAS -->
+      <div class="page" id="page-parceladas">
+        <div class="cards-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+          <div class="metric-card"><div class="mc-label">Total parcelado</div><div class="mc-value r" id="parc-total">R$ 0</div></div>
+          <div class="metric-card"><div class="mc-label">Parcelas este mês</div><div class="mc-value a" id="parc-mes">R$ 0</div></div>
+          <div class="metric-card"><div class="mc-label">Contratos ativos</div><div class="mc-value b" id="parc-qtd">0</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Despesas parceladas</div>
+            <button class="btn btn-primary" onclick="openModal('modal-parcelada')">+ Nova parcelada</button>
+          </div>
+          <div id="parceladas-list"></div>
+        </div>
+      </div>
+
+      <!-- METAS -->
+      <div class="page" id="page-metas">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Metas financeiras</div>
+            <button class="btn btn-primary" onclick="openModal('modal-meta')">+ Nova meta</button>
+          </div>
+          <div id="metas-list"></div>
+        </div>
+      </div>
+
+      <!-- A PAGAR -->
+      <div class="page" id="page-apagar">
+        <div class="cards-grid">
+          <div class="metric-card"><div class="mc-label">Total a pagar</div><div class="mc-value r">R$ 2.450</div></div>
+          <div class="metric-card"><div class="mc-label">Vencidas</div><div class="mc-value r">R$ 890</div></div>
+          <div class="metric-card"><div class="mc-label">Esta semana</div><div class="mc-value a">R$ 560</div></div>
+          <div class="metric-card"><div class="mc-label">Pagas este mês</div><div class="mc-value g">R$ 3.400</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Vencimentos</div><button class="btn btn-primary">+ Nova conta</button></div>
+          <div class="tx-list">
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--red-bg)">!</div>
+                <div><div class="tx-name">Fatura Nubank</div><div class="tx-det">Venceu 15/04</div></div></div>
+              <div class="tx-right"><span class="badge br">Vencida</span><div class="tx-val neg">R$ 890</div></div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--amber-bg)">⏱</div>
+                <div><div class="tx-name">Plano de saúde</div><div class="tx-det">Vence 30/04</div></div></div>
+              <div class="tx-right"><span class="badge ba">Pendente</span><div class="tx-val neg">R$ 350</div></div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--green-bg)">✓</div>
+                <div><div class="tx-name">Aluguel</div><div class="tx-det">Pago 05/04</div></div></div>
+              <div class="tx-right"><span class="badge bg">Pago</span><div class="tx-val neg">R$ 1.200</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A RECEBER -->
+      <div class="page" id="page-areceber">
+        <div class="cards-grid">
+          <div class="metric-card"><div class="mc-label">A receber</div><div class="mc-value g">R$ 2.800</div></div>
+          <div class="metric-card"><div class="mc-label">Atrasados</div><div class="mc-value r">R$ 600</div></div>
+          <div class="metric-card"><div class="mc-label">Esta semana</div><div class="mc-value b">R$ 1.200</div></div>
+          <div class="metric-card"><div class="mc-label">Recebidos</div><div class="mc-value g">R$ 8.400</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Cobranças</div><button class="btn btn-primary">+ Nova cobrança</button></div>
+          <div class="tx-list">
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--red-bg)">!</div>
+                <div><div class="tx-name">João Silva — Design</div><div class="tx-det">Venceu 10/04</div></div></div>
+              <div class="tx-right"><span class="badge br">Atrasado</span><div class="tx-val pos">R$ 600</div></div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--amber-bg)">⏱</div>
+                <div><div class="tx-name">Empresa ABC — Consultoria</div><div class="tx-det">Vence 25/04</div></div></div>
+              <div class="tx-right"><span class="badge ba">Pendente</span><div class="tx-val pos">R$ 1.200</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVESTIMENTOS -->
+      <div class="page" id="page-investimentos">
+        <div class="cards-grid">
+          <div class="metric-card hl"><div class="mc-label">Total investido</div><div class="mc-value b">R$ 28.500</div></div>
+          <div class="metric-card"><div class="mc-label">Rendimento</div><div class="mc-value g">+R$ 1.240</div></div>
+          <div class="metric-card"><div class="mc-label">Rentabilidade</div><div class="mc-value g">+4,35%</div></div>
+          <div class="metric-card"><div class="mc-label">Meta anual</div><div class="mc-value a">R$ 40.000</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Carteira</div></div>
+          <div class="tx-list">
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--green-bg);font-size:10px;font-weight:700">TD</div>
+                <div><div class="tx-name">Tesouro Direto</div><div class="tx-det">Renda fixa · dez/2026</div></div></div>
+              <div style="text-align:right"><div class="tx-val b">R$ 12.000</div><div style="font-size:11px;color:var(--green)">+2,1%</div></div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--blue-bg);font-size:10px;font-weight:700">FII</div>
+                <div><div class="tx-name">Fundos Imobiliários</div><div class="tx-det">Longo prazo</div></div></div>
+              <div style="text-align:right"><div class="tx-val b">R$ 9.500</div><div style="font-size:11px;color:var(--green)">+5,8%</div></div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-left"><div class="tx-av" style="background:var(--amber-bg);font-size:10px;font-weight:700">RV</div>
+                <div><div class="tx-name">Ações (B3)</div><div class="tx-det">Renda variável</div></div></div>
+              <div style="text-align:right"><div class="tx-val b">R$ 7.000</div><div style="font-size:11px;color:var(--red)">-1,2%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISÃO ANUAL -->
+      <div class="page" id="page-anual">
+        <div class="cards-grid">
+          <div class="metric-card"><div class="mc-label">Melhor mês</div><div class="mc-value g" style="font-size:16px">Abril</div></div>
+          <div class="metric-card"><div class="mc-label">Média salvo/mês</div><div class="mc-value b">R$ 2.615</div></div>
+          <div class="metric-card"><div class="mc-label">Acumulado 2025</div><div class="mc-value g">R$ 10.460</div></div>
+          <div class="metric-card"><div class="mc-label">Projeção anual</div><div class="mc-value a">R$ 31.380</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Entradas vs Saídas — 2025</div></div>
+          <div class="chart-wrap" style="height:260px"><canvas id="anualChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- PATRIMÔNIO -->
+      <div class="page" id="page-patrimonio">
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title" style="color:var(--green)">Ativos</div></div>
+            <div class="tx-list">
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Dinheiro em contas</div><div class="tx-val g">R$ 12.040</div></div>
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Investimentos</div><div class="tx-val g">R$ 28.500</div></div>
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Veículos</div><div class="tx-val g">R$ 25.000</div></div>
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Outros bens</div><div class="tx-val g">R$ 10.000</div></div>
+              <div class="tx-item" style="border-top:2px solid var(--green)"><div style="font-weight:500">Total ativos</div><div class="tx-val g" style="font-size:17px">R$ 75.540</div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title" style="color:var(--red)">Passivos</div></div>
+            <div class="tx-list">
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Cartão de crédito</div><div class="tx-val r">R$ 890</div></div>
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Empréstimos</div><div class="tx-val r">R$ 1.510</div></div>
+              <div class="tx-item"><div class="tx-name" style="font-size:12px;color:var(--text2)">Financiamento</div><div class="tx-val r">R$ 30.340</div></div>
+              <div class="tx-item" style="border-top:2px solid var(--red)"><div style="font-weight:500">Total passivos</div><div class="tx-val r" style="font-size:17px">R$ 32.740</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:var(--navy);border-radius:var(--radius);padding:24px;text-align:center">
+          <div style="font-size:12px;color:rgba(240,234,216,0.6);margin-bottom:6px">Patrimônio líquido</div>
+          <div style="font-size:32px;font-weight:500;color:#5dd4a0">R$ 42.800</div>
+        </div>
+      </div>
+
+      <!-- PLANOS -->
+      <div class="page" id="page-planos">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Escolha seu plano</div></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:4px">
+            <div class="plan-card">
+              <div class="plan-name">Free</div>
+              <div class="plan-price">R$ 0<span>/mês</span></div>
+              <div class="plan-feature ok">Dashboard mensal</div>
+              <div class="plan-feature ok">Lançamentos</div>
+              <div class="plan-feature ok">Contas a pagar</div>
+              <div class="plan-feature ok">Parceladas básicas</div>
+              <div class="plan-feature no">Metas</div>
+              <div class="plan-feature no">Investimentos</div>
+              <div class="plan-feature no">Visão anual</div>
+              <div class="plan-feature no">Patrimônio</div>
+              <button class="btn" style="width:100%;margin-top:16px" disabled>Plano atual</button>
+            </div>
+            <div class="plan-card featured">
+              <div class="plan-name" style="color:var(--navy)">Premium ⭐</div>
+              <div class="plan-price">R$ 29,90<span>/mês</span></div>
+              <div class="plan-feature ok">Tudo do Free</div>
+              <div class="plan-feature ok">Metas financeiras</div>
+              <div class="plan-feature ok">Investimentos</div>
+              <div class="plan-feature ok">Visão anual completa</div>
+              <div class="plan-feature ok">Patrimônio líquido</div>
+              <div class="plan-feature ok">A receber</div>
+              <div class="plan-feature ok">Relatórios avançados</div>
+              <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="showPayment()">Assinar agora</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel" id="payment-panel" style="display:none">
+          <div class="panel-header"><div class="panel-title">Pagamento</div></div>
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab(this,'pay-pix')">Pix</div>
+            <div class="tab" onclick="switchTab(this,'pay-card')">Cartão</div>
+            <div class="tab" onclick="switchTab(this,'pay-boleto')">Boleto</div>
+          </div>
+          <div class="tab-content active" id="pay-pix">
+            <div style="text-align:center;padding:20px">
+              <div style="font-size:14px;color:var(--text2);margin-bottom:12px">Chave Pix: <strong>financeiro@orst.com.br</strong></div>
+              <div style="font-size:24px;font-weight:700;color:var(--navy)">R$ 29,90</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:8px">Após o pagamento, seu acesso será ativado em até 2 horas</div>
+            </div>
+          </div>
+          <div class="tab-content" id="pay-card">
+            <div class="form-grid2">
+              <div class="form-group2" style="grid-column:span 2"><label class="form-label2">Número do cartão</label>
+                <input type="text" class="form-input2" placeholder="0000 0000 0000 0000"></div>
+              <div class="form-group2"><label class="form-label2">Validade</label>
+                <input type="text" class="form-input2" placeholder="MM/AA"></div>
+              <div class="form-group2"><label class="form-label2">CVV</label>
+                <input type="text" class="form-input2" placeholder="000"></div>
+            </div>
+            <button class="btn btn-primary" style="width:100%">Pagar R$ 29,90</button>
+          </div>
+          <div class="tab-content" id="pay-boleto">
+            <div style="text-align:center;padding:20px">
+              <div style="font-size:14px;color:var(--text2)">Boleto gerado após confirmação</div>
+              <button class="btn btn-primary" style="margin-top:16px">Gerar boleto — R$ 29,90</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="page" id="page-admin-panel">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">👑 Painel Administrativo</div>
+            <button class="btn" onclick="loadAdminUsers()">Atualizar</button>
+          </div>
+          <table class="admin-table" id="admin-users-table">
+            <thead><tr><th>Email</th><th>Role atual</th><th>Alterar role</th><th>Ação</th></tr></thead>
+            <tbody id="admin-users-body">
+              <tr><td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Clique em "Atualizar" para carregar</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- MODAL LANÇAMENTO -->
+<div class="modal-overlay" id="modal-lancamento" onclick="closeModalBg(event,'modal-lancamento')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Novo lançamento</div>
+      <button class="modal-close" onclick="closeModal('modal-lancamento')">×</button>
+    </div>
+    <div class="form-grid2">
+      <div class="form-group2"><label class="form-label2">Data</label><input type="date" class="form-input2" id="n-data"></div>
+      <div class="form-group2"><label class="form-label2">Tipo</label>
+        <select class="form-select2" id="n-tipo"><option>Entrada</option><option>Saída</option></select></div>
+      <div class="form-group2"><label class="form-label2">Categoria</label>
+        <select class="form-select2" id="n-cat">
+          <option>Receita</option><option>Alimentação</option><option>Moradia</option>
+          <option>Transporte</option><option>Lazer</option><option>Saúde</option><option>Outros</option>
+        </select></div>
+      <div class="form-group2"><label class="form-label2">Valor (R$)</label>
+        <input type="number" class="form-input2" id="n-valor" placeholder="0,00"></div>
+    </div>
+    <div class="form-group2"><label class="form-label2">Descrição</label>
+      <input type="text" class="form-input2" id="n-desc" placeholder="Ex: Supermercado"></div>
+    <div class="form-grid2">
+      <div class="form-group2"><label class="form-label2">Forma de pagamento</label>
+        <select class="form-select2" id="n-forma"><option>Pix</option><option>Débito</option><option>Crédito</option><option>Dinheiro</option></select></div>
+      <div class="form-group2"><label class="form-label2">Instituição</label>
+        <select class="form-select2" id="n-inst"><option>Nubank</option><option>Sicoob</option><option>Mercado Pago</option><option>PicPay</option><option>Outro</option></select></div>
+      <div class="form-group2"><label class="form-label2">Status</label>
+        <select class="form-select2" id="n-status"><option>Pago</option><option>Pendente</option></select></div>
+    </div>
+    <div id="modal-lanc-error" style="color:var(--red);font-size:12px;min-height:16px"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-lancamento')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addLancamento()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARCELADA -->
+<div class="modal-overlay" id="modal-parcelada" onclick="closeModalBg(event,'modal-parcelada')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Nova despesa parcelada</div>
+      <button class="modal-close" onclick="closeModal('modal-parcelada')">×</button>
+    </div>
+    <div class="form-group2"><label class="form-label2">Nome da despesa</label>
+      <input type="text" class="form-input2" id="p-nome" placeholder="Ex: Notebook Dell"></div>
+    <div class="form-grid2">
+      <div class="form-group2"><label class="form-label2">Valor total (R$)</label>
+        <input type="number" class="form-input2" id="p-total" placeholder="1200,00" oninput="calcParcela()"></div>
+      <div class="form-group2"><label class="form-label2">Nº de parcelas</label>
+        <input type="number" class="form-input2" id="p-qtd" placeholder="12" min="2" max="60" oninput="calcParcela()"></div>
+      <div class="form-group2"><label class="form-label2">Data inicial</label>
+        <input type="date" class="form-input2" id="p-data"></div>
+      <div class="form-group2"><label class="form-label2">Categoria</label>
+        <select class="form-select2" id="p-cat">
+          <option>Eletrônicos</option><option>Móveis</option><option>Vestuário</option>
+          <option>Saúde</option><option>Educação</option><option>Outros</option>
+        </select></div>
+      <div class="form-group2"><label class="form-label2">Instituição</label>
+        <select class="form-select2" id="p-inst">
+          <option>Nubank</option><option>Sicoob</option><option>Mercado Pago</option><option>Outro</option>
+        </select></div>
+    </div>
+    <div id="p-preview" style="background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin:8px 0;font-size:13px;display:none">
+      Parcela mensal: <strong id="p-val-calc">R$ 0</strong>
+    </div>
+    <div id="modal-parc-error" style="color:var(--red);font-size:12px;min-height:16px"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-parcelada')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addParcelada()">Criar parcelamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL META -->
+<div class="modal-overlay" id="modal-meta" onclick="closeModalBg(event,'modal-meta')">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Nova meta</div>
+      <button class="modal-close" onclick="closeModal('modal-meta')">×</button>
+    </div>
+    <div class="form-group2"><label class="form-label2">Nome</label>
+      <input type="text" class="form-input2" id="m-nome" placeholder="Ex: Reserva de emergência"></div>
+    <div class="form-grid2">
+      <div class="form-group2"><label class="form-label2">Valor alvo (R$)</label>
+        <input type="number" class="form-input2" id="m-alvo" placeholder="10000"></div>
+      <div class="form-group2"><label class="form-label2">Valor atual (R$)</label>
+        <input type="number" class="form-input2" id="m-atual" placeholder="0"></div>
+    </div>
+    <div class="form-group2"><label class="form-label2">Cor</label>
+      <select class="form-select2" id="m-cor">
+        <option value="#1a8c5e">Verde</option><option value="#1e6faa">Azul</option>
+        <option value="#9a6010">Âmbar</option><option value="#7c3aed">Roxo</option>
+      </select></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-meta')">Cancelar</button>
+      <button class="btn btn-primary" onclick="addMeta()">Criar meta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const fmt = v => 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+// UI AUTH
+function showLogin(){ document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('main-app').classList.add('hidden'); }
+function hideLogin(){ document.getElementById('login-screen').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); }
+
+function switchLoginTab(t){
+  document.querySelectorAll('.login-tab').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.login-panel').forEach(el=>el.classList.remove('active'));
+  document.querySelector(`.login-tab:nth-child(${t==='login'?1:2})`).classList.add('active');
+  document.getElementById('panel-'+t).classList.add('active');
+}
+
+// NAV
+function goPage(id, el){
+  if(!canAccess(id)){
+    if(id==='planos'||!el){ goPage('planos',null); return; }
+    alert('Esta funcionalidade está disponível no plano Premium.\n\nAcesse "Planos" para fazer upgrade.');
+    goPage('planos',null);
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const titles = {
+    dashboard:'Dashboard',lancamentos:'Lançamentos',contas:'Contas',parceladas:'Parceladas',
+    metas:'Metas',apagar:'A pagar',areceber:'A receber',investimentos:'Investimentos',
+    anual:'Visão anual',patrimonio:'Patrimônio',planos:'Planos',categorias:'Categorias','admin-panel':'Painel Admin'
+  };
+  document.getElementById('topbar-title').textContent = titles[id]||id;
+  if(id==='lancamentos') renderLancamentos();
+  if(id==='parceladas')  renderParceladas();
+  if(id==='metas')       renderMetas();
+  if(id==='dashboard')   loadDashboard();
+  if(id==='admin-panel') loadAdminUsers();
+}
+
+// MODAL
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalBg(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
+function switchTab(el,contentId){
+  el.closest('.modal,.content').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.closest('.modal,.content').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(contentId).classList.add('active');
+}
+
+// APP INIT
+function initApp(){
+  const role = window.ORST.role;
+  document.getElementById('free-banner').style.display = role==='free' ? '' : 'none';
+  document.getElementById('nav-admin').style.display = role==='admin' ? '' : 'none';
+  // Setar inicial do date
+  document.getElementById('n-data').value = new Date().toISOString().slice(0,10);
+  document.getElementById('p-data').value = new Date().toISOString().slice(0,10);
+  // User avatar inicial
+  const email = window.ORST.user?.email||'';
+  document.getElementById('user-av').textContent = email.charAt(0).toUpperCase();
+  initCharts();
+  loadDashboard();
+}
+
+// ===== LANÇAMENTOS =====
+let lancamentos = [];
+
+async function loadLancamentos(){
+  try {
+    lancamentos = await window.getLancamentos();
+  } catch(e) {
+    // Fallback local se Firebase não configurado
+    if(!lancamentos.length) lancamentos = getDemoLancamentos();
+  }
+}
+
+function getDemoLancamentos(){
+  return [
+    {id:'d1',data:'2025-04-01',tipo:'Entrada',cat:'Receita',desc:'Salário',valor:5000,forma:'Pix',inst:'Nubank',status:'Pago'},
+    {id:'d2',data:'2025-04-03',tipo:'Saída',cat:'Moradia',desc:'Aluguel',valor:1200,forma:'Débito',inst:'Sicoob',status:'Pago'},
+    {id:'d3',data:'2025-04-10',tipo:'Saída',cat:'Alimentação',desc:'Supermercado',valor:380,forma:'Crédito',inst:'Nubank',status:'Pago'},
+    {id:'d4',data:'2025-04-12',tipo:'Entrada',cat:'Receita',desc:'Freelance',valor:900,forma:'Pix',inst:'Nubank',status:'Pago'},
+    {id:'d5',data:'2025-04-20',tipo:'Saída',cat:'Transporte',desc:'Combustível',valor:180,forma:'Débito',inst:'Nubank',status:'Pago'},
+    {id:'d6',data:'2025-04-25',tipo:'Entrada',cat:'Receita',desc:'Dividendos',valor:300,forma:'Crédito',inst:'Sicoob',status:'Pago'},
+    {id:'d7',data:'2025-04-30',tipo:'Saída',cat:'Outros',desc:'Internet',valor:120,forma:'Débito',inst:'Mercado Pago',status:'Pendente'},
+  ];
+}
+
+function renderLancamentos(){
+  const tipo   = document.getElementById('f-tipo').value;
+  const cat    = document.getElementById('f-cat').value;
+  const status = document.getElementById('f-status').value;
+  const data   = lancamentos;
+  const filtered = data.filter(l=>
+    (!tipo||l.tipo===tipo) && (!cat||l.cat===cat) && (!status||l.status===status)
+  );
+  document.getElementById('lanc-count').textContent = filtered.length + ' transações';
+  const list = document.getElementById('lanc-list');
+  list.innerHTML = '';
+  if(!filtered.length){ list.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">Nenhuma transação encontrada</div>'; return; }
+  filtered.forEach(l=>{
+    const pos = l.tipo==='Entrada';
+    const bc = l.status==='Pago'?'bg':l.status==='Pendente'?'ba':'br';
+    list.innerHTML += `<div class="tx-item">
+      <div class="tx-left">
+        <div class="tx-av" style="background:${pos?'var(--green-bg)':'var(--red-bg)'};font-size:14px">${pos?'↑':'↓'}</div>
+        <div><div class="tx-name">${l.desc}</div><div class="tx-det">${l.data} · ${l.inst} · ${l.forma} · ${l.cat}</div></div>
+      </div>
+      <div class="tx-right">
+        <span class="badge ${bc}">${l.status}</span>
+        <div class="tx-val ${pos?'pos':'neg'}">${pos?'+':'-'}${fmt(l.valor)}</div>
+        <button onclick="delLanc('${l.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:0 2px">×</button>
+      </div>
+    </div>`;
+  });
+}
+
+async function addLancamento(){
+  const desc  = document.getElementById('n-desc').value.trim();
+  const valor = parseFloat(document.getElementById('n-valor').value);
+  const err   = document.getElementById('modal-lanc-error');
+  if(!desc||!valor||valor<=0){ err.textContent='Preencha descrição e valor.'; return; }
+  err.textContent='';
+  const lanc = {
+    data: document.getElementById('n-data').value || new Date().toISOString().slice(0,10),
+    tipo: document.getElementById('n-tipo').value,
+    cat:  document.getElementById('n-cat').value,
+    valor, desc,
+    forma: document.getElementById('n-forma').value,
+    inst:  document.getElementById('n-inst').value,
+    status: document.getElementById('n-status').value,
+    ts: new Date().toISOString()
+  };
+  try {
+    const ref = await window.saveLancamento(lanc);
+    lanc.id = ref?.id || 'local-'+Date.now();
+  } catch(e) { lanc.id = 'local-'+Date.now(); }
+  lancamentos.unshift(lanc);
+  closeModal('modal-lancamento');
+  renderLancamentos();
+  loadDashboard();
+}
+
+async function delLanc(id){
+  if(!confirm('Excluir esta transação?')) return;
+  try { await window.deleteLancamentoFS(id); } catch(e){}
+  lancamentos = lancamentos.filter(l=>l.id!==id);
+  renderLancamentos();
+  loadDashboard();
+}
+
+// ===== PARCELADAS =====
+let parceladas = [];
+
+async function loadParceladas(){
+  try {
+    parceladas = await window.getParceladas();
+  } catch(e) { parceladas = []; }
+}
+
+function gerarParcelas(total, qtd, dataInicial){
+  const parcelaVal = total / qtd;
+  const parcelas = [];
+  const base = new Date(dataInicial);
+  for(let i=0; i<qtd; i++){
+    const d = new Date(base);
+    d.setMonth(d.getMonth() + i);
+    parcelas.push({
+      num: i+1,
+      data: d.toISOString().slice(0,10),
+      valor: parcelaVal,
+      status: 'Pendente'
+    });
+  }
+  return parcelas;
+}
+
+function calcParcela(){
+  const total = parseFloat(document.getElementById('p-total').value)||0;
+  const qtd   = parseInt(document.getElementById('p-qtd').value)||0;
+  const preview = document.getElementById('p-preview');
+  if(total>0 && qtd>1){
+    document.getElementById('p-val-calc').textContent = fmt(total/qtd);
+    preview.style.display = '';
+  } else { preview.style.display = 'none'; }
+}
+
+async function addParcelada(){
+  const nome  = document.getElementById('p-nome').value.trim();
+  const total = parseFloat(document.getElementById('p-total').value);
+  const qtd   = parseInt(document.getElementById('p-qtd').value);
+  const data  = document.getElementById('p-data').value;
+  const err   = document.getElementById('modal-parc-error');
+  if(!nome||!total||!qtd||qtd<2){ err.textContent='Preencha todos os campos. Mínimo 2 parcelas.'; return; }
+  err.textContent='';
+  const obj = {
+    nome, total, qtd,
+    dataInicial: data,
+    cat:  document.getElementById('p-cat').value,
+    inst: document.getElementById('p-inst').value,
+    parcelas: gerarParcelas(total, qtd, data),
+    criadoEm: new Date().toISOString()
+  };
+  try {
+    const ref = await window.saveParcelada(obj);
+    obj.id = ref?.id || 'local-'+Date.now();
+  } catch(e) { obj.id = 'local-'+Date.now(); }
+  parceladas.push(obj);
+  closeModal('modal-parcelada');
+  renderParceladas();
+  loadDashboard();
+}
+
+async function toggleParcela(parceladaId, idx, currentStatus){
+  const newStatus = currentStatus==='Pago' ? 'Pendente' : 'Pago';
+  const p = parceladas.find(x=>x.id===parceladaId);
+  if(!p) return;
+  p.parcelas[idx].status = newStatus;
+  try { await window.updateParcelaStatus(parceladaId, idx, newStatus); } catch(e){}
+  renderParceladas();
+  loadDashboard();
+}
+
+async function delParcelada(id){
+  if(!confirm('Excluir este parcelamento completo?')) return;
+  try { await window.deleteParceladaFS(id); } catch(e){}
+  parceladas = parceladas.filter(p=>p.id!==id);
+  renderParceladas();
+  loadDashboard();
+}
+
+function renderParceladas(){
+  const list = document.getElementById('parceladas-list');
+  const mes = parseInt(document.getElementById('month-sel').value);
+  let totalGeral=0, totalMes=0;
+  list.innerHTML='';
+  if(!parceladas.length){
+    list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3)">Nenhuma despesa parcelada. Clique em "+ Nova parcelada".</div>';
+    document.getElementById('parc-total').textContent='R$ 0';
+    document.getElementById('parc-mes').textContent='R$ 0';
+    document.getElementById('parc-qtd').textContent='0';
+    return;
+  }
+  parceladas.forEach(p=>{
+    totalGeral += p.total;
+    const pagas = p.parcelas.filter(x=>x.status==='Pago').length;
+    const pctPago = Math.round((pagas/p.qtd)*100);
+    let bodyHtml = '';
+    p.parcelas.forEach((parc,i)=>{
+      const pMes = new Date(parc.data).getMonth();
+      if(pMes===mes) totalMes += parc.valor;
+      const pago = parc.status==='Pago';
+      bodyHtml += `<div class="parcela-item">
+        <span class="parcela-num">${parc.num}/${p.qtd}</span>
+        <span class="parcela-data">${parc.data}</span>
+        <span class="parcela-val ${pago?'':'neg'}">${fmt(parc.valor)}</span>
+        <span class="badge ${pago?'bg':'ba'}">${parc.status}</span>
+        <button class="btn parcela-toggle" style="font-size:11px;padding:3px 8px" onclick="toggleParcela('${p.id}',${i},'${parc.status}')">
+          ${pago?'Desfazer':'Marcar pago'}
+        </button>
+      </div>`;
+    });
+    list.innerHTML += `<div class="parcela-group">
+      <div class="parcela-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none'">
+        <div>
+          <div class="parcela-name">${p.nome} <span class="badge bb">${p.cat}</span></div>
+          <div class="parcela-info">${pagas}/${p.qtd} pagas · ${fmt(p.total/p.qtd)}/mês · Total: ${fmt(p.total)}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:80px">
+            <div class="pbar"><div class="pfill" style="width:${pctPago}%;background:var(--blue)"></div></div>
+            <div style="font-size:10px;color:var(--text3);text-align:right;margin-top:2px">${pctPago}%</div>
+          </div>
+          <button class="btn btn-danger" style="font-size:11px;padding:4px 8px" onclick="event.stopPropagation();delParcelada('${p.id}')">Excluir</button>
+        </div>
+      </div>
+      <div class="parcela-body" style="display:none">${bodyHtml}</div>
+    </div>`;
+  });
+  document.getElementById('parc-total').textContent = fmt(totalGeral);
+  document.getElementById('parc-mes').textContent = fmt(totalMes);
+  document.getElementById('parc-qtd').textContent = parceladas.length;
+}
+
+// ===== METAS =====
+let metas = [];
+
+async function loadMetas(){
+  try { metas = await window.getMetas(); } catch(e){ metas = [
+    {id:'m1',nome:'Reserva de emergência',alvo:10000,atual:6800,cor:'#1a8c5e'},
+    {id:'m2',nome:'Viagem Europa',alvo:15000,atual:4800,cor:'#1e6faa'},
+    {id:'m3',nome:'Notebook novo',alvo:5000,atual:4250,cor:'#9a6010'},
+  ];}
+}
+
+function renderMetas(){
+  const el = document.getElementById('metas-list');
+  el.innerHTML='';
+  if(!metas.length){ el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3)">Nenhuma meta criada.</div>'; return; }
+  metas.forEach(m=>{
+    const pct = Math.min(100,Math.round((m.atual/m.alvo)*100));
+    el.innerHTML += `<div class="goal-item">
+      <div class="goal-top">
+        <span class="goal-name">${m.nome}</span>
+        <span class="goal-info">Meta: ${fmt(m.alvo)}</span>
+      </div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%;background:${m.cor}"></div></div>
+      <div class="goal-bot">
+        <span>${fmt(m.atual)} acumulados · faltam ${fmt(m.alvo-m.atual)}</span>
+        <span style="color:${m.cor};font-weight:500">${pct}%</span>
+      </div>
+    </div>`;
+  });
+}
+
+async function addMeta(){
+  const nome  = document.getElementById('m-nome').value.trim();
+  const alvo  = parseFloat(document.getElementById('m-alvo').value);
+  const atual = parseFloat(document.getElementById('m-atual').value)||0;
+  const cor   = document.getElementById('m-cor').value;
+  if(!nome||!alvo){ alert('Preencha nome e valor alvo.'); return; }
+  const m = {nome,alvo,atual,cor,criadoEm:new Date().toISOString()};
+  try { const ref=await window.saveMeta(m); m.id=ref?.id||'m-'+Date.now(); } catch(e){ m.id='m-'+Date.now(); }
+  metas.push(m);
+  closeModal('modal-meta');
+  renderMetas();
+}
+
+// ===== DASHBOARD =====
+async function loadDashboard(){
+  if(!lancamentos.length) await loadLancamentos();
+  if(!parceladas.length)  await loadParceladas();
+  const mes = parseInt(document.getElementById('month-sel').value);
+  const doMes = lancamentos.filter(l => new Date(l.data).getMonth()===mes);
+  const entradas = doMes.filter(l=>l.tipo==='Entrada').reduce((a,l)=>a+l.valor,0);
+  const saidas   = doMes.filter(l=>l.tipo==='Saída').reduce((a,l)=>a+l.valor,0);
+  const saldo    = entradas - saidas;
+  // Parcelas do mês
+  let parcMes = 0;
+  parceladas.forEach(p=>{
+    p.parcelas?.forEach(pa=>{
+      if(new Date(pa.data).getMonth()===mes && pa.status==='Pendente') parcMes += pa.valor;
+    });
+  });
+  document.getElementById('d-entradas').textContent = fmt(entradas);
+  document.getElementById('d-saidas').textContent   = fmt(saidas);
+  document.getElementById('d-saldo').textContent    = fmt(saldo);
+  document.getElementById('d-parcelas').textContent = fmt(parcMes);
+
+  // Últimas tx
+  const dashTx = document.getElementById('dash-tx');
+  dashTx.innerHTML='';
+  lancamentos.slice(0,6).forEach(l=>{
+    const pos = l.tipo==='Entrada';
+    dashTx.innerHTML+=`<div class="tx-item">
+      <div class="tx-left">
+        <div class="tx-av" style="background:${pos?'var(--green-bg)':'var(--red-bg)'};font-size:14px">${pos?'↑':'↓'}</div>
+        <div><div class="tx-name">${l.desc}</div><div class="tx-det">${l.cat} · ${l.inst}</div></div>
+      </div>
+      <div class="tx-val ${pos?'pos':'neg'}">${pos?'+':'-'}${fmt(l.valor)}</div>
+    </div>`;
+  });
+  if(!lancamentos.length) dashTx.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3)">Nenhuma transação este mês. Clique em "+ Lançamento".</div>';
+  updateCharts(entradas, saidas, doMes);
+}
+
+// ===== CHARTS =====
+let lineChart, pieChart, anualChart;
+const COLORS = ['#1a8c5e','#1e6faa','#c94040','#9a6010','#7c3aed','#888'];
+
+function initCharts(){
+  const lCtx = document.getElementById('lineChart').getContext('2d');
+  lineChart = new Chart(lCtx,{
+    type:'line',
+    data:{
+      labels:['Jan','Fev','Mar','Abr'],
+      datasets:[
+        {label:'Entradas',data:[6800,7200,7900,8400],borderColor:'#1a8c5e',backgroundColor:'rgba(26,140,94,0.08)',tension:0.4,pointBackgroundColor:'#1a8c5e',pointRadius:4,fill:true,borderWidth:2},
+        {label:'Saídas',data:[4900,5100,4800,5230],borderColor:'#c94040',backgroundColor:'rgba(201,64,64,0.05)',tension:0.4,pointBackgroundColor:'#c94040',pointRadius:4,fill:true,borderWidth:2,borderDash:[5,4]}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}},
+      scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11}}},
+              y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11},callback:v=>'R$'+Math.round(v/1000)+'k'}}}}
+  });
+
+  const pCtx = document.getElementById('pieChart').getContext('2d');
+  pieChart = new Chart(pCtx,{
+    type:'doughnut',
+    data:{labels:['Alimentação','Moradia','Transporte','Lazer','Outros'],
+          datasets:[{data:[0,0,0,0,0],backgroundColor:COLORS,borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}
+  });
+
+  const aCtx = document.getElementById('anualChart').getContext('2d');
+  anualChart = new Chart(aCtx,{
+    type:'bar',
+    data:{
+      labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets:[
+        {label:'Entradas',data:[6800,7200,7900,8400,0,0,0,0,0,0,0,0],backgroundColor:'rgba(26,140,94,0.75)',borderRadius:4},
+        {label:'Saídas',data:[4900,5100,4800,5230,0,0,0,0,0,0,0,0],backgroundColor:'rgba(201,64,64,0.65)',borderRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},
+              y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11},callback:v=>v?'R$'+Math.round(v/1000)+'k':''}}}}
+  });
+}
+
+function updateCharts(entradas, saidas, doMes){
+  // Pie por categoria
+  const cats = {};
+  doMes.filter(l=>l.tipo==='Saída').forEach(l=>{ cats[l.cat]=(cats[l.cat]||0)+l.valor; });
+  const catKeys = Object.keys(cats);
+  pieChart.data.labels = catKeys.length ? catKeys : ['Sem dados'];
+  pieChart.data.datasets[0].data = catKeys.length ? catKeys.map(k=>cats[k]) : [1];
+  pieChart.data.datasets[0].backgroundColor = COLORS.slice(0,Math.max(catKeys.length,1));
+  pieChart.update();
+  // Legend
+  const leg = document.getElementById('pie-legend');
+  leg.innerHTML = catKeys.length ? catKeys.map((k,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${COLORS[i]};flex-shrink:0"></span>${k}
+      </span>
+      <span style="color:var(--text2);font-weight:500">${fmt(cats[k])}</span>
+    </div>`).join('') : '<div style="color:var(--text3)">Sem saídas este mês</div>';
+}
+
+// ADMIN
+async function loadAdminUsers(){
+  if(window.ORST.role!=='admin'){ return; }
+  const users = await window.loadAllUsers();
+  const body = document.getElementById('admin-users-body');
+  body.innerHTML='';
+  if(!users.length){ body.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--text3)">Nenhum usuário encontrado</td></tr>'; return; }
+  users.forEach(u=>{
+    body.innerHTML+=`<tr>
+      <td>${u.email||'—'}</td>
+      <td><span class="badge ${u.role==='admin'?'ba':u.role==='premium'?'bp':'bb'}">${u.role||'free'}</span></td>
+      <td>
+        <select id="role-sel-${u.uid}" class="form-select2" style="width:auto;font-size:12px">
+          <option value="free" ${u.role==='free'?'selected':''}>free</option>
+          <option value="premium" ${u.role==='premium'?'selected':''}>premium</option>
+          <option value="admin" ${u.role==='admin'?'selected':''}>admin</option>
+        </select>
+      </td>
+      <td><button class="btn btn-success" style="font-size:11px;padding:4px 10px" onclick="updateRole('${u.uid}')">Salvar</button></td>
+    </tr>`;
+  });
+}
+
+async function updateRole(uid){
+  const newRole = document.getElementById('role-sel-'+uid).value;
+  try {
+    await window.ORST.updateUserRole(uid, newRole);
+    alert('Role atualizado para: ' + newRole);
+    loadAdminUsers();
+  } catch(e){ alert('Erro ao atualizar: '+e.message); }
+}
+
+// PLANOS
+function showPayment(){ document.getElementById('payment-panel').style.display=''; }
+
+// INIT com fallback
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    if(!window.ORST?.user){
+      // Se Firebase não configurado, entra em modo demo
+      if(document.getElementById('login-screen') &&
+         !document.getElementById('login-screen').classList.contains('hidden')){
+        console.log('Firebase não configurado — modo demo');
+      }
+    }
+  }, 3000);
+});
+</script>
+</body>
+</html>
