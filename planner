@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORST Planner</title>
+<meta name="theme-color" content="#1a1612">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, deleteDoc, updateDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBsbhLaj1_LsAkETAhzEHM5KIJWB-7Zjkw",
+  authDomain: "orst-financas.firebaseapp.com",
+  projectId: "orst-financas",
+  storageBucket: "orst-financas.firebasestorage.app",
+  messagingSenderId: "26142326621",
+  appId: "1:26142326621:web:c1fd54a75aecdb3ae7b2b4"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.PL = { user:null, role:'free', signOut:()=>signOut(auth) };
+
+onAuthStateChanged(auth, async user => {
+  if(user){
+    window.PL.user = user;
+    try {
+      const snap = await getDoc(doc(db,'users',user.uid));
+      window.PL.role = snap.exists() ? snap.data().role||'free' : 'free';
+    } catch(e){ window.PL.role='free'; }
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    initPlanner();
+  } else {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+  }
+});
+
+window.doLogin = async () => {
+  const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+  const e=document.getElementById('p-email').value.trim();
+  const p=document.getElementById('p-pass').value;
+  const err=document.getElementById('p-err');
+  if(!e||!p){err.textContent='Preencha email e senha.';return;}
+  try{ document.getElementById('btn-plogin').textContent='Entrando...'; await signInWithEmailAndPassword(auth,e,p); }
+  catch(ex){ document.getElementById('btn-plogin').textContent='Entrar'; err.textContent='Email ou senha incorretos.'; }
+};
+
+window.FS = {
+  save: async (col,data) => { const uid=window.PL.user?.uid; if(!uid)return; return await addDoc(collection(db,'users',uid,col),data); },
+  get:  async (col,ord)  => { const uid=window.PL.user?.uid; if(!uid)return []; try{ const q=ord?query(collection(db,'users',uid,col),orderBy(ord,'desc')):collection(db,'users',uid,col); const s=await getDocs(q); return s.docs.map(d=>({id:d.id,...d.data()})); }catch(e){return[];} },
+  del:  async (col,id)   => { const uid=window.PL.user?.uid; if(!uid)return; await deleteDoc(doc(db,'users',uid,col,id)); },
+  upd:  async (col,id,data) => { const uid=window.PL.user?.uid; if(!uid)return; await updateDoc(doc(db,'users',uid,col,id),data); }
+};
+</script>
+
+<style>
+:root{
+  --ink:#1a1612;--ink2:#3d3630;--ink3:#7a6f64;
+  --nude:#f5f0e8;--nude2:#ede6d8;--nude3:#e4dace;--nude4:#d4c9b8;
+  --warm:#c4a882;--warm2:#a8896a;--accent:#8a6d4e;
+  --green:#5a7a5a;--green-bg:#edf2ed;
+  --red:#9a4a4a;--red-bg:#f5eaea;
+  --blue:#4a6a8a;--blue-bg:#eaeff5;
+  --gold:#b8963e;--gold-bg:#faf4e6;
+  --surface:#faf8f4;--border:rgba(26,22,18,0.08);--border2:rgba(26,22,18,0.15);
+  --shadow:0 2px 8px rgba(26,22,18,0.06);
+  --r:12px;--r-sm:7px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--nude);color:var(--ink);font-size:14px;}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.login-screen.hidden{display:none;}
+.login-box{background:var(--surface);border-radius:var(--r);padding:36px;width:360px;max-width:95vw;}
+.login-box h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;margin-bottom:4px;}
+.login-box p{font-size:12px;color:var(--ink3);margin-bottom:24px;}
+.l-group{margin-bottom:14px;}
+.l-label{font-size:11px;color:var(--ink3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:5px;}
+.l-input{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--ink);background:var(--nude);font-family:'DM Sans',sans-serif;}
+.l-input:focus{outline:none;border-color:var(--warm);}
+.l-err{font-size:12px;min-height:16px;margin-bottom:10px;color:var(--red);}
+.l-btn{width:100%;padding:11px;border:none;border-radius:var(--r-sm);background:var(--ink);color:var(--nude);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* APP */
+#app{display:flex;flex-direction:column;min-height:100vh;}
+#app.hidden{display:none;}
+
+/* TOPBAR */
+.topbar{background:var(--ink);height:52px;display:flex;align-items:center;padding:0 22px;gap:14px;position:sticky;top:0;z-index:100;}
+.tb-brand{display:flex;align-items:center;gap:8px;margin-right:20px;}
+.tb-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;color:var(--nude);letter-spacing:.07em;}
+.tb-name em{font-style:italic;color:var(--warm);font-size:12px;}
+.tb-nav{display:flex;gap:2px;flex:1;overflow-x:auto;}
+.tb-btn{padding:5px 14px;border-radius:100px;font-size:12px;color:rgba(245,240,232,0.5);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .15s;}
+.tb-btn:hover{color:var(--nude);background:rgba(255,255,255,0.07);}
+.tb-btn.active{color:var(--nude);background:rgba(196,168,130,0.18);border:1px solid rgba(196,168,130,0.25);}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.tb-av{width:26px;height:26px;border-radius:50%;background:var(--warm);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink);}
+.tb-out{background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(245,240,232,0.45);font-size:11px;cursor:pointer;padding:4px 10px;border-radius:100px;font-family:'DM Sans',sans-serif;}
+
+/* CONTENT */
+.content{flex:1;padding:24px;max-width:1200px;margin:0 auto;width:100%;}
+.page{display:none;flex-direction:column;gap:18px;animation:fadeUp .2s ease;}
+.page.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PANELS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.panel-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;color:var(--ink);}
+.panel-sub{font-size:11px;color:var(--ink3);margin-top:2px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;}
+.stat-label{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--ink);}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.w{color:var(--warm2)}.stat-val.b{color:var(--blue)}
+.stat-sub{font-size:11px;color:var(--ink3);margin-top:3px;}
+
+/* AGENDA */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.day-col{background:var(--nude2);border-radius:var(--r-sm);overflow:hidden;}
+.day-hdr{padding:10px 8px;text-align:center;border-bottom:1px solid var(--border);}
+.day-name{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
+.day-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--ink);}
+.day-num.today{color:var(--warm2);}
+.day-body{padding:6px;min-height:90px;}
+.day-event{background:var(--surface);border-left:3px solid var(--warm);border-radius:4px;padding:4px 7px;margin-bottom:4px;font-size:11px;color:var(--ink2);line-height:1.4;}
+.day-event.blue{border-left-color:var(--blue);}
+.day-event.green{border-left-color:var(--green);}
+.day-event.red{border-left-color:var(--red);}
+.add-evt{width:100%;background:none;border:1px dashed var(--nude4);border-radius:4px;padding:4px;font-size:10px;color:var(--ink3);cursor:pointer;margin-top:2px;}
+.add-evt:hover{background:var(--surface);color:var(--ink);}
+
+/* HÁBITOS */
+.habit-list{display:flex;flex-direction:column;gap:8px;}
+.habit-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--nude2);border-radius:var(--r-sm);}
+.hcheck{width:22px;height:22px;border-radius:50%;border:2px solid var(--nude4);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:11px;transition:all .2s;}
+.hcheck.done{background:var(--green);border-color:var(--green);color:#fff;}
+.hname{flex:1;font-size:13px;color:var(--ink);}
+.hstreak{font-size:11px;color:var(--warm2);font-weight:500;}
+.hcat{font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude3);color:var(--ink3);}
+
+/* METAS */
+.meta-item{background:var(--nude2);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:10px;}
+.meta-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.meta-name{font-size:13px;font-weight:500;color:var(--ink);}
+.meta-pct{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--warm2);}
+.pbar{height:5px;border-radius:100px;background:var(--nude3);overflow:hidden;}
+.pfill{height:100%;border-radius:100px;transition:width .5s;}
+.meta-bot{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--ink3);}
+
+/* ALIMENTAÇÃO */
+.meal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.meal-slot{background:var(--nude2);border-radius:var(--r-sm);padding:14px;text-align:center;}
+.meal-time{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.meal-name{font-size:13px;color:var(--ink);margin-bottom:4px;}
+.meal-cal{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--warm2);}
+.macros{display:flex;gap:6px;margin-top:14px;}
+.macro{flex:1;background:var(--nude3);border-radius:6px;padding:8px 4px;text-align:center;}
+.macro-v{font-size:13px;font-weight:500;}
+.macro-l{font-size:10px;color:var(--ink3);}
+
+/* SONO */
+.sono-hero{background:var(--ink);border-radius:var(--r);padding:28px;text-align:center;color:var(--nude);}
+.sono-hrs{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;color:var(--warm);line-height:1;}
+.sono-lbl{font-size:11px;color:rgba(245,240,232,0.4);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
+.sono-bars{display:flex;gap:10px;justify-content:center;margin-top:22px;}
+.sday{text-align:center;}
+.sbar-wrap{height:56px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:4px;}
+.sbar{width:14px;border-radius:4px;background:rgba(196,168,130,0.25);}
+.sbar.ok{background:var(--warm);}
+.sdn{font-size:9px;color:rgba(245,240,232,0.3);text-transform:uppercase;}
+
+/* TREINO */
+.treino-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.treino-card{background:var(--nude2);border-radius:var(--r-sm);padding:14px;}
+.treino-type{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin-bottom:4px;}
+.treino-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px;}
+.treino-ex{font-size:12px;color:var(--ink2);line-height:1.6;}
+
+/* TX LIST */
+.tx-list{display:flex;flex-direction:column;}
+.tx-item{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.tx-item:last-child{border-bottom:none;}
+.tx-left{display:flex;align-items:center;gap:10px;}
+.tx-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.tx-name{font-size:13px;font-weight:500;}
+.tx-det{font-size:11px;color:var(--ink3);}
+
+/* FORMS */
+.m-group{margin-bottom:14px;}
+.m-label{font-size:11px;color:var(--ink3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:5px;}
+.m-input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--ink);background:var(--nude);font-family:'DM Sans',sans-serif;}
+.m-input:focus{outline:none;border-color:var(--warm);}
+.m-select{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--ink);background:var(--nude);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn{padding:8px 18px;border-radius:var(--r-sm);font-size:13px;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;transition:all .15s;}
+.btn:hover{background:var(--nude2);}
+.btn-primary{background:var(--ink);color:var(--nude);border-color:var(--ink);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;}
+.bg{background:var(--green-bg);color:var(--green)}.br{background:var(--red-bg);color:var(--red)}.ba{background:var(--gold-bg);color:var(--gold)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,22,18,0.55);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--r);padding:26px;width:460px;max-width:96vw;max-height:90vh;overflow-y:auto;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;}
+.modal-x{background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink3);}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+
+@media(max-width:700px){
+  .week-grid{grid-template-columns:repeat(4,1fr);}
+  .stats-row,.treino-grid,.meal-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+  .content{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <h2>ORST Planner</h2>
+    <p>Use o mesmo login do ORST Hub</p>
+    <div class="l-group"><label class="l-label">Email</label>
+      <input class="l-input" type="email" id="p-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="l-group"><label class="l-label">Senha</label>
+      <input class="l-input" type="password" id="p-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="l-err" id="p-err"></div>
+    <button class="l-btn" id="btn-plogin" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <div class="topbar">
+    <div class="tb-brand">
+      <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+        <path d="M50 16C67 16 83 30 84 49C85 66 73 80 57 83C41 86 25 76 19 60C13 44 23 26 38 20" stroke="#f5f0e8" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <path d="M50 24C64 24 77 36 77 51C77 65 66 75 52 76C38 77 27 66 27 52C27 38 37 24 50 24" stroke="#c4a882" stroke-width="4" stroke-linecap="round" fill="none" opacity=".65"/>
+      </svg>
+      <span class="tb-name">ORST <em>Planner</em></span>
+    </div>
+    <div class="tb-nav">
+      <button class="tb-btn active" onclick="goPage('agenda',this)">📅 Agenda</button>
+      <button class="tb-btn" onclick="goPage('habitos',this)">✅ Hábitos</button>
+      <button class="tb-btn" onclick="goPage('metas',this)">🎯 Metas</button>
+      <button class="tb-btn" onclick="goPage('alimentacao',this)">🥗 Alimentação</button>
+      <button class="tb-btn" onclick="goPage('sono',this)">🌙 Sono</button>
+      <button class="tb-btn" onclick="goPage('treino',this)">💪 Treino</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-av" id="pl-av">P</div>
+      <button class="tb-out" onclick="window.PL.signOut()">Sair</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- AGENDA -->
+    <div class="page active" id="page-agenda">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Hábitos hoje</div><div class="stat-val w" id="st-hab">0/0</div></div>
+        <div class="stat-card"><div class="stat-label">Metas ativas</div><div class="stat-val b" id="st-metas">0</div></div>
+        <div class="stat-card"><div class="stat-label">Sono ontem</div><div class="stat-val g" id="st-sono">—</div></div>
+        <div class="stat-card"><div class="stat-label">Treinos semana</div><div class="stat-val w" id="st-treino">0</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Agenda semanal</div><div class="panel-sub" id="semana-label"></div></div>
+          <button class="btn btn-primary btn-sm" onclick="openM('modal-evento')">+ Evento</button>
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+    </div>
+
+    <!-- HÁBITOS -->
+    <div class="page" id="page-habitos">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Hábitos diários</div><div class="panel-sub" id="hab-date"></div></div>
+          <button class="btn btn-primary btn-sm" onclick="openM('modal-habito')">+ Hábito</button>
+        </div>
+        <div class="habit-list" id="hab-list"></div>
+      </div>
+    </div>
+
+    <!-- METAS -->
+    <div class="page" id="page-metas">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Metas de vida</div></div>
+          <button class="btn btn-primary btn-sm" onclick="openM('modal-meta')">+ Meta</button>
+        </div>
+        <div id="metas-list"></div>
+      </div>
+    </div>
+
+    <!-- ALIMENTAÇÃO -->
+    <div class="page" id="page-alimentacao">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Alimentação de hoje</div></div>
+          <button class="btn btn-primary btn-sm" onclick="openM('modal-refeicao')">+ Refeição</button>
+        </div>
+        <div class="meal-grid" id="meal-grid"></div>
+        <div style="margin-top:16px">
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:8px">Macros do dia</div>
+          <div class="macros" id="macros-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SONO -->
+    <div class="page" id="page-sono">
+      <div class="two-col">
+        <div class="sono-hero">
+          <div class="sono-lbl">Média semanal</div>
+          <div class="sono-hrs" id="sono-avg">—</div>
+          <div class="sono-lbl">horas de sono</div>
+          <div class="sono-bars" id="sono-bars"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hdr"><div class="panel-title">Registrar sono</div></div>
+          <div class="m-group"><label class="m-label">Dormiu às</label><input type="time" class="m-input" id="s-ini" value="23:00"></div>
+          <div class="m-group"><label class="m-label">Acordou às</label><input type="time" class="m-input" id="s-fim" value="06:30"></div>
+          <div class="m-group"><label class="m-label">Qualidade</label>
+            <select class="m-select" id="s-qual"><option>😴 Ótima</option><option>😊 Boa</option><option>😐 Regular</option><option>😔 Ruim</option></select></div>
+          <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="regSono()">Registrar</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title">Histórico</div></div>
+        <div class="tx-list" id="sono-hist"></div>
+      </div>
+    </div>
+
+    <!-- TREINO -->
+    <div class="page" id="page-treino">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div><div class="panel-title">Fichas de treino</div></div>
+          <button class="btn btn-primary btn-sm" onclick="openM('modal-treino')">+ Treino</button>
+        </div>
+        <div class="treino-grid" id="treino-grid"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAIS -->
+<div class="modal-overlay" id="modal-evento" onclick="closeMBg(event,'modal-evento')">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Novo evento</div><button class="modal-x" onclick="closeM('modal-evento')">×</button></div>
+    <div class="m-group"><label class="m-label">Título</label><input type="text" class="m-input" id="ev-titulo" placeholder="Ex: Reunião de equipe"></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Dia</label>
+        <select class="m-select" id="ev-dia"><option>Segunda</option><option>Terça</option><option>Quarta</option><option>Quinta</option><option>Sexta</option><option>Sábado</option><option>Domingo</option></select></div>
+      <div class="m-group"><label class="m-label">Horário</label><input type="time" class="m-input" id="ev-hora" value="09:00"></div>
+    </div>
+    <div class="m-group"><label class="m-label">Cor</label>
+      <select class="m-select" id="ev-cor"><option value="">Padrão (nude)</option><option value="blue">Azul</option><option value="green">Verde</option><option value="red">Vermelho</option></select></div>
+    <div class="modal-footer"><button class="btn" onclick="closeM('modal-evento')">Cancelar</button><button class="btn btn-primary" onclick="addEvento()">Salvar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-habito" onclick="closeMBg(event,'modal-habito')">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Novo hábito</div><button class="modal-x" onclick="closeM('modal-habito')">×</button></div>
+    <div class="m-group"><label class="m-label">Nome</label><input type="text" class="m-input" id="hb-nome" placeholder="Ex: Beber 2L de água"></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Categoria</label>
+        <select class="m-select" id="hb-cat"><option>Saúde</option><option>Exercício</option><option>Produtividade</option><option>Alimentação</option><option>Mente</option><option>Outro</option></select></div>
+      <div class="m-group"><label class="m-label">Frequência</label>
+        <select class="m-select" id="hb-freq"><option>Diário</option><option>Seg-Sex</option><option>Fins de semana</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeM('modal-habito')">Cancelar</button><button class="btn btn-primary" onclick="addHabito()">Criar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-meta" onclick="closeMBg(event,'modal-meta')">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Nova meta</div><button class="modal-x" onclick="closeM('modal-meta')">×</button></div>
+    <div class="m-group"><label class="m-label">Nome da meta</label><input type="text" class="m-input" id="mt-nome" placeholder="Ex: Ler 24 livros"></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Categoria</label>
+        <select class="m-select" id="mt-cat"><option>Saúde</option><option>Financeiro</option><option>Carreira</option><option>Pessoal</option><option>Relacionamento</option></select></div>
+      <div class="m-group"><label class="m-label">Prazo</label><input type="date" class="m-input" id="mt-prazo"></div>
+      <div class="m-group"><label class="m-label">Progresso %</label><input type="number" class="m-input" id="mt-prog" placeholder="0" min="0" max="100"></div>
+    </div>
+    <div class="m-group"><label class="m-label">Descrição</label><input type="text" class="m-input" id="mt-desc" placeholder="Detalhes..."></div>
+    <div class="modal-footer"><button class="btn" onclick="closeM('modal-meta')">Cancelar</button><button class="btn btn-primary" onclick="addMeta()">Criar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-refeicao" onclick="closeMBg(event,'modal-refeicao')">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Registrar refeição</div><button class="modal-x" onclick="closeM('modal-refeicao')">×</button></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Refeição</label>
+        <select class="m-select" id="rf-tipo"><option>Café da manhã</option><option>Lanche manhã</option><option>Almoço</option><option>Lanche tarde</option><option>Jantar</option><option>Ceia</option></select></div>
+      <div class="m-group"><label class="m-label">Calorias kcal</label><input type="number" class="m-input" id="rf-cal" placeholder="400"></div>
+    </div>
+    <div class="m-group"><label class="m-label">Alimentos</label><input type="text" class="m-input" id="rf-desc" placeholder="Ex: Frango, arroz, salada"></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Proteínas g</label><input type="number" class="m-input" id="rf-prot" placeholder="30"></div>
+      <div class="m-group"><label class="m-label">Carboidratos g</label><input type="number" class="m-input" id="rf-carb" placeholder="45"></div>
+      <div class="m-group"><label class="m-label">Gorduras g</label><input type="number" class="m-input" id="rf-gord" placeholder="12"></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeM('modal-refeicao')">Cancelar</button><button class="btn btn-primary" onclick="addRefeicao()">Registrar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-treino" onclick="closeMBg(event,'modal-treino')">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Novo treino</div><button class="modal-x" onclick="closeM('modal-treino')">×</button></div>
+    <div class="m-group"><label class="m-label">Nome do treino</label><input type="text" class="m-input" id="tr-nome" placeholder="Ex: Treino A — Peito"></div>
+    <div class="m-grid">
+      <div class="m-group"><label class="m-label">Tipo</label>
+        <select class="m-select" id="tr-tipo"><option>Musculação</option><option>Cardio</option><option>HIIT</option><option>Yoga</option><option>Pilates</option><option>Funcional</option></select></div>
+      <div class="m-group"><label class="m-label">Duração min</label><input type="number" class="m-input" id="tr-dur" placeholder="60"></div>
+    </div>
+    <div class="m-group"><label class="m-label">Exercícios</label><input type="text" class="m-input" id="tr-exer" placeholder="Ex: Supino 4x12, Rosca 3x15"></div>
+    <div class="modal-footer"><button class="btn" onclick="closeM('modal-treino')">Cancelar</button><button class="btn btn-primary" onclick="addTreino()">Salvar</button></div>
+  </div>
+</div>
+
+<script>
+const fmt = v => Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+const diasNome=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const mesesNome=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const hoje=new Date();
+let habitos=[],metas=[],refeicoes=[],sonoLog=[],treinos=[],eventos=[];
+
+function initPlanner(){
+  const email=window.PL.user?.email||'';
+  document.getElementById('pl-av').textContent=email.charAt(0).toUpperCase();
+  document.getElementById('hab-date').textContent=diasNome[hoje.getDay()]+', '+hoje.getDate()+' de '+mesesNome[hoje.getMonth()];
+  loadAll().then(()=>{renderAgenda();renderHabitos();renderMetas();renderAlimentacao();renderSono();renderTreino();updateStats();});
+}
+
+async function loadAll(){
+  try{habitos=await window.FS.get('habitos');}catch(e){}
+  try{metas=await window.FS.get('metas');}catch(e){}
+  try{refeicoes=await window.FS.get('refeicoes');}catch(e){}
+  try{sonoLog=await window.FS.get('sono');}catch(e){}
+  try{treinos=await window.FS.get('treinos');}catch(e){}
+  try{eventos=await window.FS.get('eventos');}catch(e){}
+}
+
+function updateStats(){
+  const done=habitos.filter(h=>h.done).length;
+  document.getElementById('st-hab').textContent=done+'/'+habitos.length;
+  document.getElementById('st-metas').textContent=metas.filter(m=>!m.concluida).length;
+  document.getElementById('st-sono').textContent=sonoLog[0]?sonoLog[0].horas+'h':'—';
+  const hojeStr=hoje.toISOString().slice(0,10);
+  document.getElementById('st-treino').textContent=treinos.filter(t=>t.data===hojeStr).length;
+}
+
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+function closeMBg(e,id){if(e.target===document.getElementById(id))closeM(id);}
+
+// AGENDA
+function renderAgenda(){
+  const semana=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+  const grid=document.getElementById('week-grid');
+  const mon=new Date(hoje);mon.setDate(hoje.getDate()-(hoje.getDay()||7)+1);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  document.getElementById('semana-label').textContent=mon.getDate()+'/'+mesesNome[mon.getMonth()]+' — '+sun.getDate()+'/'+mesesNome[sun.getMonth()];
+  grid.innerHTML='';
+  semana.forEach((d,i)=>{
+    const dDate=new Date(mon);dDate.setDate(mon.getDate()+i);
+    const isToday=dDate.toDateString()===hoje.toDateString();
+    const dayEvts=eventos.filter(e=>e.dia===d);
+    let evHtml=dayEvts.map(e=>`<div class="day-event ${e.cor||''}">${e.hora} ${e.titulo}</div>`).join('');
+    grid.innerHTML+=`<div class="day-col">
+      <div class="day-hdr">
+        <div class="day-name">${d.slice(0,3)}</div>
+        <div class="day-num ${isToday?'today':''}">${dDate.getDate()}</div>
+      </div>
+      <div class="day-body">${evHtml}
+        <button class="add-evt" onclick="document.getElementById('ev-dia').value='${d}';openM('modal-evento')">+</button>
+      </div>
+    </div>`;
+  });
+}
+
+async function addEvento(){
+  const ev={titulo:document.getElementById('ev-titulo').value.trim(),
+    dia:document.getElementById('ev-dia').value,hora:document.getElementById('ev-hora').value,
+    cor:document.getElementById('ev-cor').value,criadoEm:new Date().toISOString()};
+  if(!ev.titulo){alert('Digite o título.');return;}
+  try{const r=await window.FS.save('eventos',ev);ev.id=r?.id||'ev-'+Date.now();}catch(e){ev.id='ev-'+Date.now();}
+  eventos.push(ev);closeM('modal-evento');renderAgenda();
+}
+
+// HÁBITOS
+function renderHabitos(){
+  const list=document.getElementById('hab-list');
+  list.innerHTML='';
+  if(!habitos.length){list.innerHTML='<div style="text-align:center;padding:30px;color:var(--ink3)">Nenhum hábito. Clique em "+ Hábito".</div>';return;}
+  habitos.forEach(h=>{
+    list.innerHTML+=`<div class="habit-item">
+      <div class="hcheck ${h.done?'done':''}" onclick="toggleH('${h.id}',${h.done})">${h.done?'✓':''}</div>
+      <div class="hname">${h.nome}</div>
+      <span class="hcat">${h.cat}</span>
+      <span class="hstreak">🔥${h.streak||0}</span>
+      <button onclick="delH('${h.id}')" style="background:none;border:none;cursor:pointer;color:var(--ink3);font-size:16px;margin-left:auto">×</button>
+    </div>`;
+  });
+  updateStats();
+}
+
+async function addHabito(){
+  const h={nome:document.getElementById('hb-nome').value.trim(),cat:document.getElementById('hb-cat').value,
+    freq:document.getElementById('hb-freq').value,done:false,streak:0,criadoEm:new Date().toISOString()};
+  if(!h.nome){alert('Digite o nome.');return;}
+  try{const r=await window.FS.save('habitos',h);h.id=r?.id||'h-'+Date.now();}catch(e){h.id='h-'+Date.now();}
+  habitos.push(h);closeM('modal-habito');renderHabitos();
+}
+
+async function toggleH(id,wasDone){
+  const h=habitos.find(x=>x.id===id);if(!h)return;
+  h.done=!wasDone;h.streak=h.done?(h.streak||0)+1:Math.max(0,(h.streak||1)-1);
+  try{await window.FS.upd('habitos',id,{done:h.done,streak:h.streak});}catch(e){}
+  renderHabitos();
+}
+
+async function delH(id){
+  if(!confirm('Excluir hábito?'))return;
+  try{await window.FS.del('habitos',id);}catch(e){}
+  habitos=habitos.filter(h=>h.id!==id);renderHabitos();
+}
+
+// METAS
+function renderMetas(){
+  const el=document.getElementById('metas-list');
+  el.innerHTML='';
+  if(!metas.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--ink3)">Nenhuma meta. Clique em "+ Meta".</div>';return;}
+  const cores=['#5a7a5a','#4a6a8a','#b8963e','#9a4a4a','#8a6d4e'];
+  metas.forEach((m,i)=>{
+    const pct=Math.min(100,parseInt(m.prog)||0);
+    const cor=cores[i%cores.length];
+    el.innerHTML+=`<div class="meta-item">
+      <div class="meta-top"><span class="meta-name">🎯 ${m.nome} <small style="color:var(--ink3);font-size:11px">${m.cat}</small></span>
+        <span class="meta-pct">${pct}%</span></div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%;background:${cor}"></div></div>
+      <div class="meta-bot"><span>${m.desc||'—'}</span><span>Prazo: ${m.prazo||'—'}</span></div>
+    </div>`;
+  });
+  updateStats();
+}
+
+async function addMeta(){
+  const m={nome:document.getElementById('mt-nome').value.trim(),cat:document.getElementById('mt-cat').value,
+    prazo:document.getElementById('mt-prazo').value,prog:document.getElementById('mt-prog').value||0,
+    desc:document.getElementById('mt-desc').value,concluida:false,criadoEm:new Date().toISOString()};
+  if(!m.nome){alert('Digite a meta.');return;}
+  try{const r=await window.FS.save('metas',m);m.id=r?.id||'m-'+Date.now();}catch(e){m.id='m-'+Date.now();}
+  metas.push(m);closeM('modal-meta');renderMetas();
+}
+
+// ALIMENTAÇÃO
+function renderAlimentacao(){
+  const hojeStr=hoje.toISOString().slice(0,10);
+  const rfHoje=refeicoes.filter(r=>r.data===hojeStr);
+  const slots=['Café da manhã','Lanche manhã','Almoço','Lanche tarde','Jantar','Ceia'];
+  const grid=document.getElementById('meal-grid');
+  grid.innerHTML='';
+  slots.forEach(s=>{
+    const rf=rfHoje.find(r=>r.tipo===s);
+    grid.innerHTML+=`<div class="meal-slot">
+      <div class="meal-time">${s}</div>
+      ${rf?`<div class="meal-name">${rf.desc||'—'}</div><div class="meal-cal">${rf.cal||0}<span style="font-size:11px;color:var(--ink3)"> kcal</span></div>`
+        :`<div style="color:var(--ink3);font-size:12px;margin:8px 0">Não registrado</div>
+         <button class="btn btn-sm" style="font-size:11px;width:100%" onclick="document.getElementById('rf-tipo').value='${s}';openM('modal-refeicao')">+ Registrar</button>`}
+    </div>`;
+  });
+  const tCal=rfHoje.reduce((a,r)=>a+(r.cal||0),0);
+  const tProt=rfHoje.reduce((a,r)=>a+(r.prot||0),0);
+  const tCarb=rfHoje.reduce((a,r)=>a+(r.carb||0),0);
+  const tGord=rfHoje.reduce((a,r)=>a+(r.gord||0),0);
+  document.getElementById('macros-bar').innerHTML=`
+    <div class="macro"><div class="macro-v">${tCal}</div><div class="macro-l">kcal</div></div>
+    <div class="macro"><div class="macro-v">${tProt}g</div><div class="macro-l">Proteína</div></div>
+    <div class="macro"><div class="macro-v">${tCarb}g</div><div class="macro-l">Carbo</div></div>
+    <div class="macro"><div class="macro-v">${tGord}g</div><div class="macro-l">Gordura</div></div>`;
+}
+
+async function addRefeicao(){
+  const r={tipo:document.getElementById('rf-tipo').value,desc:document.getElementById('rf-desc').value,
+    cal:parseFloat(document.getElementById('rf-cal').value)||0,
+    prot:parseFloat(document.getElementById('rf-prot').value)||0,
+    carb:parseFloat(document.getElementById('rf-carb').value)||0,
+    gord:parseFloat(document.getElementById('rf-gord').value)||0,
+    data:hoje.toISOString().slice(0,10),ts:new Date().toISOString()};
+  try{const ref=await window.FS.save('refeicoes',r);r.id=ref?.id||'rf-'+Date.now();}catch(e){r.id='rf-'+Date.now();}
+  refeicoes.push(r);closeM('modal-refeicao');renderAlimentacao();
+}
+
+// SONO
+function calcH(ini,fim){
+  const[ih,im]=ini.split(':').map(Number);const[fh,fm]=fim.split(':').map(Number);
+  let h=fh-ih+(fm-im)/60;if(h<0)h+=24;return Math.round(h*10)/10;
+}
+
+function renderSono(){
+  const bars=document.getElementById('sono-bars');
+  const snDias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  bars.innerHTML='';
+  snDias.forEach((d,i)=>{
+    const log=sonoLog[sonoLog.length-7+i];
+    const h=log?log.horas:0;
+    const pct=Math.min(100,Math.round((h/9)*100));
+    bars.innerHTML+=`<div class="sday">
+      <div class="sbar-wrap"><div class="sbar ${h>=7?'ok':''}" style="height:${pct}%"></div></div>
+      <div class="sdn">${d}</div>
+    </div>`;
+  });
+  const avg=sonoLog.length?Math.round(sonoLog.slice(-7).reduce((a,s)=>a+s.horas,0)/Math.min(7,sonoLog.length)*10)/10:0;
+  document.getElementById('sono-avg').textContent=avg||'—';
+  const hist=document.getElementById('sono-hist');
+  hist.innerHTML='';
+  sonoLog.slice(0,5).forEach(s=>{
+    hist.innerHTML+=`<div class="tx-item">
+      <div class="tx-left">
+        <div class="tx-av" style="background:var(--ink);color:var(--warm)">🌙</div>
+        <div><div class="tx-name">${s.horas}h de sono</div><div class="tx-det">${s.data} · ${s.ini}→${s.fim} · ${s.qual}</div></div>
+      </div>
+      <span class="badge ${s.horas>=7?'bg':'br'}">${s.horas>=7?'Bom':'Curto'}</span>
+    </div>`;
+  });
+  if(!sonoLog.length)hist.innerHTML='<div style="text-align:center;padding:20px;color:var(--ink3)">Nenhum registro.</div>';
+  updateStats();
+}
+
+async function regSono(){
+  const ini=document.getElementById('s-ini').value;
+  const fim=document.getElementById('s-fim').value;
+  const qual=document.getElementById('s-qual').value;
+  const horas=calcH(ini,fim);
+  const s={ini,fim,horas,qual,data:hoje.toISOString().slice(0,10),ts:new Date().toISOString()};
+  try{const r=await window.FS.save('sono',s);s.id=r?.id||'s-'+Date.now();}catch(e){s.id='s-'+Date.now();}
+  sonoLog.unshift(s);renderSono();alert('✅ '+horas+'h registradas!');
+}
+
+// TREINO
+function renderTreino(){
+  const grid=document.getElementById('treino-grid');
+  grid.innerHTML='';
+  if(!treinos.length){grid.innerHTML='<div style="text-align:center;padding:30px;color:var(--ink3);grid-column:span 3">Nenhum treino. Clique em "+ Treino".</div>';return;}
+  treinos.slice(0,6).forEach(t=>{
+    grid.innerHTML+=`<div class="treino-card">
+      <div class="treino-type">${t.tipo} · ${t.dur||0}min</div>
+      <div class="treino-name">💪 ${t.nome}</div>
+      <div class="treino-ex">${t.exer||'—'}</div>
+      <button onclick="delT('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--ink3);font-size:11px;margin-top:8px">Excluir</button>
+    </div>`;
+  });
+  updateStats();
+}
+
+async function addTreino(){
+  const t={nome:document.getElementById('tr-nome').value.trim(),tipo:document.getElementById('tr-tipo').value,
+    dur:parseInt(document.getElementById('tr-dur').value)||0,exer:document.getElementById('tr-exer').value,
+    data:hoje.toISOString().slice(0,10),ts:new Date().toISOString()};
+  if(!t.nome){alert('Digite o nome.');return;}
+  try{const r=await window.FS.save('treinos',t);t.id=r?.id||'t-'+Date.now();}catch(e){t.id='t-'+Date.now();}
+  treinos.unshift(t);closeM('modal-treino');renderTreino();
+}
+
+async function delT(id){
+  if(!confirm('Excluir treino?'))return;
+  try{await window.FS.del('treinos',id);}catch(e){}
+  treinos=treinos.filter(t=>t.id!==id);renderTreino();
+}
+</script>
+</body>
+</html>
