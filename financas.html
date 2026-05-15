@@ -2483,6 +2483,16 @@ showApp = function(){
 };
 </script>
 <script>
+// Aliases globais para fun\u00E7\u00F5es do m\u00F3dulo Firebase
+function doLogin() { if(window.doLogin) window.doLogin(...arguments); }
+function doRegister() { if(window.doRegister) window.doRegister(...arguments); }
+function doReset() { if(window.doReset) window.doReset(...arguments); }
+function doLogout() { if(window.doLogout) window.doLogout(...arguments); }
+function updateUserRole() { if(window.updateUserRole) window.updateUserRole(...arguments); }
+function ativarPremium() { if(window.ativarPremium) window.ativarPremium(...arguments); }
+function revogarPremium() { if(window.revogarPremium) window.revogarPremium(...arguments); }
+
+
 // financas.html \u2014 override de showApp/showLogin para este arquivo
 function showLogin(){ $('login-fin').style.display='flex'; $('app-fin').style.display='none'; }
 function showApp(){
