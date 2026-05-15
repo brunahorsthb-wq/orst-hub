@@ -482,22 +482,22 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
       <h2>Bem-vinda</h2>
       <p>Acesse o ORST Hub</p>
       <div class="l-tabs">
-        <div class="l-tab active" onclick="lTab('login')">Entrar</div>
-        <div class="l-tab" onclick="lTab('register')">Criar conta</div>
+        <div class="l-tab active" onclick="window.lTab('login')">Entrar</div>
+        <div class="l-tab" onclick="window.lTab('register')">Criar conta</div>
       </div>
       <div class="l-panel active" id="lp-login">
         <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="l-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
         <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="l-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
         <div class="l-err" id="l-err" style="color:var(--red)"></div>
-        <button class="l-btn" id="btn-login" onclick="doLogin()">Entrar</button>
-        <div class="l-forgot" onclick="doReset()">Esqueci minha senha</div>
+        <button class="l-btn" id="btn-login" onclick="window.doLogin()">Entrar</button>
+        <div class="l-forgot" onclick="window.doReset()">Esqueci minha senha</div>
       </div>
       <div class="l-panel" id="lp-register">
         <div class="fg"><label class="fl">Nome</label><input class="fi" type="text" id="r-name" placeholder="Seu nome completo"></div>
         <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="r-email" placeholder="seu@email.com"></div>
         <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="r-pass" placeholder="Mínimo 6 caracteres"></div>
         <div class="l-err" id="r-err" style="color:var(--red)"></div>
-        <button class="l-btn" id="btn-reg" onclick="doRegister()">Criar conta grátis</button>
+        <button class="l-btn" id="btn-reg" onclick="window.doRegister()">Criar conta grátis</button>
         <p style="font-size:11px;color:var(--ink3);text-align:center;margin-top:12px">Sem cartão · Cancele quando quiser</p>
       </div>
     </div>
@@ -520,7 +520,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         <span class="tb-uname" id="tb-un"></span>
       </div>
       <span class="tb-role role-free" id="tb-role">Free</span>
-      <button class="tb-out" onclick="doLogout()">Sair</button>
+      <button class="tb-out" onclick="window.doLogout()">Sair</button>
     </div>
   </div>
 
@@ -1013,10 +1013,10 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="fg2"><label class="fl2">Nome de exibição</label><input type="text" class="fi2" id="pf-name" placeholder="Seu nome"></div>
           <div class="fg2"><label class="fl2">Email</label><input type="text" class="fi2" id="pf-email" disabled style="opacity:.55"></div>
           <div class="fg2"><label class="fl2">URL da foto de perfil (opcional)</label><input type="url" class="fi2" id="pf-url" placeholder="https://..." oninput="prevAv(this.value)"></div>
-          <div style="text-align:right;margin-top:4px"><button class="btn btn-p" onclick="savePerfil()">Salvar perfil</button></div>
+          <div style="text-align:right;margin-top:4px"><button class="btn btn-p" onclick="window.savePerfil()">Salvar perfil</button></div>
         </div>
         <div class="panel" style="margin-bottom:16px;"><div class="ph"><div class="pt">Meu plano</div></div><div id="pf-plan"></div></div>
-        <div class="panel"><div class="ph"><div class="pt">Conta</div></div><button class="btn btn-d" onclick="doLogout()">← Sair da conta</button></div>
+        <div class="panel"><div class="ph"><div class="pt">Conta</div></div><button class="btn btn-d" onclick="window.doLogout()">← Sair da conta</button></div>
       </div>
     </div>
 
@@ -1243,16 +1243,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
 
 <script>
-// Aliases globais para fun\u00E7\u00F5es do m\u00F3dulo Firebase
-function doLogin() { if(window.doLogin) window.doLogin(...arguments); }
-function doRegister() { if(window.doRegister) window.doRegister(...arguments); }
-function doReset() { if(window.doReset) window.doReset(...arguments); }
-function doLogout() { if(window.doLogout) window.doLogout(...arguments); }
-function savePerfil() { if(window.savePerfil) window.savePerfil(...arguments); }
-function updateUserRole() { if(window.updateUserRole) window.updateUserRole(...arguments); }
-function ativarPremium() { if(window.ativarPremium) window.ativarPremium(...arguments); }
-function revogarPremium() { if(window.revogarPremium) window.revogarPremium(...arguments); }
-
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 // ORST HUB \u2014 JavaScript Principal
