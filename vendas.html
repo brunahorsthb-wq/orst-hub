@@ -451,7 +451,7 @@ function copiarPix() {
   const key = document.getElementById('pix-key').textContent;
   navigator.clipboard.writeText(key).then(() => {
     const btn = document.querySelector('.copy-btn');
-    btn.textContent = '✓ Copiado!';
+    btn.textContent = '\u2713 Copiado!';
     setTimeout(() => btn.textContent = 'Copiar chave Pix', 2000);
   });
 }
