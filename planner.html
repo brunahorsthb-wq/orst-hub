@@ -477,13 +477,13 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
       <div style="background:var(--amber-bg);border-radius:var(--r-sm);padding:10px 13px;margin-bottom:18px;font-size:12px;color:var(--amber-t);">
         🔒 Disponível apenas no plano <strong>Premium</strong>. Crie uma conta grátis e faça upgrade.
       </div>
-      <div class="l-tabs"><div class="l-tab active" onclick="lTab('login')">Entrar</div><div class="l-tab" onclick="lTab('register')">Criar conta</div></div>
+      <div class="l-tabs"><div class="l-tab active" onclick="window.lTab('login')">Entrar</div><div class="l-tab" onclick="window.lTab('register')">Criar conta</div></div>
       <div class="l-panel active" id="lp-login">
         <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="l-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
         <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="l-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
         <div class="l-err" id="l-err" style="color:var(--red)"></div>
-        <button class="l-btn" id="btn-login" onclick="doLogin()">Entrar</button>
-        <div class="l-forgot" onclick="doReset()">Esqueci minha senha</div>
+        <button class="l-btn" id="btn-login" onclick="window.doLogin()">Entrar</button>
+        <div class="l-forgot" onclick="window.doReset()">Esqueci minha senha</div>
         <div style="text-align:center;margin-top:16px;"><a href="index.html" style="font-size:12px;color:var(--ink3);">← Voltar ao Hub</a></div>
       </div>
       <div class="l-panel" id="lp-register">
@@ -491,7 +491,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="r-email" placeholder="seu@email.com"></div>
         <div class="fg"><label class="fl">Senha</label><input class="fi" type="password" id="r-pass" placeholder="Mínimo 6 caracteres"></div>
         <div class="l-err" id="r-err" style="color:var(--red)"></div>
-        <button class="l-btn" id="btn-reg" onclick="doRegister()">Criar conta grátis</button>
+        <button class="l-btn" id="btn-reg" onclick="window.doRegister()">Criar conta grátis</button>
       </div>
     </div>
   </div>
@@ -505,7 +505,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
       <div class="tb-av" id="tb-av"><span id="tb-av-l">O</span></div>
       <span class="tb-uname" id="tb-un"></span>
       <span class="tb-role role-free" id="tb-role">Free</span>
-      <button class="tb-out" onclick="doLogout()">Sair</button>
+      <button class="tb-out" onclick="window.doLogout()">Sair</button>
     </div>
   </div>
   <div style="flex:1;display:flex;overflow:hidden;">
@@ -1645,15 +1645,6 @@ showApp = function(){
 };
 </script>
 <script>
-// Aliases globais para fun\u00E7\u00F5es do m\u00F3dulo Firebase
-function doLogin() { if(window.doLogin) window.doLogin(...arguments); }
-function doRegister() { if(window.doRegister) window.doRegister(...arguments); }
-function doReset() { if(window.doReset) window.doReset(...arguments); }
-function doLogout() { if(window.doLogout) window.doLogout(...arguments); }
-function updateUserRole() { if(window.updateUserRole) window.updateUserRole(...arguments); }
-function ativarPremium() { if(window.ativarPremium) window.ativarPremium(...arguments); }
-function revogarPremium() { if(window.revogarPremium) window.revogarPremium(...arguments); }
-
 
 function showLogin(){ $('login-pl').style.display='flex'; $('app-pl').style.display='none'; }
 function showApp(){
