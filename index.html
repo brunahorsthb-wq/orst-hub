@@ -251,6 +251,15 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(4,1fr);}
 }
+/* Menu mobile sidebar */
+.mob-menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,0.2);color:var(--cream);width:36px;height:36px;border-radius:var(--r-sm);cursor:pointer;font-size:18px;flex-shrink:0;}
+.mob-sidebar-drawer{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);}
+.mob-sidebar-drawer.open{display:block;}
+.mob-sidebar-panel{width:240px;height:100%;background:var(--navy);overflow-y:auto;padding-bottom:40px;}
+.mob-sidebar-close{width:100%;background:rgba(255,255,255,0.08);border:none;color:rgba(240,234,216,0.6);padding:14px;font-size:13px;cursor:pointer;font-family:var(--fn);text-align:left;}
+@media(max-width:900px){
+  .mob-menu-btn{display:flex;align-items:center;justify-content:center;}
+}
 @media(max-width:600px){
   /* Layout geral */
   .g4,.g3{grid-template-columns:repeat(2,1fr);}
@@ -296,6 +305,42 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   /* Hab card */
   .hab-card{flex-wrap:wrap;gap:8px;}
 }
+
+/* ===== PLANNER BOARD SEMANAL ===== */
+.planner-board{display:grid;min-width:700px;}
+.pb-col{border-right:1px solid var(--border);min-height:400px;}
+.pb-col:last-child{border-right:none;}
+.pb-col-hdr{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;}
+.pb-day-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#fff;}
+.pb-day-num{font-family:var(--fs);font-size:22px;font-weight:300;color:#fff;line-height:1.1;}
+.pb-day-num.pb-today{color:var(--warm);}
+.pb-col-hdr.pb-today-col{background:rgba(196,168,130,0.15);}
+.pb-col-body{padding:4px;}
+.pb-event{border-radius:4px;padding:5px 7px;margin-bottom:4px;cursor:pointer;position:relative;transition:opacity .2s;}
+.pb-event.feito{opacity:.55;}
+.pb-event.feito .pb-ev-title{text-decoration:line-through;}
+.pb-ev-time{font-size:10px;opacity:.75;margin-bottom:1px;}
+.pb-ev-title{font-size:12px;font-weight:500;line-height:1.3;}
+.pb-ev-check{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;}
+.pb-ev-check.done{background:rgba(255,255,255,0.3);border-color:transparent;}
+.pb-add-btn{width:100%;background:none;border:1px dashed var(--border2);border-radius:4px;padding:4px;font-size:11px;color:var(--ink3);cursor:pointer;margin-top:2px;}
+.pb-add-btn:hover{background:var(--nude2);}
+/* Cores dos eventos */
+.ev-azul{background:#1e6faa;color:#fff;}
+.ev-verde{background:#5a7a5a;color:#fff;}
+.ev-vermelho{background:#c94040;color:#fff;}
+.ev-roxo{background:#7c3aed;color:#fff;}
+.ev-laranja{background:#c87941;color:#fff;}
+.ev-rosa{background:#b5537a;color:#fff;}
+.ev-padrao{background:var(--navy);color:var(--cream);}
+/* Habitos checklist */
+.hab-check-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;}
+.hab-check-item:last-child{border-bottom:none;}
+.hab-check-box{width:20px;height:20px;border-radius:4px;border:2px solid var(--nude4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s;}
+.hab-check-box.done{background:var(--green);border-color:var(--green);color:#fff;}
+.hab-check-label{font-size:13px;flex:1;}
+.hab-check-label.done{text-decoration:line-through;color:var(--ink3);}
+.hab-check-time{font-size:11px;color:var(--warm2);}
 
 /* ===== NAVEGACAO MOBILE INFERIOR ===== */
 .mob-nav{display:none;}
@@ -516,6 +561,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         </div>
         <div class="main-cnt">
           <div class="sys-tb">
+            <button class="mob-menu-btn" onclick="abrirMobSidebar('fin')" title="Menu">&#9776;</button>
             <span class="sys-ttl" id="f-ttl">Dashboard</span>
             <select id="month-sel" onchange="loadFDash()" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;">
               <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Marco</option>
@@ -613,6 +659,11 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div class="mc"><div class="mc-l">Vencidas</div><div class="mc-v r" id="ap-venc">0</div></div>
                 <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v a" id="ap-pend">0</div></div>
               </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Contas a pagar</div><button class="btn btn-p btn-sm" onclick="openM('m-apagar')">+ Conta</button></div>
+                <div class="txl" id="apagar-list"></div>
+              </div>
+            </div>
             <!-- Contas a Receber -->
             <div class="page" id="page-f-receber">
               <div class="g3">
@@ -636,11 +687,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div class="txl" id="receber-list">
                   <div style="text-align:center;padding:24px;color:var(--ink3)">Nenhuma conta cadastrada.</div>
                 </div>
-              </div>
-            </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Contas a pagar</div><button class="btn btn-p btn-sm" onclick="openM('m-apagar')">+ Conta</button></div>
-                <div class="txl" id="apagar-list"></div>
               </div>
             </div>
             <!-- Investimentos -->
@@ -776,43 +822,45 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         </div>
         <div class="main-cnt">
           <div class="sys-tb">
+            <button class="mob-menu-btn" onclick="abrirMobSidebar('pl')" title="Menu">&#9776;</button>
             <span class="sys-ttl" id="pl-ttl">Agenda semanal</span>
             <button class="btn btn-p btn-sm" id="pl-add" onclick="openM('m-evento')">+ Evento</button>
           </div>
           <div class="pg-area">
             <!-- Agenda/Dashboard -->
             <div class="page active" id="page-pl-agenda">
+              <!-- Hero do dia -->
               <div class="pl-hero">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;">
                   <div>
-                    <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Meu dia</div>
-                    <div style="font-family:var(--fs);font-size:22px;font-weight:300;color:var(--cream)" id="pl-saudacao">Bom dia!</div>
+                    <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Meu dia</div>
+                    <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream)" id="pl-saudacao">Bom dia!</div>
                     <div style="font-size:11px;color:rgba(240,234,216,0.35);margin-top:2px" id="pl-data-hoje"></div>
                   </div>
                   <div style="text-align:right;">
-                    <div style="font-family:var(--fs);font-size:42px;font-weight:300;color:var(--warm);line-height:1" id="pl-hora">-</div>
+                    <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:var(--warm);line-height:1" id="pl-hora">--:--</div>
                   </div>
                 </div>
                 <div class="pl-stats-row">
                   <div class="pl-stat"><div class="pl-stat-val" id="pl-hc">0/0</div><div class="pl-stat-lbl">Habitos hoje</div></div>
                   <div class="pl-stat"><div class="pl-stat-val" id="pl-mc">0</div><div class="pl-stat-lbl">Metas ativas</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-sc">-</div><div class="pl-stat-lbl">Sono ontem</div></div>
+                  <div class="pl-stat"><div class="pl-stat-val" id="pl-sc">--</div><div class="pl-stat-lbl">Sono ontem</div></div>
                   <div class="pl-stat"><div class="pl-stat-val" id="pl-tc">0</div><div class="pl-stat-lbl">Treinos hoje</div></div>
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-                <div class="panel">
-                  <div class="ph"><div class="pt">Eventos de hoje</div><button class="btn btn-p btn-sm" onclick="openM('m-evento')" style="font-size:11px">+ Evento</button></div>
-                  <div id="eventos-hoje"><div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum evento hoje.</div></div>
+
+              <!-- Planner Semanal Visual -->
+              <div class="panel" style="padding:0;overflow:hidden;">
+                <div style="background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <div style="font-family:var(--fs);font-size:17px;color:var(--cream)">Planner Semanal</div>
+                  <div style="display:flex;gap:6px;">
+                    <button onclick="semanaOffset--;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8592;</button>
+                    <button onclick="semanaOffset=0;renderAgenda()" style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
+                    <button onclick="semanaOffset++;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8594;</button>
+                  </div>
                 </div>
-                <div class="panel">
-                  <div class="ph"><div class="pt">Habitos de hoje</div><button class="btn btn-sm" onclick="goPP(document.querySelector('[data-page=pl-habitos]'))" style="font-size:11px">Ver todos</button></div>
-                  <div id="hab-rapido"><div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum habito.</div></div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Agenda semanal</div><span style="font-size:12px;color:var(--ink3)" id="sem-lbl"></span></div>
-                <div class="week-grid" id="week-grid"></div>
+                <div style="padding:0 0 8px;font-size:11px;color:var(--ink3);text-align:center;padding-top:6px;" id="sem-lbl"></div>
+                <div id="planner-board" style="overflow-x:auto;"></div>
               </div>
             </div>
             <!-- Habitos -->
@@ -1486,6 +1534,10 @@ function showApp(){
     loadFDash();
     loadCategorias();
     renderAgenda();
+    loadApagar();
+    loadReceber();
+    loadInvest();
+    loadPatrimonio();
   });
 }
 function lTab(t){
@@ -2285,22 +2337,104 @@ function getMonday(off){
 }
 
 function renderAgenda(){
-  var sem=['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
-  var grid=$('week-grid'); if(!grid) return;
-  var mon=getMonday(semanaOffset);
-  var sun=new Date(mon); sun.setDate(mon.getDate()+6);
-  var sl=$('sem-lbl'); if(sl) sl.textContent=mon.getDate()+'/' + MESES[mon.getMonth()] + ' - ' + sun.getDate() + '/' + MESES[sun.getMonth()];
-  var html='<div style="grid-column:span 7;display:flex;gap:8px;margin-bottom:8px;"><button class="btn btn-sm" onclick="semanaOffset--;renderAgenda()">Anterior</button><button class="btn btn-sm" onclick="semanaOffset=0;renderAgenda()">Hoje</button><button class="btn btn-sm" onclick="semanaOffset++;renderAgenda()">Proxima</button></div>';
-  html+=sem.map(function(d,i){
-    var dDate=new Date(mon); dDate.setDate(mon.getDate()+i);
-    var dateStr=dDate.toISOString().slice(0,10);
-    var isT=dDate.toDateString()===hoje.toDateString();
-    var evts=eventos.filter(function(e){ return e.data===dateStr || (!e.data && e.dia===d); });
-    return '<div class="day-col"><div class="day-hdr"><div class="day-name">' + d.slice(0,3) + '</div><div class="day-num ' + (isT?'today':'') + '">' + dDate.getDate() + '</div></div><div class="day-body">' + evts.map(function(e){ return '<div class="day-ev ' + (e.cor||'') + '">' + e.hora + ' ' + esc(e.titulo) + '<button onclick="delEvento(\'' + e.id + '\')" style="float:right;background:none;border:none;cursor:pointer;color:rgba(26,22,18,.4);font-size:11px;line-height:1">x</button></div>'; }).join('') + '<button class="add-ev-btn" onclick="prepEvento(\'' + dateStr + '\',\'' + d + '\')">+</button></div></div>';
-  }).join('');
-  grid.innerHTML=html;
+  var board = document.getElementById('planner-board');
+  if(!board) return;
+  var DIAS_NOMES = ['Seg','Ter','Qua','Qui','Sex','Sab','Dom'];
+  var DIAS_FULL  = ['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
+  var CORES = {'':'ev-padrao','blue':'ev-azul','green':'ev-verde','red':'ev-vermelho','roxo':'ev-roxo','laranja':'ev-laranja','rosa':'ev-rosa'};
+  var mon = getMonday(semanaOffset);
+  var sun = new Date(mon); sun.setDate(mon.getDate()+6);
+
+  // Label da semana
+  var sl = document.getElementById('sem-lbl');
+  if(sl) sl.textContent = mon.getDate()+'/'+MESES[mon.getMonth()]+' a '+sun.getDate()+'/'+MESES[sun.getMonth()]+' de '+sun.getFullYear();
+
+  // Monta grid 7 colunas
+  var grid = document.createElement('div');
+  grid.className = 'planner-board';
+  grid.style.gridTemplateColumns = 'repeat(7, minmax(120px, 1fr))';
+
+  DIAS_NOMES.forEach(function(dNome, i){
+    var dDate = new Date(mon); dDate.setDate(mon.getDate()+i);
+    var dStr  = dDate.toISOString().slice(0,10);
+    var isHj  = dDate.toDateString() === hoje.toDateString();
+
+    var col = document.createElement('div');
+    col.className = 'pb-col' + (isHj ? ' pb-today-col' : '');
+
+    // Header do dia
+    var hdr = document.createElement('div');
+    hdr.className = 'pb-col-hdr' + (isHj ? ' pb-today-col' : '');
+    hdr.style.background = isHj ? 'rgba(196,168,130,0.25)' : 'var(--navy)';
+    hdr.innerHTML = '<div class="pb-day-name">'+dNome+'</div>'
+      + '<div class="pb-day-num'+(isHj?' pb-today':'')+'">'+dDate.getDate()+'</div>';
+    col.appendChild(hdr);
+
+    // Body com eventos
+    var body = document.createElement('div');
+    body.className = 'pb-col-body';
+
+    // Filtra eventos do dia (por data ou por dia recorrente)
+    var evDia = eventos.filter(function(e){
+      return e.data === dStr || (e.recorrente && e.dia === DIAS_FULL[i]);
+    }).sort(function(a,b){ return (a.hora||'').localeCompare(b.hora||''); });
+
+    evDia.forEach(function(ev){
+      var corClass = CORES[ev.cor||''] || 'ev-padrao';
+      var feitoDatas = ev.feitoDatas || [];
+      var feito = feitoDatas.indexOf(dStr) >= 0;
+
+      var evDiv = document.createElement('div');
+      evDiv.className = 'pb-event ' + corClass + (feito?' feito':'');
+
+      var checkDiv = document.createElement('div');
+      checkDiv.className = 'pb-ev-check' + (feito?' done':'');
+      checkDiv.textContent = feito ? 'ok' : '';
+      checkDiv.addEventListener('click', (function(id, ds){ return function(e){
+        e.stopPropagation();
+        toggleEventoFeito(id, ds);
+      }; })(ev.id, dStr));
+
+      evDiv.innerHTML = (ev.hora?'<div class="pb-ev-time">'+ev.hora+'</div>':'')
+        + '<div class="pb-ev-title">'+esc(ev.titulo)+'</div>';
+      evDiv.appendChild(checkDiv);
+
+      // Botao excluir ao clicar no evento
+      evDiv.addEventListener('click', (function(id){ return function(){ delEvento(id); }; })(ev.id));
+
+      body.appendChild(evDiv);
+    });
+
+    // Botao adicionar
+    var addBtn = document.createElement('button');
+    addBtn.className = 'pb-add-btn';
+    addBtn.textContent = '+ Adicionar';
+    addBtn.addEventListener('click', (function(ds, di){ return function(){
+      prepEvento(ds, DIAS_FULL[di]);
+    }; })(dStr, i));
+    body.appendChild(addBtn);
+
+    col.appendChild(body);
+    grid.appendChild(col);
+  });
+
+  board.innerHTML = '';
+  board.appendChild(grid);
   updPlannerStats();
 }
+
+function toggleEventoFeito(id, dStr){
+  var ev = eventos.find(function(e){ return e.id===id; }); if(!ev) return;
+  if(!ev.feitoDatas) ev.feitoDatas = [];
+  var idx2 = ev.feitoDatas.indexOf(dStr);
+  if(idx2 >= 0) ev.feitoDatas.splice(idx2, 1);
+  else ev.feitoDatas.push(dStr);
+  DB.update('eventos', id, {feitoDatas: ev.feitoDatas}).then(function(){
+    renderAgenda();
+    renderEventosHoje();
+  });
+}
+
 
 function prepEvento(dateStr,dia){
   var ed=$('ev-data'); if(ed) ed.value=dateStr;
@@ -2382,50 +2516,29 @@ function renderHabitos(){
     list.innerHTML='<div style="text-align:center;padding:24px;color:var(--ink3)">Nenhum habito. Clique em + Habito.</div>';
     return;
   }
-  var catColors={
-    'Saude':'var(--green-bg)','Exercicio':'var(--blue-bg)',
-    'Produtividade':'var(--amber-bg)','Alimentacao':'var(--green-bg)',
-    'Mente':'var(--purple-bg)','Sono':'#e8eaf6'
-  };
   list.innerHTML='';
   habitos.forEach(function(h){
-    var feito=h.doneDate===hojeStr;
-    var catColor=catColors[h.cat]||'var(--nude3)';
-    var card=document.createElement('div');
-    card.className='hab-card';
-    card.style.cssText='background:'+(feito?'var(--green-bg)':'var(--nude2)')+';border:1px solid '+(feito?'rgba(90,122,90,0.3)':'transparent');
-    var chk=document.createElement('div');
-    chk.className='pl-chk'+(feito?' done':'');
-    chk.style.flexShrink='0';
-    chk.textContent=feito?'ok':'';
-    chk.addEventListener('click',(function(id){ return function(){ toggleHabito(id); }; })(h.id));
-    var info=document.createElement('div');
-    info.style.flex='1';
-    info.innerHTML=
-      '<div style="font-size:13px;font-weight:500;'+(feito?'text-decoration:line-through;color:var(--ink3)':'')+'">'
-        +esc(h.nome)+'</div>'
-      +'<div style="font-size:11px;color:var(--ink3);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;">'
-        +(h.hora?'<span>'+h.hora+'</span>':'')
-        +(h.meta?'<span>Meta: '+esc(h.meta)+'</span>':'')
-        +'<span>'+(h.freq||'Diario')+'</span>'
-      +'</div>';
-    var acts=document.createElement('div');
-    acts.style.cssText='display:flex;align-items:center;gap:8px;';
-    acts.innerHTML=
-      '<span style="font-size:10px;padding:2px 8px;border-radius:100px;background:'+catColor+';color:var(--ink2)">'+h.cat+'</span>'
-      +'<div style="text-align:center;min-width:36px;">'
-        +'<div style="font-size:14px;font-weight:500;color:var(--warm2)">'+(h.streak||0)+'</div>'
-        +'<div style="font-size:9px;color:var(--ink3)">streak</div>'
-      +'</div>';
-    var btnDel=document.createElement('button');
-    btnDel.className='btn btn-d btn-sm';
-    btnDel.textContent='x';
-    btnDel.addEventListener('click',(function(id){ return function(){ delHabito(id); }; })(h.id));
-    acts.appendChild(btnDel);
-    card.appendChild(chk);
-    card.appendChild(info);
-    card.appendChild(acts);
-    list.appendChild(card);
+    var feito = h.doneDate===hojeStr;
+    var item = document.createElement('div');
+    item.className = 'hab-check-item';
+    item.style.background = feito ? 'var(--green-bg)' : '';
+    var box = document.createElement('div');
+    box.className = 'hab-check-box'+(feito?' done':'');
+    box.textContent = feito ? 'ok' : '';
+    box.addEventListener('click', (function(id){ return function(){ toggleHabito(id); }; })(h.id));
+    var lbl = document.createElement('div');
+    lbl.style.flex = '1';
+    lbl.innerHTML = '<div class="hab-check-label'+(feito?' done':'')+'">'+esc(h.nome)+'</div>'
+      +(h.hora||h.meta?'<div style="font-size:11px;color:var(--ink3);margin-top:1px;">'+(h.hora?h.hora+' ':'')+(h.meta?'| Meta: '+esc(h.meta):'')+'</div>':'');
+    var right = document.createElement('div');
+    right.style.cssText = 'display:flex;align-items:center;gap:6px;';
+    right.innerHTML = '<span style="font-size:11px;color:var(--warm2);">'+(h.streak||0)+' dias</span>';
+    var btnDel = document.createElement('button');
+    btnDel.className='btn btn-d btn-sm'; btnDel.style.fontSize='11px'; btnDel.textContent='x';
+    btnDel.addEventListener('click', (function(id){ return function(){ delHabito(id); }; })(h.id));
+    right.appendChild(btnDel);
+    item.appendChild(box); item.appendChild(lbl); item.appendChild(right);
+    list.appendChild(item);
   });
   updPlannerStats();
 }
@@ -2673,7 +2786,80 @@ goSis = function(s){
   });
   _goSisOrig(s);
 };
+
+function abrirMobSidebar(tipo){
+  var id=tipo==='fin'?'mob-drawer-fin':'mob-drawer-pl';
+  var el=document.getElementById(id);
+  if(el){ el.classList.add('open'); var ag=document.getElementById('mob-adm-g'); if(ag) ag.style.display=G.role==='admin'?'':'none'; }
+}
+function fecharMobSidebar(tipo){
+  var id=tipo==='fin'?'mob-drawer-fin':'mob-drawer-pl';
+  var el=document.getElementById(id); if(el) el.classList.remove('open');
+}
+function mobGoFP(el,tipo){
+  fecharMobSidebar(tipo);
+  var pid=el.dataset.page;
+  if(tipo==='fin'){
+    var sb=document.querySelector('#sis-financas .sb-i[data-page="'+pid+'"]');
+    if(sb) goFP(sb); else goFP(el);
+  } else {
+    var sb2=document.querySelector('#sis-planner .sb-i[data-page="'+pid+'"]');
+    if(sb2) goPP(sb2); else goPP(el);
+  }
+}
 </script>
+
+<!-- Drawer mobile sidebar financas -->
+<div class="mob-sidebar-drawer" id="mob-drawer-fin" onclick="fecharMobSidebar('fin')">
+  <div class="mob-sidebar-panel" onclick="event.stopPropagation()">
+    <button class="mob-sidebar-close" onclick="fecharMobSidebar('fin')">x Fechar menu</button>
+    <div class="sb-g">
+      <div class="sb-l">Principal</div>
+      <div class="sb-i" data-page="f-dash"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">+</span><span>Dashboard</span></div>
+      <div class="sb-i" data-page="f-lanc"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">$</span><span>Lancamentos</span></div>
+      <div class="sb-i" data-page="f-contas" onclick="mobGoFP(this,'fin')"><span class="sb-ic">@</span><span>Contas</span></div>
+      <div class="sb-i" data-page="f-parc"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">#</span><span>Parceladas</span></div>
+    </div>
+    <div class="sb-g">
+      <div class="sb-l">Planejamento</div>
+      <div class="sb-i" data-page="f-metas"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">o</span><span>Metas</span></div>
+      <div class="sb-i" data-page="f-apagar"  onclick="mobGoFP(this,'fin')"><span class="sb-ic">!</span><span>A pagar</span></div>
+      <div class="sb-i" data-page="f-receber" onclick="mobGoFP(this,'fin')"><span class="sb-ic">E</span><span>A receber</span></div>
+      <div class="sb-i" data-page="f-invest"  onclick="mobGoFP(this,'fin')"><span class="sb-ic">^</span><span>Investimentos</span></div>
+    </div>
+    <div class="sb-g">
+      <div class="sb-l">Analise</div>
+      <div class="sb-i" data-page="f-anual"  onclick="mobGoFP(this,'fin')"><span class="sb-ic">=</span><span>Visao anual</span></div>
+      <div class="sb-i" data-page="f-pat"    onclick="mobGoFP(this,'fin')"><span class="sb-ic">*</span><span>Patrimonio</span></div>
+      <div class="sb-i" data-page="f-planos" onclick="mobGoFP(this,'fin')"><span class="sb-ic">~</span><span>Planos</span></div>
+      <div class="sb-i" data-page="f-cats"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">%</span><span>Categorias</span></div>
+    </div>
+    <div class="sb-g" id="mob-adm-g" style="display:none">
+      <div class="sb-l">Admin</div>
+      <div class="sb-i" data-page="f-admin" onclick="mobGoFP(this,'fin')"><span class="sb-ic">A</span><span>Admin</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Drawer mobile sidebar planner -->
+<div class="mob-sidebar-drawer" id="mob-drawer-pl" onclick="fecharMobSidebar('pl')">
+  <div class="mob-sidebar-panel" onclick="event.stopPropagation()">
+    <button class="mob-sidebar-close" onclick="fecharMobSidebar('pl')">x Fechar menu</button>
+    <div class="sb-g">
+      <div class="sb-l">Planner</div>
+      <div class="sb-i" data-page="pl-agenda"  onclick="mobGoFP(this,'pl')"><span class="sb-ic">C</span><span>Agenda</span></div>
+      <div class="sb-i" data-page="pl-habitos" onclick="mobGoFP(this,'pl')"><span class="sb-ic">V</span><span>Habitos</span></div>
+      <div class="sb-i" data-page="pl-metas"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">O</span><span>Metas</span></div>
+    </div>
+    <div class="sb-g">
+      <div class="sb-l">Saude</div>
+      <div class="sb-i" data-page="pl-alim"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">F</span><span>Alimentacao</span></div>
+      <div class="sb-i" data-page="pl-sono"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">Z</span><span>Sono</span></div>
+      <div class="sb-i" data-page="pl-treino" onclick="mobGoFP(this,'pl')"><span class="sb-ic">T</span><span>Treino</span></div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 // Registra Service Worker para PWA
