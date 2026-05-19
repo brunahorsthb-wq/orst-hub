@@ -577,13 +577,13 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="sys-tb">
             <button class="mob-menu-btn" onclick="abrirMobSidebar('fin')" title="Menu">&#9776;</button>
             <span class="sys-ttl" id="f-ttl">Dashboard</span>
-            <select id="month-sel" onchange="loadFDash()" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;">
+            <select id="month-sel" onchange="loadFDash(); if(document.getElementById('page-f-lanc').classList.contains('active')) renderLanc();" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;">
               <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Marco</option>
               <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
               <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
               <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
             </select>
-            <select id="year-sel" onchange="loadFDash()" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;"></select>
+            <select id="year-sel" onchange="loadFDash(); if(document.getElementById('page-f-lanc').classList.contains('active')) renderLanc();" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;"></select>
             <button class="btn btn-p btn-sm" onclick="openM('m-lanc')">+ Lancamento</button>
           </div>
           <div class="pg-area">
@@ -683,24 +683,20 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
             <!-- Lancamentos -->
             <div class="page" id="page-f-lanc">
-              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-                <select class="fsel" style="width:auto;font-size:12px;" id="fl-mes">
-                  <option value="">Todos meses</option>
-                  <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-                  <option value="03">Marco</option><option value="04">Abril</option>
-                  <option value="05">Maio</option><option value="06">Junho</option>
-                  <option value="07">Julho</option><option value="08">Agosto</option>
-                  <option value="09">Setembro</option><option value="10">Outubro</option>
-                  <option value="11">Novembro</option><option value="12">Dezembro</option>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+                <select class="fsel" style="width:auto;font-size:12px;" id="fl-tipo">
+                  <option value="">Todos tipos</option>
+                  <option>Entrada</option><option>Saida</option>
                 </select>
-                <select class="fsel" style="width:auto;font-size:12px;" id="fl-ano"></select>
-                <select class="fsel" style="width:auto;font-size:12px;" id="fl-tipo"><option value="">Todos tipos</option><option>Entrada</option><option>Saida</option></select>
-                <select class="fsel" style="width:auto;font-size:12px;" id="fl-cat"><option value="">Todas cats</option></select>
-                <select class="fsel" style="width:auto;font-size:12px;" id="fl-st"><option value="">Todos status</option><option>Pago</option><option>Pendente</option></select>
-              </div>
-              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <select class="fsel" style="width:auto;font-size:12px;" id="fl-cat">
+                  <option value="">Todas categorias</option>
+                </select>
+                <select class="fsel" style="width:auto;font-size:12px;" id="fl-st">
+                  <option value="">Todos status</option>
+                  <option>Pago</option><option>Pendente</option>
+                </select>
                 <button class="btn btn-sm" onclick="renderLanc()" style="font-size:12px;">Filtrar</button>
-                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar</button>
+                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar filtros</button>
                 <button class="btn btn-p btn-sm" onclick="openM('m-lanc')" style="font-size:12px;">+ Novo</button>
               </div>
               <div class="panel">
@@ -1820,10 +1816,7 @@ function showApp(){
   populateAnos();
   // Seleciona mes e ano atuais
   var msEl = $('month-sel'); if(msEl) msEl.value = hoje.getMonth();
-  populateFiltroAno();
-  // Define m\u00EAs atual nos filtros de lan\u00E7amentos por padr\u00E3o
-  var flMes = $('fl-mes');
-  if(flMes){ flMes.value = String(hoje.getMonth()+1).padStart(2,'0'); }
+
   var ysEl = $('year-sel');  if(ysEl) ysEl.value = hoje.getFullYear();
   renderUserUI();
   initCharts();
@@ -1946,7 +1939,7 @@ function goFP(el){
     'f-metas':'Metas','f-apagar':'A pagar','f-receber':'A receber','f-invest':'Investimentos','f-anual':'Visao anual',
     'f-pat':'Patrimonio','f-planos':'Planos','f-cats':'Categorias','f-admin':'Painel Admin'};
   $('f-ttl').textContent = T[pid] || pid;
-  if(pid==='f-lanc'){   populateFiltroAno(); renderLanc(); }
+  if(pid==='f-lanc')    renderLanc();
   if(pid==='f-parc')    renderParceladas();
   if(pid==='f-metas')   renderMetasFin();
   if(pid==='f-admin')   loadAdminUsers();
@@ -2111,17 +2104,18 @@ function renderLanc(){
   var tipo = $('fl-tipo') ? $('fl-tipo').value : '';
   var cat  = $('fl-cat')  ? $('fl-cat').value  : '';
   var st   = $('fl-st')   ? $('fl-st').value   : '';
-  var mes  = $('fl-mes')  ? $('fl-mes').value  : '';
-  var ano  = $('fl-ano')  ? $('fl-ano').value  : '';
+  // Usa o mes e ano da sys-tb (seletor do topo) para filtrar lancamentos
+  var mesSel = $('month-sel') ? parseInt($('month-sel').value) : -1; // 0-11
+  var anoSel = $('year-sel')  ? parseInt($('year-sel').value)  : -1;
   var filt = lancamentos.filter(function(l){
     if(tipo && l.tipo !== tipo) return false;
     if(cat  && l.cat  !== cat)  return false;
     if(st   && l.status !== st) return false;
-    // Filtro de data - l.data formato yyyy-mm-dd
-    if(mes || ano){
-      var d = (l.data || '').split('-');
-      if(ano && d[0] !== ano) return false;
-      if(mes && d[1] !== mes) return false;
+    // Filtro de mes/ano usando o seletor do topo
+    if(mesSel >= 0 || anoSel > 0){
+      var d = new Date((l.data||'2000-01-01')+'T12:00');
+      if(mesSel >= 0 && d.getMonth() !== mesSel) return false;
+      if(anoSel > 0  && d.getFullYear() !== anoSel) return false;
     }
     return true;
   });
@@ -3900,8 +3894,6 @@ function populateFiltroAno(){
 }
 
 function limparFiltrosLanc(){
-  if($('fl-mes'))  $('fl-mes').value  = '';
-  if($('fl-ano'))  $('fl-ano').value  = '';
   if($('fl-tipo')) $('fl-tipo').value = '';
   if($('fl-cat'))  $('fl-cat').value  = '';
   if($('fl-st'))   $('fl-st').value   = '';
