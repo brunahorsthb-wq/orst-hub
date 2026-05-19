@@ -1308,19 +1308,46 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 </div>
 <div class="modal-ov" id="m-ref" onclick="closeMBg(event,'m-ref')">
   <div class="modal">
-    <div class="mh"><div class="mt">Registrar refeicao</div><button class="mx" onclick="closeM('m-ref')">x</button></div>
+    <div class="mh"><div class="mt">Registrar alimento</div><button class="mx" onclick="closeM('m-ref')">x</button></div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Refeicao</label><select class="fsel" id="rf-tipo"><option>Cafe da manha</option><option>Lanche manha</option><option>Almoco</option><option>Lanche tarde</option><option>Jantar</option><option>Ceia</option></select></div>
-      <div class="fg2"><label class="fl2">Dia da semana</label><select class="fsel" id="rf-dia"><option value="hoje">Hoje</option><option>Segunda</option><option>Terca</option><option>Quarta</option><option>Quinta</option><option>Sexta</option><option>Sabado</option><option>Domingo</option></select></div>
+      <div class="fg2"><label class="fl2">Refeicao</label>
+        <select class="fsel" id="rf-tipo">
+          <option>Cafe da manha</option><option>Lanche manha</option><option>Almoco</option>
+          <option>Lanche tarde</option><option>Jantar</option><option>Ceia</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Dia</label>
+        <select class="fsel" id="rf-dia">
+          <option value="hoje">Hoje</option>
+          <option value="Segunda">Segunda</option><option value="Terca">Terca</option>
+          <option value="Quarta">Quarta</option><option value="Quinta">Quinta</option>
+          <option value="Sexta">Sexta</option><option value="Sabado">Sabado</option>
+          <option value="Domingo">Domingo</option>
+        </select>
+      </div>
     </div>
-    <div class="fg2"><label class="fl2">Alimentos</label><input type="text" class="fi2" id="rf-desc" placeholder="Ex: Frango, arroz, salada, suco"></div>
+    <div class="fg2">
+      <label class="fl2">O que voce comeu?</label>
+      <input type="text" class="fi2" id="rf-alim" placeholder="Ex: frango grelhado, arroz cozido, banana..." list="nutri-list">
+      <datalist id="nutri-list"></datalist>
+      <div id="rf-nutri-hint" style="font-size:11px;color:var(--ink3);margin-top:4px;min-height:16px;"></div>
+    </div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Calorias kcal</label><input type="number" class="fi2" id="rf-cal" placeholder="400" min="0"></div>
-      <div class="fg2"><label class="fl2">Proteinas g</label><input type="number" class="fi2" id="rf-prot" placeholder="30" min="0"></div>
-      <div class="fg2"><label class="fl2">Carboidratos g</label><input type="number" class="fi2" id="rf-carb" placeholder="45" min="0"></div>
-      <div class="fg2"><label class="fl2">Gorduras g</label><input type="number" class="fi2" id="rf-gord" placeholder="10" min="0"></div>
+      <div class="fg2">
+        <label class="fl2">Quantidade (g)</label>
+        <input type="number" class="fi2" id="rf-peso" placeholder="100" min="1" oninput="previewNutri()">
+      </div>
+      <div class="fg2">
+        <label class="fl2">Previsao</label>
+        <div id="rf-preview" style="background:var(--nude2);border-radius:var(--r-sm);padding:8px 10px;font-size:12px;color:var(--ink3);min-height:36px;">
+          Digite o alimento e o peso
+        </div>
+      </div>
     </div>
-    <div class="mf"><button class="btn" onclick="closeM('m-ref')">Cancelar</button><button class="btn btn-p" onclick="addRefeicao()">Registrar</button></div>
+    <div class="mf">
+      <button class="btn" onclick="closeM('m-ref')">Cancelar</button>
+      <button class="btn btn-p" onclick="addRefeicao()">Registrar</button>
+    </div>
   </div>
 </div>
 
@@ -1792,6 +1819,7 @@ function showApp(){
     loadReceber();
     loadInvest();
     loadPatrimonio();
+    loadRefeicoes();
     setTimeout(initDateInputs, 500);
     // Corrige treinos antigos com data errada
     setTimeout(migrateTreinos, 1000);
@@ -1950,13 +1978,12 @@ function loadAllData(){
     DB.getAll('lancamentos','data'), DB.getAll('parceladas'),
     DB.getAll('metas-fin'), DB.getAll('metas-vida'),
     DB.getAll('habitos'),   DB.getAll('eventos'),
-    DB.getAll('refeicoes'), DB.getAll('sono'),
-    DB.getAll('treinos'),   DB.getAll('contas'),
+    DB.getAll('sono'),      DB.getAll('treinos'),
+    DB.getAll('contas'),
   ]).then(function(res){
     lancamentos=res[0]; parceladas=res[1]; metasFin=res[2];
     metasVida=res[3];   habitos=res[4];    eventos=res[5];
-    refeicoes=res[6];   sonoLog=res[7];    treinos=res[8];
-    contas=res[9];
+    sonoLog=res[6];     treinos=res[7];    contas=res[8];
     dataLoaded=true;
   });
 }
@@ -2900,6 +2927,241 @@ function renderHabitos(){
   updPlannerStats();
 }
 
+
+var NUTRI = {
+  // Proteinas
+  'frango grelhado': [165,31,0,3.6],
+  'frango cozido': [150,28,0,3.2],
+  'carne bovina': [250,26,0,16],
+  'peixe tilapia': [96,20,0,2],
+  'ovo cozido': [155,13,1,11],
+  'atum lata': [116,26,0,1],
+  'carne moida': [215,24,0,13],
+  'peito frango': [110,23,0,1.2],
+  // Carboidratos
+  'arroz cozido': [130,2.7,28,0.3],
+  'feijao cozido': [77,5,14,0.5],
+  'batata doce': [86,1.6,20,0.1],
+  'macarrao cozido': [157,5,31,1],
+  'pao frances': [300,8,57,3],
+  'aveia': [389,17,66,7],
+  'mandioca cozida': [125,1,30,0.3],
+  'lentilha cozida': [116,9,20,0.4],
+  'quinoa cozida': [120,4.4,21,1.9],
+  // Vegetais
+  'alface': [15,1.4,2.4,0.2],
+  'tomate': [18,0.9,3.9,0.2],
+  'brocolis': [34,2.8,6.6,0.4],
+  'cenoura': [41,0.9,9.6,0.2],
+  'espinafre': [23,2.9,3.6,0.4],
+  'abobrinha': [17,1.2,3.1,0.3],
+  'pepino': [16,0.7,3.6,0.1],
+  'couve': [49,3.3,9.8,0.9],
+  // Frutas
+  'banana': [89,1.1,23,0.3],
+  'maca': [52,0.3,14,0.2],
+  'laranja': [47,0.9,12,0.1],
+  'manga': [60,0.8,15,0.4],
+  'mamao': [43,0.5,11,0.3],
+  'morango': [32,0.7,7.7,0.3],
+  'melancia': [30,0.6,7.5,0.2],
+  // Laticinios
+  'leite integral': [61,3.2,4.8,3.3],
+  'iogurte natural': [61,3.5,4.7,3.3],
+  'queijo mussarela': [280,22,2.2,21],
+  'requeijao': [255,12,2.5,22],
+  // Gorduras boas
+  'abacate': [160,2,9,15],
+  'amendoim': [567,26,16,49],
+  'castanha para': [656,14,12,66],
+  'azeite': [884,0,0,100],
+  // Outros
+  'pera': [57,0.4,15,0.1],
+  'coco ralado': [354,3.3,15,34],
+  'bolo de coco': [350,4,55,13],
+  'cafe': [2,0.1,0,0],
+  'suco laranja': [45,0.7,10,0.2],
+  'leite desnatado': [35,3.4,5,0.1],
+  'granola': [471,10,65,14],
+  'chocolate 70%': [598,8,46,43],
+};
+
+function calcNutri(alimento, gramas){
+  if(!alimento || !gramas) return {cal:0,prot:0,carbo:0,gord:0};
+  var key = alimento.toLowerCase().trim();
+  // Busca exata
+  if(NUTRI[key]){
+    var n = NUTRI[key], f = gramas/100;
+    return {cal:Math.round(n[0]*f), prot:Math.round(n[1]*f*10)/10, carbo:Math.round(n[2]*f*10)/10, gord:Math.round(n[3]*f*10)/10};
+  }
+  // Busca parcial
+  var keys = Object.keys(NUTRI);
+  for(var i=0;i<keys.length;i++){
+    if(keys[i].indexOf(key)>=0 || key.indexOf(keys[i])>=0){
+      var n2 = NUTRI[keys[i]], f2 = gramas/100;
+      return {cal:Math.round(n2[0]*f2), prot:Math.round(n2[1]*f2*10)/10, carbo:Math.round(n2[2]*f2*10)/10, gord:Math.round(n2[3]*f2*10)/10};
+    }
+  }
+  // Nao encontrado - retorna zeros
+  return {cal:0,prot:0,carbo:0,gord:0};
+}
+
+function sugestaoAlimentos(input){
+  if(!input || input.length < 2) return [];
+  var q = input.toLowerCase();
+  return Object.keys(NUTRI).filter(function(k){ return k.indexOf(q)>=0; }).slice(0,6);
+}
+
+
+// =====================================================
+// ALIMENTA\u00C7\u00C3O - Card\u00E1pio semanal com c\u00E1lculo autom\u00E1tico
+// =====================================================
+var refeicoes = [];
+
+function loadRefeicoes(){
+  DB.getAll('refeicoes').then(function(res){ refeicoes=res; renderAlimentacao(); });
+}
+
+function addRefeicao(){
+  var tipo = $('rf-tipo') ? $('rf-tipo').value : '';
+  var alim = ($('rf-alim') ? $('rf-alim').value : '').trim();
+  var peso = parseFloat($('rf-peso') ? $('rf-peso').value : 0) || 0;
+  var diaVal = $('rf-dia') ? $('rf-dia').value : 'hoje';
+  if(!alim){ alert('Digite o alimento.'); return; }
+
+  // Calcula macros automaticamente
+  var nutri = calcNutri(alim, peso || 100);
+
+  // Data do dia selecionado
+  var DIAS_ALIM2 = ['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
+  var dataRef = hojeStr;
+  if(diaVal !== 'hoje' && diaVal !== ''){
+    var mon5 = getMonday(0);
+    var dIdx2 = DIAS_ALIM2.indexOf(diaVal);
+    if(dIdx2 >= 0){
+      var dd2 = new Date(mon5); dd2.setDate(mon5.getDate()+dIdx2);
+      dataRef = dd2.toISOString().slice(0,10);
+    }
+  }
+
+  var r = {tipo:tipo, dia:diaVal, desc:alim, peso:peso, data:dataRef,
+           cal:nutri.cal, prot:nutri.prot, carbo:nutri.carbo, gord:nutri.gord};
+  DB.save('refeicoes',r).then(function(id){
+    if(id){
+      r.id=id; refeicoes.push(r);
+      closeM('m-ref');
+      if($('rf-alim')) $('rf-alim').value='';
+      if($('rf-peso')) $('rf-peso').value='';
+      toast('Registrado!');
+      renderAlimentacao();
+    }
+  });
+}
+
+function delRefeicao(id){
+  DB.delete('refeicoes',id).then(function(){
+    refeicoes = refeicoes.filter(function(r){ return r.id!==id; });
+    renderAlimentacao();
+  });
+}
+
+function prepRefeicao(slot, dia){
+  if($('rf-tipo')) $('rf-tipo').value = slot;
+  if($('rf-dia'))  $('rf-dia').value  = dia;
+  openM('m-ref');
+}
+
+function buildAlimTabs(diaAtual){
+  var DIAS_ALIM = ['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
+  var tabsEl = $('alim-tabs'); if(!tabsEl) return;
+  tabsEl.innerHTML = '';
+  DIAS_ALIM.forEach(function(d){
+    var btn = document.createElement('button');
+    btn.textContent = d.slice(0,3);
+    btn.style.cssText = 'padding:6px 12px;border-radius:100px;font-size:12px;cursor:pointer;border:1px solid '+(d===diaAtual?'var(--navy)':'var(--border2)')+';background:'+(d===diaAtual?'var(--navy)':'transparent')+';color:'+(d===diaAtual?'var(--cream)':'var(--ink3)');
+    btn.addEventListener('click',(function(dia){ return function(){ selDiaAlim(dia); }; })(d));
+    tabsEl.appendChild(btn);
+  });
+}
+
+function renderAlimentacao(){
+  var DIAS_ALIM = ['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
+  var mg = $('meal-grid'); if(!mg) return;
+  var diaAtual = window._diaAlimSel || DIAS_ALIM[hoje.getDay()===0?6:hoje.getDay()-1];
+  buildAlimTabs(diaAtual);
+
+  // Data do dia selecionado
+  var mon4 = getMonday(0);
+  var dIdxAlim = DIAS_ALIM.indexOf(diaAtual);
+  var ddAlim = new Date(mon4); ddAlim.setDate(mon4.getDate()+(dIdxAlim>=0?dIdxAlim:0));
+  var dataAlim = ddAlim.toISOString().slice(0,10);
+
+  // Filtra refei\u00E7\u00F5es do dia
+  var rfDia = refeicoes.filter(function(r){ return r.data===dataAlim || r.dia===diaAtual; });
+
+  var slots = ['Cafe da manha','Lanche manha','Almoco','Lanche tarde','Jantar','Ceia'];
+  mg.innerHTML = '';
+  slots.forEach(function(s){
+    var rfSlot = rfDia.filter(function(r){ return r.tipo===s; });
+    var slot = document.createElement('div');
+    slot.className = 'meal-slot';
+
+    var slotHdr = document.createElement('div');
+    slotHdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;';
+    slotHdr.innerHTML = '<div class="meal-time">'+s+'</div>';
+    var btnAdd = document.createElement('button');
+    btnAdd.className = 'btn btn-sm'; btnAdd.style.fontSize='11px'; btnAdd.textContent='+';
+    btnAdd.addEventListener('click',(function(s2,d){ return function(){ prepRefeicao(s2,d); }; })(s,diaAtual));
+    slotHdr.appendChild(btnAdd);
+    slot.appendChild(slotHdr);
+
+    if(rfSlot.length){
+      rfSlot.forEach(function(rf){
+        var item = document.createElement('div');
+        item.style.cssText = 'display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);';
+        item.innerHTML =
+          '<div style="flex:1;">'
+            +'<div style="font-size:13px;font-weight:500;color:var(--ink);">'+esc(rf.desc)+(rf.peso?'<span style="font-size:11px;color:var(--ink3);font-weight:400"> '+rf.peso+'g</span>':'')+'</div>'
+            +'<div style="font-size:11px;color:var(--ink3);margin-top:1px;">'
+              +(rf.cal?rf.cal+'kcal':'')
+              +(rf.prot?' | P:'+rf.prot+'g':'')
+              +(rf.carbo?' | C:'+rf.carbo+'g':'')
+              +(rf.gord?' | G:'+rf.gord+'g':'')
+            +'</div>'
+          +'</div>';
+        var btnDel = document.createElement('button');
+        btnDel.className='btn btn-d btn-sm'; btnDel.style.fontSize='10px'; btnDel.textContent='x';
+        btnDel.addEventListener('click',(function(id){ return function(){ delRefeicao(id); }; })(rf.id));
+        item.appendChild(btnDel);
+        slot.appendChild(item);
+      });
+    } else {
+      var empty = document.createElement('div');
+      empty.style.cssText = 'font-size:12px;color:var(--ink3);padding:4px 0;';
+      empty.textContent = 'Nao registrado';
+      slot.appendChild(empty);
+    }
+    mg.appendChild(slot);
+  });
+
+  // Totais do dia
+  var tC  = rfDia.reduce(function(a,r){ return a+(r.cal||0); },0);
+  var tP  = rfDia.reduce(function(a,r){ return a+(r.prot||0); },0);
+  var tCb = rfDia.reduce(function(a,r){ return a+(r.carbo||0); },0);
+  var tG  = rfDia.reduce(function(a,r){ return a+(r.gord||0); },0);
+  var mb = $('macros-bar');
+  if(mb){
+    mb.innerHTML = '';
+    [{l:'Calorias',v:tC+'kcal'},{l:'Proteina',v:tP+'g'},{l:'Carbo',v:tCb+'g'},{l:'Gordura',v:tG+'g'}]
+    .forEach(function(item){
+      var d = document.createElement('div');
+      d.style.cssText='flex:1;background:var(--nude2);border-radius:var(--r-sm);padding:9px;text-align:center;';
+      d.innerHTML='<div style="font-size:16px;font-weight:500">'+item.v+'</div><div style="font-size:10px;color:var(--ink3)">'+item.l+'</div>';
+      mb.appendChild(d);
+    });
+  }
+}
+
 function selDiaAlim(dia){
   window._diaAlimSel = dia;
   renderAlimentacao();
@@ -3561,6 +3823,29 @@ function migrateTreinos(){
   // Re-renderiza depois de corrigir
   renderTreino();
   toast('Treinos atualizados!');
+}
+
+function previewNutri(){
+  var alim = $('rf-alim') ? $('rf-alim').value.trim() : '';
+  var peso = parseFloat($('rf-peso') ? $('rf-peso').value : 0) || 100;
+  var hint = $('rf-nutri-hint');
+  var preview = $('rf-preview');
+
+  // Autocomplete
+  var sug = sugestaoAlimentos(alim);
+  var dl = $('nutri-list');
+  if(dl) dl.innerHTML = sug.map(function(s){ return '<option value="'+s+'">'; }).join('');
+
+  if(!alim){ if(preview) preview.textContent='Digite o alimento e o peso'; return; }
+  var n = calcNutri(alim, peso);
+  if(n.cal > 0){
+    if(hint) hint.innerHTML = '<span style="color:var(--green)">Encontrado na tabela nutricional</span>';
+    if(preview) preview.innerHTML =
+      '<strong>'+n.cal+'</strong> kcal &nbsp;|&nbsp; P: '+n.prot+'g &nbsp;|&nbsp; C: '+n.carbo+'g &nbsp;|&nbsp; G: '+n.gord+'g';
+  } else {
+    if(hint) hint.innerHTML = '<span style="color:var(--amber-t)">Nao encontrado \u2014 kcal sera 0. Tente: frango, arroz, ovo...</span>';
+    if(preview) preview.textContent = 'Nao encontrado na tabela';
+  }
 }
 </script>
 
