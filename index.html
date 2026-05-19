@@ -1714,7 +1714,15 @@ var hoje  = new Date();
 var hojeStr = hoje.toISOString().slice(0,10);
 var DIAS  = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
 var MESES = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var COLORS = ['#5a7a5a','#1e6faa','#c94040','#9a6010','#7c3aed','#888'];
+var COLORS = [
+  '#1e6faa','#5a7a5a','#c94040','#9a6010','#7c3aed','#b5537a',
+  '#c87941','#2d8a8a','#6b7c32','#8b4513','#4a4a8a','#a0522d',
+  '#2e8b57','#8b008b','#cd853f','#4682b4','#d2691e','#708090',
+  '#c0392b','#16a085'
+];
+
+// Funcao para pegar cor de forma ciclica (nunca falta cor)
+function getColor(i){ return COLORS[i % COLORS.length]; }
 
 function fmt(v){ return 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -3125,9 +3133,9 @@ function updateCharts(ent,sai,doMes,ano){
   var cats={};
   doMes.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cats[l.cat]=(cats[l.cat]||0)+Number(l.valor); });
   var keys=Object.keys(cats);
-  if(charts.pie){ charts.pie.data.labels=keys.length?keys:['Sem dados']; charts.pie.data.datasets[0].data=keys.length?keys.map(function(k){ return cats[k]; }):[1]; charts.pie.data.datasets[0].backgroundColor=keys.length?COLORS.slice(0,keys.length):['#ede6d8']; charts.pie.update(); }
+  if(charts.pie){ charts.pie.data.labels=keys.length?keys:['Sem dados']; charts.pie.data.datasets[0].data=keys.length?keys.map(function(k){ return cats[k]; }):[1]; charts.pie.data.datasets[0].backgroundColor=keys.length?keys.map(function(_,i){ return getColor(i); }):['#ede6d8']; charts.pie.update(); }
   var pieEl=$('pie-leg');
-  if(pieEl) pieEl.innerHTML=keys.length?keys.map(function(k,i){ return '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:7px;height:7px;border-radius:50%;background:' + COLORS[i] + ';flex-shrink:0"></span>' + k + '</span><span style="font-size:11px;font-weight:500;color:var(--ink2)">' + fmt(cats[k]) + '</span></div>'; }).join(''):'<div style="color:var(--ink3);font-size:12px">Sem saidas este mes</div>';
+  if(pieEl) pieEl.innerHTML=keys.length?keys.map(function(k,i){ return '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:7px;height:7px;border-radius:50%;background:' + getColor(i) + ';flex-shrink:0"></span>' + k + '</span><span style="font-size:11px;font-weight:500;color:var(--ink2)">' + fmt(cats[k]) + '</span></div>'; }).join(''):'<div style="color:var(--ink3);font-size:12px">Sem saidas este mes</div>';
   if(!ano) ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
   var entD=[], saiD=[];
   for(var m=0;m<12;m++){
