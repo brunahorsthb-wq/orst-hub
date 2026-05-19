@@ -1712,6 +1712,7 @@ function showApp(){
     loadReceber();
     loadInvest();
     loadPatrimonio();
+    setTimeout(unlockAllDates, 500);
   });
 }
 function lTab(t){
@@ -1854,7 +1855,7 @@ function goPP(el){
   if(pid==='pl-treino')   renderTreino();
 }
 
-function openM(id)  { $(id).classList.add('open'); }
+function openM(id)  { $(id).classList.add('open'); setTimeout(unlockAllDates,50); }
 function closeM(id) { $(id).classList.remove('open'); }
 function closeMBg(e,id){ if(e.target===$(id)) closeM(id); }
 
@@ -2516,21 +2517,57 @@ function renderPatrimonio(){
 // =====================================================
 function loadAdminUsers(){
   if(G.role!=='admin') return;
-  $('admin-body').innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--ink3)">Carregando...</td></tr>';
+  var body=$('admin-body');
+  body.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--ink3)">Carregando...</td></tr>';
   DB.getAllUsers().then(function(users){
-    var body=$('admin-body');
-    if(!users.length){ body.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--ink3)">Nenhum usuario</td></tr>'; return; }
-    body.innerHTML=users.map(function(u){
-      var rc=u.role==='admin'?'ba':u.role==='premium'?'bb':'bg';
-      var isPrem=u.role==='premium'||u.role==='admin';
-      return '<tr><td>' + esc(u.email||'-') + '</td><td>' + esc(u.name||'-') + '</td><td><span class="badge ' + rc + '">' + (u.role||'free') + '</span></td><td><select id="rs-' + u.uid + '" class="fsel" style="width:auto;font-size:12px"><option value="free"' + (u.role==='free'?' selected':'') + '>free</option><option value="premium"' + (u.role==='premium'?' selected':'') + '>premium</option><option value="admin"' + (u.role==='admin'?' selected':'') + '>admin</option></select></td><td><div style="display:flex;gap:6px;">' + (!isPrem?'<button class="btn btn-p btn-sm" style="background:var(--green);border-color:var(--green);font-size:11px" onclick="ativarPremium(\'' + u.uid + '\',\'' + (u.email||'') + '\')">Ativar Premium</button>':'<button class="btn btn-sm" style="font-size:11px" onclick="revogarPremium(\'' + u.uid + '\',\'' + (u.email||'') + '\')">Revogar</button>') + '<button class="btn btn-p btn-sm" style="font-size:11px" onclick="updateUserRole(\'' + u.uid + '\')">Salvar</button></div></td></tr>';
-    }).join('');
+    if(!users.length){
+      body.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--ink3)">Nenhum usuario encontrado.</td></tr>';
+      return;
+    }
+    body.innerHTML='';
+    users.forEach(function(u){
+      var email = u.email || u.Email || u.emailAddress || (u.uid ? u.uid+'@(sem email)' : '-');
+      var name  = u.name  || u.Name  || u.displayName  || '-';
+      var role  = u.role  || 'free';
+      var rc    = role==='admin'?'ba':role==='premium'?'bb':'bg';
+      var isPrem= role==='premium'||role==='admin';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td style="font-size:12px;word-break:break-all;">' + esc(email) + '</td>'
+        + '<td style="font-size:12px">' + esc(name) + '</td>'
+        + '<td><span class="badge ' + rc + '">' + role + '</span></td>'
+        + '<td><select id="rs-'+u.uid+'" class="fsel" style="width:auto;font-size:12px">'
+          + '<option value="free"'+(role==='free'?' selected':'')+'>free</option>'
+          + '<option value="premium"'+(role==='premium'?' selected':'')+'>premium</option>'
+          + '<option value="admin"'+(role==='admin'?' selected':'')+'>admin</option>'
+        + '</select></td>'
+        + '<td><div style="display:flex;gap:5px;flex-wrap:wrap;"></div></td>';
+      var btnsDiv = tr.querySelector('div');
+      if(!isPrem){
+        var bAP=document.createElement('button');
+        bAP.className='btn btn-p btn-sm';
+        bAP.style.cssText='background:var(--green);border-color:var(--green);font-size:11px;';
+        bAP.textContent='Ativar Premium';
+        bAP.addEventListener('click',(function(uid2,em){ return function(){ ativarPremium(uid2,em); }; })(u.uid,email));
+        btnsDiv.appendChild(bAP);
+      } else {
+        var bRV=document.createElement('button');
+        bRV.className='btn btn-sm'; bRV.style.fontSize='11px';
+        bRV.textContent='Revogar';
+        bRV.addEventListener('click',(function(uid2,em){ return function(){ revogarPremium(uid2,em); }; })(u.uid,email));
+        btnsDiv.appendChild(bRV);
+      }
+      var bSV=document.createElement('button');
+      bSV.className='btn btn-p btn-sm'; bSV.style.fontSize='11px';
+      bSV.textContent='Salvar';
+      bSV.addEventListener('click',(function(uid2){ return function(){ updateUserRole(uid2); }; })(u.uid));
+      btnsDiv.appendChild(bSV);
+      body.appendChild(tr);
+    });
+  }).catch(function(e){
+    body.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--red)">Erro: '+e.message+'</td></tr>';
   });
 }
-
-// =====================================================
-// PLANNER - AGENDA
-// =====================================================
 function getMonday(off){
   var d=new Date(hoje); var day=d.getDay()||7;
   d.setDate(d.getDate()-day+1+(off*7)); d.setHours(0,0,0,0); return d;
@@ -3181,6 +3218,17 @@ function salvarEditReceber(){
     var r=receber.find(function(x){ return x.id===id; });
     if(r) Object.assign(r,updates);
     closeM('m-edit-receber'); toast('Atualizado!'); renderReceber();
+  });
+}
+
+// Remove limites de min/max de todos os campos de data
+function unlockAllDates(){
+  document.querySelectorAll('input[type="date"]').forEach(function(el){
+    el.removeAttribute('min');
+    el.removeAttribute('max');
+    // Define range muito amplo: 1900 a 2099
+    el.setAttribute('min','1900-01-01');
+    el.setAttribute('max','2099-12-31');
   });
 }
 </script>
