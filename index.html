@@ -529,6 +529,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="sb-g">
             <div class="sb-l">Principal</div>
             <div class="sb-i active" data-page="f-dash"   onclick="goFP(this)"><span class="sb-ic">+</span><span>Dashboard</span></div>
+            <div class="sb-i"        data-page="f-patdash" onclick="goFP(this)"><span class="sb-ic">P</span><span>Patrimonio</span></div>
             <div class="sb-i"        data-page="f-lanc"   onclick="goFP(this)"><span class="sb-ic">$</span><span>Lancamentos</span></div>
             <div class="sb-i"        data-page="f-contas" onclick="goFP(this)"><span class="sb-ic">@</span><span>Contas</span></div>
             <div class="sb-i"        data-page="f-parc"   onclick="goFP(this)"><span class="sb-ic">#</span><span>Parceladas</span></div>
@@ -599,6 +600,74 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div class="txl" id="fd-tx"><div style="text-align:center;padding:20px;color:var(--ink3)">Carregando...</div></div>
               </div>
             </div>
+            <!-- Dashboard Patrimônio -->
+            <div class="page" id="page-f-patdash">
+              <!-- Resumo Patrimônio Líquido -->
+              <div style="background:var(--navy);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                <div>
+                  <div style="font-size:11px;color:rgba(240,234,216,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Patrimônio Líquido</div>
+                  <div style="font-family:var(--fs);font-size:42px;font-weight:300;color:#5dd4a0" id="pdash-liq">R$ 0</div>
+                  <div style="font-size:12px;color:rgba(240,234,216,0.35);margin-top:4px">Ativos - Passivos</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px">Total em contas</div>
+                  <div style="font-family:var(--fs);font-size:24px;font-weight:300;color:var(--warm)" id="pdash-contas">R$ 0</div>
+                </div>
+              </div>
+
+              <!-- Cards resumo -->
+              <div class="g3" style="margin-top:0;">
+                <div class="mc" style="border-left:3px solid var(--green);">
+                  <div class="mc-l">Total Ativos</div>
+                  <div class="mc-v g" id="pdash-ativos">R$ 0</div>
+                  <div class="mc-s" id="pdash-ativos-qtd">0 itens</div>
+                </div>
+                <div class="mc" style="border-left:3px solid var(--red);">
+                  <div class="mc-l">Total Passivos</div>
+                  <div class="mc-v r" id="pdash-passivos">R$ 0</div>
+                  <div class="mc-s" id="pdash-passivos-qtd">0 itens</div>
+                </div>
+                <div class="mc" style="border-left:3px solid var(--blue);">
+                  <div class="mc-l">Investimentos</div>
+                  <div class="mc-v b" id="pdash-invest">R$ 0</div>
+                  <div class="mc-s" id="pdash-invest-rend">Rendimento: R$ 0</div>
+                </div>
+              </div>
+              <div class="g3" style="margin-top:0;">
+                <div class="mc" style="border-left:3px solid var(--amber);">
+                  <div class="mc-l">A Pagar</div>
+                  <div class="mc-v r" id="pdash-apagar">R$ 0</div>
+                  <div class="mc-s" id="pdash-apagar-qtd">0 contas</div>
+                </div>
+                <div class="mc" style="border-left:3px solid var(--green);">
+                  <div class="mc-l">A Receber</div>
+                  <div class="mc-v g" id="pdash-areceber">R$ 0</div>
+                  <div class="mc-s" id="pdash-areceber-qtd">0 contas</div>
+                </div>
+                <div class="mc" style="border-left:3px solid var(--navy);">
+                  <div class="mc-l">Saldo Liquido</div>
+                  <div class="mc-v b" id="pdash-saldo-liq">R$ 0</div>
+                  <div class="mc-s">A receber - A pagar</div>
+                </div>
+              </div>
+
+              <!-- Detalhes por categoria -->
+              <div class="two-col">
+                <div class="panel">
+                  <div class="ph"><div class="pt" style="color:var(--green)">Ativos</div></div>
+                  <div id="pdash-ativos-list"><div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum ativo.</div></div>
+                </div>
+                <div class="panel">
+                  <div class="ph"><div class="pt" style="color:var(--red)">Passivos</div></div>
+                  <div id="pdash-passivos-list"><div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum passivo.</div></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Contas bancarias</div></div>
+                <div id="pdash-contas-list"></div>
+              </div>
+            </div>
+
             <!-- Lancamentos -->
             <div class="page" id="page-f-lanc">
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
@@ -1211,6 +1280,111 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
 <div class="toast" id="toast"></div>
 
+<!-- Modal Editar Treino -->
+<div class="modal-ov" id="m-edit-treino" onclick="closeMBg(event,'m-edit-treino')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Editar treino</div><button class="mx" onclick="closeM('m-edit-treino')">x</button></div>
+    <div class="fg2"><label class="fl2">Nome</label><input type="text" class="fi2" id="etr-nome"></div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Tipo</label>
+        <select class="fsel" id="etr-tipo">
+          <option>Musculacao</option><option>Cardio</option><option>HIIT</option>
+          <option>Yoga</option><option>Pilates</option><option>Funcional</option><option>Corrida</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Duracao min</label><input type="number" class="fi2" id="etr-dur" min="1"></div>
+    </div>
+    <div class="fg2"><label class="fl2">Exercicios</label><input type="text" class="fi2" id="etr-exer"></div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Dia da semana</label>
+        <select class="fsel" id="etr-dia">
+          <option value="">Sem dia fixo</option>
+          <option>Segunda</option><option>Terca</option><option>Quarta</option>
+          <option>Quinta</option><option>Sexta</option><option>Sabado</option><option>Domingo</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="etr-hora"></div>
+    </div>
+    <div class="fg2"><label class="fl2">Data especifica</label><input type="date" class="fi2" id="etr-data"></div>
+    <input type="hidden" id="etr-id">
+    <div class="mf"><button class="btn" onclick="closeM('m-edit-treino')">Cancelar</button><button class="btn btn-p" onclick="salvarEditTreino()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Editar Evento -->
+<div class="modal-ov" id="m-edit-evento" onclick="closeMBg(event,'m-edit-evento')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Editar evento</div><button class="mx" onclick="closeM('m-edit-evento')">x</button></div>
+    <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="eev-tit"></div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Data</label><input type="date" class="fi2" id="eev-data"></div>
+      <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="eev-hora"></div>
+      <div class="fg2"><label class="fl2">Dia da semana</label>
+        <select class="fsel" id="eev-dia">
+          <option>Segunda</option><option>Terca</option><option>Quarta</option>
+          <option>Quinta</option><option>Sexta</option><option>Sabado</option><option>Domingo</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Cor</label>
+        <select class="fsel" id="eev-cor">
+          <option value="">Azul escuro</option><option value="blue">Azul</option>
+          <option value="green">Verde</option><option value="red">Vermelho</option>
+          <option value="roxo">Roxo</option><option value="laranja">Laranja</option><option value="rosa">Rosa</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg2"><label class="fl2">Recorrencia</label>
+      <select class="fsel" id="eev-recorr">
+        <option value="0">Somente nesta data</option>
+        <option value="1">Toda semana neste dia</option>
+      </select>
+    </div>
+    <input type="hidden" id="eev-id">
+    <div class="mf"><button class="btn" onclick="closeM('m-edit-evento')">Cancelar</button><button class="btn btn-p" onclick="salvarEditEvento()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Editar A Pagar -->
+<div class="modal-ov" id="m-edit-apagar" onclick="closeMBg(event,'m-edit-apagar')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Editar conta a pagar</div><button class="mx" onclick="closeM('m-edit-apagar')">x</button></div>
+    <div class="fg2"><label class="fl2">Descricao</label><input type="text" class="fi2" id="eap-desc"></div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="eap-valor" min="0" step="0.01"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="eap-venc"></div>
+      <div class="fg2"><label class="fl2">Status</label>
+        <select class="fsel" id="eap-status"><option>Pendente</option><option>Vencida</option><option>Pago</option></select>
+      </div>
+    </div>
+    <input type="hidden" id="eap-id">
+    <div class="mf"><button class="btn" onclick="closeM('m-edit-apagar')">Cancelar</button><button class="btn btn-p" onclick="salvarEditApagar()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Editar A Receber -->
+<div class="modal-ov" id="m-edit-receber" onclick="closeMBg(event,'m-edit-receber')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Editar conta a receber</div><button class="mx" onclick="closeM('m-edit-receber')">x</button></div>
+    <div class="fg2"><label class="fl2">Descricao / Devedor</label><input type="text" class="fi2" id="erc-desc"></div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="erc-valor" min="0" step="0.01"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="erc-venc"></div>
+      <div class="fg2"><label class="fl2">Categoria</label>
+        <select class="fsel" id="erc-cat">
+          <option>Venda</option><option>Servico</option><option>Emprestimo</option>
+          <option>Aluguel</option><option>Comissao</option><option>Outros</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Status</label>
+        <select class="fsel" id="erc-status"><option>Pendente</option><option>Vencida</option><option>Recebido</option></select>
+      </div>
+    </div>
+    <div class="fg2"><label class="fl2">Observacao</label><input type="text" class="fi2" id="erc-obs"></div>
+    <input type="hidden" id="erc-id">
+    <div class="mf"><button class="btn" onclick="closeM('m-edit-receber')">Cancelar</button><button class="btn btn-p" onclick="salvarEditReceber()">Salvar</button></div>
+  </div>
+</div>
+
 <!-- Modal Editar Lancamento -->
 <div class="modal-ov" id="m-edit-lanc" onclick="closeMBg(event,'m-edit-lanc')">
   <div class="modal">
@@ -1640,7 +1814,7 @@ function goFP(el){
   document.querySelectorAll('#sis-financas .page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('#sis-financas .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
-  var T = {'f-dash':'Dashboard','f-lanc':'Lancamentos','f-contas':'Contas','f-parc':'Parceladas',
+  var T = {'f-dash':'Dashboard','f-patdash':'Patrimonio','f-lanc':'Lancamentos','f-contas':'Contas','f-parc':'Parceladas',
     'f-metas':'Metas','f-apagar':'A pagar','f-receber':'A receber','f-invest':'Investimentos','f-anual':'Visao anual',
     'f-pat':'Patrimonio','f-planos':'Planos','f-cats':'Categorias','f-admin':'Painel Admin'};
   $('f-ttl').textContent = T[pid] || pid;
@@ -1655,6 +1829,7 @@ function goFP(el){
   if(pid==='f-invest'){ if(!investimentos.length) loadInvest(); else renderInvest(); }
   if(pid==='f-pat')   { if(!ativos.length) loadPatrimonio(); else renderPatrimonio(); }
   if(pid==='f-cats')    renderCategorias();
+  if(pid==='f-patdash') renderPatrimonioDash();
 }
 function goFPid(pid){
   var el = document.querySelector('[data-page="' + pid + '"]');
@@ -2094,23 +2269,46 @@ function pagarConta(id){
 }
 function renderApagar(){
   var list=$('apagar-list'); if(!list) return;
-  var total=apagar.filter(function(a){ return a.status!=='Pago'; }).reduce(function(s,a){ return s+a.valor; },0);
+  var total=apagar.filter(function(a){ return a.status!=='Pago'; }).reduce(function(s,a){ return s+(a.valor||0); },0);
   var vencidas=apagar.filter(function(a){ return a.status==='Vencida'; }).length;
   var pend=apagar.filter(function(a){ return a.status==='Pendente'; }).length;
   var apt=$('ap-total'); if(apt) apt.textContent=fmt(total);
-  var apv=$('ap-venc'); if(apv) apv.textContent=vencidas;
-  var app=$('ap-pend'); if(app) app.textContent=pend;
+  var apv=$('ap-venc');  if(apv) apv.textContent=vencidas;
+  var app=$('ap-pend');  if(app) app.textContent=pend;
   if(!apagar.length){ list.innerHTML='<div style="text-align:center;padding:24px;color:var(--ink3)">Nenhuma conta. Clique em + Conta.</div>'; return; }
-  list.innerHTML=apagar.map(function(a){ var bc=a.status==='Pago'?'bg':a.status==='Vencida'?'br':'ba'; var av=a.status==='Pago'?'P':a.status==='Vencida'?'!':'T'; var avBg=a.status==='Pago'?'var(--green-bg)':a.status==='Vencida'?'var(--red-bg)':'var(--amber-bg)'; return '<div class="txi"><div class="txi-l"><div class="txi-av" style="background:' + avBg + '">' + av + '</div><div><div class="txi-name">' + esc(a.desc) + '</div><div class="txi-det">Venc: ' + (a.venc||'-') + '</div></div></div><div class="txi-r"><span class="badge ' + bc + '">' + a.status + '</span><span class="tv-n">' + fmt(a.valor) + '</span>' + (a.status!=='Pago'?'<button class="btn btn-sm" style="font-size:11px" onclick="pagarConta(\'' + a.id + '\')">Pago</button>':'') + '<button class="btn btn-d btn-sm" onclick="delApagar(\'' + a.id + '\')">x</button></div></div>'; }).join('');
+  list.innerHTML='';
+  apagar.forEach(function(a){
+    var bc=a.status==='Pago'?'bg':a.status==='Vencida'?'br':'ba';
+    var av=a.status==='Pago'?'P':a.status==='Vencida'?'!':'T';
+    var avBg=a.status==='Pago'?'var(--green-bg)':a.status==='Vencida'?'var(--red-bg)':'var(--amber-bg)';
+    var item=document.createElement('div');
+    item.className='txi'; item.style.flexWrap='wrap';
+    item.innerHTML=
+      '<div class="txi-l"><div class="txi-av" style="background:'+avBg+'">'+av+'</div>'
+      +'<div><div class="txi-name">'+esc(a.desc)+'</div><div class="txi-det">Venc: '+(a.venc||'-')+'</div></div></div>'
+      +'<div class="txi-r" style="flex-wrap:wrap;gap:4px;">'
+        +'<span class="badge '+bc+'">'+a.status+'</span>'
+        +'<span class="tv-n" style="white-space:nowrap">'+fmt(a.valor)+'</span>'
+      +'</div>';
+    var btnsDiv = item.querySelector('.txi-r');
+    if(a.status!=='Pago'){
+      var bP=document.createElement('button');
+      bP.className='btn btn-sm'; bP.style.fontSize='11px'; bP.textContent='Pago';
+      bP.style.cssText='font-size:11px;background:var(--green);color:#fff;border-color:var(--green);';
+      bP.addEventListener('click',(function(id){ return function(){ pagarConta(id); }; })(a.id));
+      btnsDiv.appendChild(bP);
+    }
+    var bE=document.createElement('button');
+    bE.className='btn btn-sm'; bE.style.fontSize='11px'; bE.textContent='Editar';
+    bE.addEventListener('click',(function(id){ return function(){ abrirEditApagar(id); }; })(a.id));
+    btnsDiv.appendChild(bE);
+    var bD=document.createElement('button');
+    bD.className='btn btn-d btn-sm'; bD.style.fontSize='11px'; bD.textContent='x';
+    bD.addEventListener('click',(function(id){ return function(){ delApagar(id); }; })(a.id));
+    btnsDiv.appendChild(bD);
+    list.appendChild(item);
+  });
 }
-
-// =====================================================
-// INVESTIMENTOS
-// =====================================================
-// =====================================================
-// CONTAS A RECEBER
-// =====================================================
-var receber = [];
 
 function loadReceber(){
   DB.getAll('receber').then(function(res){ receber=res; renderReceber(); });
@@ -2239,12 +2437,14 @@ function renderReceber(){
         +'<span class="badge '+bc+'">'+r.status+'</span>'
         +'<span class="tv-p" style="white-space:nowrap">+'+fmt(r.valor)+'</span>'
         +(r.status!=='Recebido'?'<button class="btn btn-sm" style="font-size:11px;background:var(--green);color:#fff;border-color:var(--green)" data-action="rec">Recebido</button>':'')
+        +'<button class="btn btn-sm" style="font-size:11px" data-action="edit">Editar</button>'
         +'<button class="btn btn-d btn-sm" style="font-size:11px" data-action="del">x</button>'
       +'</div>';
     item.querySelectorAll('[data-action]').forEach(function(btn){
       btn.addEventListener('click',(function(id,action){
         return function(){
           if(action==='rec') marcarRecebido(id);
+          else if(action==='edit') abrirEditReceber(id);
           else if(action==='del') delReceber(id);
         };
       })(r.id, btn.dataset.action));
@@ -2400,7 +2600,18 @@ function renderAgenda(){
       evDiv.appendChild(checkDiv);
 
       // Botao excluir ao clicar no evento
-      evDiv.addEventListener('click', (function(id){ return function(){ delEvento(id); }; })(ev.id));
+      // Clique simples: editar; o check tem stopPropagation
+      evDiv.addEventListener('click', (function(id){ return function(e){
+        if(e.target.classList.contains('pb-ev-check')) return;
+        abrirEditEvento(id);
+      }; })(ev.id));
+      // Botao excluir (long press simulado com botao X)
+      var delBtn=document.createElement('button');
+      delBtn.className='pb-ev-del';
+      delBtn.style.cssText='position:absolute;top:3px;left:4px;background:rgba(0,0,0,0.25);border:none;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;';
+      delBtn.textContent='x';
+      delBtn.addEventListener('click',(function(id){ return function(e){ e.stopPropagation(); delEvento(id); }; })(ev.id));
+      evDiv.appendChild(delBtn);
 
       body.appendChild(evDiv);
     });
@@ -2686,11 +2897,15 @@ function renderTreino(){
       bM.className='btn btn-sm';
       bM.style.cssText='font-size:11px;background:'+(fH?'var(--green)':'var(--nude2)')+';color:'+(fH?'#fff':'var(--ink)')+';border-color:'+(fH?'var(--green)':'var(--border2)');
       bM.textContent=fH?'Desmarcar':'Marcar feito';
+      var bE=document.createElement('button');
+      bE.className='btn btn-sm'; bE.style.fontSize='11px'; bE.textContent='Editar';
+      bE.addEventListener('click',(function(id){ return function(e){ e.stopPropagation(); abrirEditTreino(id); }; })(t.id));
       bM.addEventListener('click',(function(id){ return function(){ toggleTreino(id); }; })(t.id));
       var bD=document.createElement('button');
       bD.className='btn btn-d btn-sm'; bD.style.fontSize='11px'; bD.textContent='x';
       bD.addEventListener('click',(function(id){ return function(){ delTreino(id); }; })(t.id));
       card.querySelector('.tr-btns').appendChild(bM);
+      card.querySelector('.tr-btns').appendChild(bE);
       card.querySelector('.tr-btns').appendChild(bD);
       grid.appendChild(card);
     });
@@ -2806,6 +3021,167 @@ function mobGoFP(el,tipo){
     var sb2=document.querySelector('#sis-planner .sb-i[data-page="'+pid+'"]');
     if(sb2) goPP(sb2); else goPP(el);
   }
+}
+
+// =====================================================
+// DASHBOARD PATRIM\u00D4NIO
+// =====================================================
+function renderPatrimonioDash(){
+  // Garante dados carregados
+  var tA = ativos.reduce(function(s,a){ return s+(a.valor||0); },0);
+  var tP = passivos.reduce(function(s,p){ return s+(p.valor||0); },0);
+  var tI = investimentos.reduce(function(s,i){ return s+(i.valor||0); },0);
+  var tIR= investimentos.reduce(function(s,i){ return s+(i.rend||0); },0);
+  var tAP= apagar.filter(function(a){ return a.status!=='Pago'; }).reduce(function(s,a){ return s+(a.valor||0); },0);
+  var tAR= receber.filter(function(r){ return r.status!=='Recebido'; }).reduce(function(s,r){ return s+(r.valor||0); },0);
+  var tC = contas.reduce(function(s,c){ return s+(c.saldo||0); },0);
+  var liq = tA - tP;
+
+  var pdL=$('pdash-liq'); if(pdL) pdL.textContent=fmt(liq);
+  pdL && (pdL.style.color = liq>=0?'#5dd4a0':'#f87171');
+  var pdC=$('pdash-contas'); if(pdC) pdC.textContent=fmt(tC);
+  var pdA=$('pdash-ativos'); if(pdA) pdA.textContent=fmt(tA);
+  var pdAQ=$('pdash-ativos-qtd'); if(pdAQ) pdAQ.textContent=ativos.length+' itens';
+  var pdP=$('pdash-passivos'); if(pdP) pdP.textContent=fmt(tP);
+  var pdPQ=$('pdash-passivos-qtd'); if(pdPQ) pdPQ.textContent=passivos.length+' itens';
+  var pdI=$('pdash-invest'); if(pdI) pdI.textContent=fmt(tI);
+  var pdIR=$('pdash-invest-rend'); if(pdIR) pdIR.textContent='Rendimento: '+(tIR>=0?'+':'')+fmt(tIR);
+  var pdAP=$('pdash-apagar'); if(pdAP) pdAP.textContent=fmt(tAP);
+  var pdAPQ=$('pdash-apagar-qtd'); if(pdAPQ) pdAPQ.textContent=apagar.filter(function(a){ return a.status!=='Pago'; }).length+' contas';
+  var pdAR=$('pdash-areceber'); if(pdAR) pdAR.textContent=fmt(tAR);
+  var pdARQ=$('pdash-areceber-qtd'); if(pdARQ) pdARQ.textContent=receber.filter(function(r){ return r.status!=='Recebido'; }).length+' contas';
+  var pdSL=$('pdash-saldo-liq'); if(pdSL){ pdSL.textContent=fmt(tAR-tAP); pdSL.className='mc-v '+(tAR>=tAP?'g':'r'); }
+
+  // Lista ativos
+  var aEl=$('pdash-ativos-list');
+  if(aEl) aEl.innerHTML = ativos.length ? ativos.map(function(a){
+    return '<div class="txi"><div class="txi-l"><div class="txi-av" style="background:var(--green-bg);font-size:11px">A</div><div><div class="txi-name">'+esc(a.desc)+'</div><div class="txi-det">'+a.cat+'</div></div></div><span class="tv-p">'+fmt(a.valor)+'</span></div>';
+  }).join('') : '<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum ativo cadastrado.</div>';
+
+  // Lista passivos
+  var pEl=$('pdash-passivos-list');
+  if(pEl) pEl.innerHTML = passivos.length ? passivos.map(function(p){
+    return '<div class="txi"><div class="txi-l"><div class="txi-av" style="background:var(--red-bg);font-size:11px">P</div><div><div class="txi-name">'+esc(p.desc)+'</div><div class="txi-det">'+p.cat+'</div></div></div><span class="tv-n">'+fmt(p.valor)+'</span></div>';
+  }).join('') : '<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum passivo cadastrado.</div>';
+
+  // Lista contas
+  var cEl=$('pdash-contas-list');
+  if(cEl) cEl.innerHTML = contas.length ? contas.map(function(c){
+    return '<div class="txi"><div class="txi-l"><div class="txi-av" style="background:'+(c.cor||'var(--blue)')+';color:#fff;font-size:11px;font-weight:700">'+c.nome.substring(0,2).toUpperCase()+'</div><div><div class="txi-name">'+esc(c.nome)+'</div><div class="txi-det">'+(c.tipo||'Conta')+'</div></div></div><span style="font-size:15px;font-weight:500;color:'+(c.saldo>=0?'var(--blue)':'var(--red)')+'">'+fmt(c.saldo)+'</span></div>';
+  }).join('') : '<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhuma conta cadastrada.</div>';
+}
+
+// =====================================================
+// EDITAR TREINO
+// =====================================================
+function abrirEditTreino(id){
+  var t=treinos.find(function(x){ return x.id===id; }); if(!t) return;
+  $('etr-id').value=id;
+  $('etr-nome').value=t.nome||'';
+  $('etr-exer').value=t.exer||'';
+  $('etr-dur').value=t.dur||0;
+  if($('etr-hora')) $('etr-hora').value=t.hora||'';
+  if($('etr-data')) $('etr-data').value=t.data||'';
+  var s=$('etr-tipo'); if(s){ for(var i=0;i<s.options.length;i++){ if(s.options[i].text===t.tipo) s.selectedIndex=i; } }
+  var d=$('etr-dia'); if(d){ d.value=''; for(var i=0;i<d.options.length;i++){ if(d.options[i].text===t.dia||d.options[i].value===t.dia) d.selectedIndex=i; } }
+  openM('m-edit-treino');
+}
+function salvarEditTreino(){
+  var id=$('etr-id').value;
+  var nome=($('etr-nome').value||'').trim();
+  if(!nome){ alert('Digite o nome.'); return; }
+  var updates={nome:nome,tipo:$('etr-tipo').value,dur:parseInt($('etr-dur').value)||0,
+    exer:$('etr-exer').value,dia:$('etr-dia').value,
+    hora:$('etr-hora')?$('etr-hora').value:'',
+    data:$('etr-data')?$('etr-data').value:''};
+  DB.update('treinos',id,updates).then(function(){
+    var t=treinos.find(function(x){ return x.id===id; });
+    if(t) Object.assign(t,updates);
+    closeM('m-edit-treino'); toast('Treino atualizado!'); renderTreino();
+  });
+}
+
+// =====================================================
+// EDITAR EVENTO
+// =====================================================
+function abrirEditEvento(id){
+  var ev=eventos.find(function(x){ return x.id===id; }); if(!ev) return;
+  $('eev-id').value=id;
+  $('eev-tit').value=ev.titulo||'';
+  if($('eev-data')) $('eev-data').value=ev.data||'';
+  if($('eev-hora')) $('eev-hora').value=ev.hora||'';
+  var d=$('eev-dia'); if(d){ for(var i=0;i<d.options.length;i++){ if(d.options[i].text===ev.dia) d.selectedIndex=i; } }
+  var c=$('eev-cor'); if(c){ c.value=ev.cor||''; }
+  var r=$('eev-recorr'); if(r){ r.value=(ev.recorrente||0).toString(); }
+  openM('m-edit-evento');
+}
+function salvarEditEvento(){
+  var id=$('eev-id').value;
+  var titulo=($('eev-tit').value||'').trim();
+  if(!titulo){ alert('Digite o titulo.'); return; }
+  var updates={titulo:titulo,
+    data:$('eev-data')?$('eev-data').value:'',
+    hora:$('eev-hora')?$('eev-hora').value:'',
+    dia:$('eev-dia').value, cor:$('eev-cor').value,
+    recorrente:parseInt($('eev-recorr').value)||0};
+  DB.update('eventos',id,updates).then(function(){
+    var ev=eventos.find(function(x){ return x.id===id; });
+    if(ev) Object.assign(ev,updates);
+    closeM('m-edit-evento'); toast('Evento atualizado!'); renderAgenda();
+  });
+}
+
+// =====================================================
+// EDITAR A PAGAR
+// =====================================================
+function abrirEditApagar(id){
+  var a=apagar.find(function(x){ return x.id===id; }); if(!a) return;
+  $('eap-id').value=id;
+  $('eap-desc').value=a.desc||'';
+  $('eap-valor').value=a.valor||0;
+  $('eap-venc').value=a.venc||'';
+  var s=$('eap-status'); if(s){ for(var i=0;i<s.options.length;i++){ if(s.options[i].text===a.status) s.selectedIndex=i; } }
+  openM('m-edit-apagar');
+}
+function salvarEditApagar(){
+  var id=$('eap-id').value;
+  var desc=($('eap-desc').value||'').trim();
+  var valor=parseFloat($('eap-valor').value)||0;
+  if(!desc||!valor){ alert('Preencha descricao e valor.'); return; }
+  var updates={desc:desc,valor:valor,venc:$('eap-venc').value,status:$('eap-status').value};
+  DB.update('apagar',id,updates).then(function(){
+    var a=apagar.find(function(x){ return x.id===id; });
+    if(a) Object.assign(a,updates);
+    closeM('m-edit-apagar'); toast('Atualizado!'); renderApagar();
+  });
+}
+
+// =====================================================
+// EDITAR A RECEBER
+// =====================================================
+function abrirEditReceber(id){
+  var r=receber.find(function(x){ return x.id===id; }); if(!r) return;
+  $('erc-id').value=id;
+  $('erc-desc').value=r.desc||'';
+  $('erc-valor').value=r.valor||0;
+  $('erc-venc').value=r.venc||'';
+  $('erc-obs').value=r.obs||'';
+  var c=$('erc-cat'); if(c){ for(var i=0;i<c.options.length;i++){ if(c.options[i].text===r.cat) c.selectedIndex=i; } }
+  var s=$('erc-status'); if(s){ for(var i=0;i<s.options.length;i++){ if(s.options[i].text===r.status) s.selectedIndex=i; } }
+  openM('m-edit-receber');
+}
+function salvarEditReceber(){
+  var id=$('erc-id').value;
+  var desc=($('erc-desc').value||'').trim();
+  var valor=parseFloat($('erc-valor').value)||0;
+  if(!desc||!valor){ alert('Preencha descricao e valor.'); return; }
+  var updates={desc:desc,valor:valor,venc:$('erc-venc').value,
+    cat:$('erc-cat').value,status:$('erc-status').value,obs:$('erc-obs').value};
+  DB.update('receber',id,updates).then(function(){
+    var r=receber.find(function(x){ return x.id===id; });
+    if(r) Object.assign(r,updates);
+    closeM('m-edit-receber'); toast('Atualizado!'); renderReceber();
+  });
 }
 </script>
 
