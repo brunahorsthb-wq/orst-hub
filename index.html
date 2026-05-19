@@ -1211,10 +1211,11 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 <div class="modal-ov" id="m-evento" onclick="closeMBg(event,'m-evento')">
   <div class="modal">
     <div class="mh"><div class="mt">Novo evento</div><button class="mx" onclick="closeM('m-evento')">x</button></div>
-    <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="ev-tit" placeholder="Ex: Academia, Reuniao, Consulta..."></div>
+    <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="ev-tit" placeholder="Ex: Trabalho Centrao, Academia, Consulta..."></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" id="ev-data" placeholder="dd/mm/aaaa" maxlength="10"></div>
-      <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="ev-hora" value="09:00"></div>
+      <div class="fg2"><label class="fl2">Inicio</label><input type="time" class="fi2" id="ev-hora" value="09:00"></div>
+      <div class="fg2"><label class="fl2">Fim (opcional)</label><input type="time" class="fi2" id="ev-hora-fim"></div>
       <div class="fg2"><label class="fl2">Cor</label>
         <select class="fsel" id="ev-cor">
           <option value="">Azul escuro</option><option value="blue">Azul</option>
@@ -1385,7 +1386,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="eev-tit"></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="eev-data" data-dtype="date"></div>
-      <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="eev-hora"></div>
+      <div class="fg2"><label class="fl2">Inicio</label><input type="time" class="fi2" id="eev-hora"></div>
+      <div class="fg2"><label class="fl2">Fim (opcional)</label><input type="time" class="fi2" id="eev-hora-fim"></div>
       <div class="fg2"><label class="fl2">Dia da semana</label>
         <select class="fsel" id="eev-dia">
           <option>Segunda</option><option>Terca</option><option>Quarta</option>
@@ -1791,6 +1793,8 @@ function showApp(){
     loadInvest();
     loadPatrimonio();
     setTimeout(initDateInputs, 500);
+    // Corrige treinos antigos com data errada
+    setTimeout(migrateTreinos, 1000);
   });
 }
 function lTab(t){
@@ -2711,7 +2715,8 @@ function renderAgenda(){
         toggleEventoFeito(id, ds);
       }; })(ev.id, dStr));
 
-      evDiv.innerHTML = (ev.hora?'<div class="pb-ev-time">'+ev.hora+'</div>':'')
+      var timeLabel = ev.hora ? (ev.horaFim ? ev.hora+' - '+ev.horaFim : ev.hora) : '';
+      evDiv.innerHTML = (timeLabel?'<div class="pb-ev-time">'+timeLabel+'</div>':'')
         + '<div class="pb-ev-title">'+esc(ev.titulo)+'</div>';
       evDiv.appendChild(checkDiv);
 
@@ -2775,14 +2780,16 @@ function addEvento(){
   // Descobre dia da semana da data escolhida
   var DIAS_FULL2 = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
   var diaBase = DIAS_FULL2[new Date(dataVal+'T12:00').getDay()];
+  var horaFim = $('ev-hora-fim') ? $('ev-hora-fim').value : '';
   var ev={titulo:titulo,data:dataVal,dia:diaBase,diasRecorr:diasRecorr,
-          hora:$('ev-hora').value,cor:$('ev-cor').value,recorrente:recorr,
+          hora:$('ev-hora').value,horaFim:horaFim,cor:$('ev-cor').value,recorrente:recorr,
           feitoDatas:[]};
   DB.save('eventos',ev).then(function(id){
     if(id){
       ev.id=id; eventos.push(ev);
       closeM('m-evento'); $('ev-tit').value='';
       if($('ev-data')) $('ev-data').value='';
+      if($('ev-hora-fim')) $('ev-hora-fim').value='';
       toast('Evento salvo!'); renderAgenda(); renderEventosHoje();
     }
   });
@@ -3077,7 +3084,7 @@ function renderEventosHoje(){
       '<div style="width:8px;height:8px;border-radius:50%;background:'+(e.cor?'var(--'+e.cor+')':'var(--warm)')+';flex-shrink:0;"></div>'
       +'<div style="flex:1;">'
         +'<div style="font-size:12px;color:var(--cream);'+(feito?'text-decoration:line-through;opacity:.6;':'')+'">'+esc(e.titulo)+'</div>'
-        +(e.hora?'<div style="font-size:10px;color:rgba(240,234,216,0.4)">'+e.hora+'</div>':'')
+        +(e.hora?'<div style="font-size:10px;color:rgba(240,234,216,0.4)">'+(e.horaFim?e.hora+' - '+e.horaFim:e.hora)+'</div>':'')
       +'</div>'
       +'<div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;'+(feito?'background:rgba(255,255,255,0.2);':'')+'" >'+(feito?'ok':'')+'</div>';
     div.querySelector('div:last-child').addEventListener('click',(function(id){ return function(e2){ e2.stopPropagation(); toggleEventoFeito(id,hojeStr); }; })(e.id));
@@ -3278,6 +3285,7 @@ function abrirEditEvento(id){
   $('eev-tit').value=ev.titulo||'';
   setDateVal('eev-data',ev.data||'');
   if($('eev-hora')) $('eev-hora').value=ev.hora||'';
+  if($('eev-hora-fim')) $('eev-hora-fim').value=ev.horaFim||'';
   var d=$('eev-dia'); if(d){ for(var i=0;i<d.options.length;i++){ if(d.options[i].text===ev.dia) d.selectedIndex=i; } }
   var c=$('eev-cor'); if(c){ c.value=ev.cor||''; }
   var r=$('eev-recorr'); if(r){ r.value=(ev.recorrente||0).toString(); }
@@ -3290,6 +3298,7 @@ function salvarEditEvento(){
   var updates={titulo:titulo,
     data:getDateVal('eev-data'),
     hora:$('eev-hora')?$('eev-hora').value:'',
+    horaFim:$('eev-hora-fim')?$('eev-hora-fim').value:'',
     dia:$('eev-dia').value, cor:$('eev-cor').value,
     recorrente:parseInt($('eev-recorr').value)||0};
   DB.update('eventos',id,updates).then(function(){
@@ -3528,6 +3537,30 @@ function eventoAparece(ev, dStr){
     return ev.dia === diaAtual;
   }
   return false;
+}
+
+// =====================================================
+// MIGRA\u00C7\u00C3O: corrige treinos antigos com data errada
+// Treinos com dia da semana fixo nao devem ter data
+// =====================================================
+function migrateTreinos(){
+  var DIAS_VALIDOS = ['Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo'];
+  var paraCorrigir = treinos.filter(function(t){
+    // Tem dia da semana E tem data preenchida = bug antigo
+    return t.dia && DIAS_VALIDOS.indexOf(t.dia) >= 0 && t.data && t.data.length === 10;
+  });
+  if(!paraCorrigir.length) return;
+  console.log('Migrando '+paraCorrigir.length+' treinos com data errada...');
+  paraCorrigir.forEach(function(t){
+    // Limpa a data - mant\u00E9m s\u00F3 o dia da semana
+    t.data = '';
+    DB.update('treinos', t.id, {data: ''}).catch(function(e){
+      console.error('Erro ao migrar treino', t.id, e);
+    });
+  });
+  // Re-renderiza depois de corrigir
+  renderTreino();
+  toast('Treinos atualizados!');
 }
 </script>
 
