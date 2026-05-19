@@ -571,7 +571,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             <span class="sys-ttl" id="f-ttl">Dashboard</span>
             <select id="month-sel" onchange="loadFDash()" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;">
               <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Marco</option>
-              <option value="3" selected>Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+              <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
               <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
               <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
             </select>
@@ -1203,17 +1203,44 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 <div class="modal-ov" id="m-evento" onclick="closeMBg(event,'m-evento')">
   <div class="modal">
     <div class="mh"><div class="mt">Novo evento</div><button class="mx" onclick="closeM('m-evento')">x</button></div>
-    <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="ev-tit" placeholder="Ex: Reuniao, Academia, Consulta..."></div>
+    <div class="fg2"><label class="fl2">Titulo</label><input type="text" class="fi2" id="ev-tit" placeholder="Ex: Academia, Reuniao, Consulta..."></div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="ev-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" id="ev-data" placeholder="dd/mm/aaaa" maxlength="10"></div>
       <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="ev-hora" value="09:00"></div>
-      <div class="fg2"><label class="fl2">Dia da semana</label><select class="fsel" id="ev-dia"><option>Segunda</option><option>Terca</option><option>Quarta</option><option>Quinta</option><option>Sexta</option><option>Sabado</option><option>Domingo</option></select></div>
-      <div class="fg2"><label class="fl2">Cor</label><select class="fsel" id="ev-cor"><option value="">Padrao</option><option value="blue">Azul</option><option value="green">Verde</option><option value="red">Vermelho</option></select></div>
+      <div class="fg2"><label class="fl2">Cor</label>
+        <select class="fsel" id="ev-cor">
+          <option value="">Azul escuro</option><option value="blue">Azul</option>
+          <option value="green">Verde</option><option value="red">Vermelho</option>
+          <option value="roxo">Roxo</option><option value="laranja">Laranja</option>
+          <option value="rosa">Rosa</option>
+        </select>
+      </div>
     </div>
-    <div class="fg2"><label class="fl2">Recorrente (se semanal)</label>
-      <select class="fsel" id="ev-recorr"><option value="0">Nao — somente nesta data</option><option value="1">Sim — repete toda semana</option></select>
+    <div class="fg2"><label class="fl2">Recorrencia</label>
+      <select class="fsel" id="ev-recorr" onchange="toggleDiasEvento()">
+        <option value="0">Somente nesta data</option>
+        <option value="semanal">Toda semana (escolher dias)</option>
+        <option value="diario">Todo dia</option>
+        <option value="quinzenal">Quinzenal</option>
+        <option value="mensal">Todo mes neste dia</option>
+      </select>
     </div>
-    <div class="mf"><button class="btn" onclick="closeM('m-evento')">Cancelar</button><button class="btn btn-p" onclick="addEvento()">Salvar evento</button></div>
+    <div class="fg2" id="ev-dias-wrap" style="display:none;">
+      <label class="fl2">Dias da semana</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Segunda" id="evd-seg"> Seg</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Terca" id="evd-ter"> Ter</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Quarta" id="evd-qua"> Qua</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Quinta" id="evd-qui"> Qui</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Sexta" id="evd-sex"> Sex</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Sabado" id="evd-sab"> Sab</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Domingo" id="evd-dom"> Dom</label>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeM('m-evento')">Cancelar</button>
+      <button class="btn btn-p" onclick="addEvento()">Salvar evento</button>
+    </div>
   </div>
 </div>
 
@@ -1222,11 +1249,38 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="mh"><div class="mt">Novo habito</div><button class="mx" onclick="closeM('m-hab')">x</button></div>
     <div class="fg2"><label class="fl2">Nome do habito</label><input type="text" class="fi2" id="hb-nome" placeholder="Ex: Beber 2L de agua"></div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Categoria</label><select class="fsel" id="hb-cat"><option>Saude</option><option>Exercicio</option><option>Produtividade</option><option>Alimentacao</option><option>Mente</option><option>Sono</option></select></div>
-      <div class="fg2"><label class="fl2">Frequencia</label><select class="fsel" id="hb-freq"><option>Diario</option><option>Seg-Sex</option><option>Fins de semana</option><option>3x por semana</option><option>Personalizado</option></select></div>
+      <div class="fg2"><label class="fl2">Categoria</label>
+        <select class="fsel" id="hb-cat">
+          <option>Saude</option><option>Exercicio</option><option>Produtividade</option>
+          <option>Alimentacao</option><option>Mente</option><option>Sono</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Frequencia</label>
+        <select class="fsel" id="hb-freq" onchange="toggleDiasHabito()">
+          <option value="Diario">Diario (todos os dias)</option>
+          <option value="Seg-Sex">Seg a Sex (dias uteis)</option>
+          <option value="Fins de semana">Fins de semana</option>
+          <option value="3x por semana">3x por semana</option>
+          <option value="Personalizado">Personalizado (escolher dias)</option>
+        </select>
+      </div>
     </div>
-    <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="hb-hora" placeholder="Ex: 06:00"></div>
-    <div class="fg2"><label class="fl2">Meta diaria (opcional)</label><input type="text" class="fi2" id="hb-meta" placeholder="Ex: 8 copos, 30 min, 10 paginas"></div>
+    <div class="fg2" id="hb-dias-wrap" style="display:none;">
+      <label class="fl2">Dias da semana</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Segunda" id="hbd-seg"> Seg</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Terca" id="hbd-ter"> Ter</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Quarta" id="hbd-qua"> Qua</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Quinta" id="hbd-qui"> Qui</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Sexta" id="hbd-sex"> Sex</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Sabado" id="hbd-sab"> Sab</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;"><input type="checkbox" value="Domingo" id="hbd-dom"> Dom</label>
+      </div>
+    </div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Horario</label><input type="time" class="fi2" id="hb-hora"></div>
+      <div class="fg2"><label class="fl2">Meta diaria</label><input type="text" class="fi2" id="hb-meta" placeholder="Ex: 8 copos, 30 min"></div>
+    </div>
     <div class="mf"><button class="btn" onclick="closeM('m-hab')">Cancelar</button><button class="btn btn-p" onclick="addHabito()">Criar habito</button></div>
   </div>
 </div>
@@ -1706,6 +1760,9 @@ function showApp(){
   $('login-screen').classList.add('hidden');
   $('app').classList.add('visible');
   populateAnos();
+  // Seleciona mes e ano atuais
+  var msEl = $('month-sel'); if(msEl) msEl.value = hoje.getMonth();
+  var ysEl = $('year-sel');  if(ysEl) ysEl.value = hoje.getFullYear();
   renderUserUI();
   initCharts();
   initClock();
@@ -1791,7 +1848,7 @@ function populateAnos(){
   var sel = $('year-sel'); if(!sel) return;
   var anoAtual = hoje.getFullYear();
   sel.innerHTML = '';
-  for(var a = anoAtual+3; a >= 2018; a--){
+  for(var a = anoAtual+10; a >= 2000; a--){
     var opt = document.createElement('option');
     opt.value = a; opt.textContent = a;
     if(a === anoAtual) opt.selected = true;
@@ -2616,9 +2673,9 @@ function renderAgenda(){
     var body = document.createElement('div');
     body.className = 'pb-col-body';
 
-    // Filtra eventos do dia (por data ou por dia recorrente)
+    // Filtra eventos do dia usando funcao de recorrencia
     var evDia = eventos.filter(function(e){
-      return e.data === dStr || (e.recorrente && e.dia === DIAS_FULL[i]);
+      return eventoAparece(e, dStr);
     }).sort(function(a,b){ return (a.hora||'').localeCompare(b.hora||''); });
 
     evDia.forEach(function(ev){
@@ -2695,9 +2752,15 @@ function prepEvento(dateStr,dia){
 }
 function addEvento(){
   var titulo=($('ev-tit').value||'').trim(); if(!titulo){ alert('Digite o titulo.'); return; }
-  var ed=$('ev-data'); var edv=ed?getDateVal('ev-data'):'';
-  var recorr = $('ev-recorr') ? parseInt($('ev-recorr').value)||0 : 0;
-  var ev={titulo:titulo,data:edv||hojeStr,dia:$('ev-dia').value,hora:$('ev-hora').value,cor:$('ev-cor').value,recorrente:recorr};
+  var dataVal = getDateVal('ev-data') || hojeStr;
+  var recorr = $('ev-recorr') ? $('ev-recorr').value : '0';
+  var diasRecorr = recorr==='semanal' ? getDiasChecked('evd') : [];
+  // Descobre dia da semana da data escolhida
+  var DIAS_FULL2 = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  var diaBase = DIAS_FULL2[new Date(dataVal+'T12:00').getDay()];
+  var ev={titulo:titulo,data:dataVal,dia:diaBase,diasRecorr:diasRecorr,
+          hora:$('ev-hora').value,cor:$('ev-cor').value,recorrente:recorr,
+          feitoDatas:[]};
   DB.save('eventos',ev).then(function(id){
     if(id){
       ev.id=id; eventos.push(ev);
@@ -2719,7 +2782,10 @@ function addHabito(){
   var nome=($('hb-nome').value||'').trim(); if(!nome){ alert('Digite o nome.'); return; }
   var hora = $('hb-hora') ? $('hb-hora').value : '';
   var meta = $('hb-meta') ? $('hb-meta').value : '';
-  var h={nome:nome,cat:$('hb-cat').value,freq:$('hb-freq').value,hora:hora,meta:meta,done:false,doneDate:'',streak:0,doneDatas:[]};
+  var freq = $('hb-freq').value;
+  var dias = freq==='Personalizado' ? getDiasChecked('hbd') : [];
+  var h={nome:nome,cat:$('hb-cat').value,freq:freq,dias:dias,hora:hora,meta:meta,
+         done:false,doneDate:'',streak:0,doneDatas:[]};
   DB.save('habitos',h).then(function(id){
     if(id){
       h.id=id; habitos.push(h);
@@ -2756,35 +2822,49 @@ function delHabito(id){
 }
 function renderHabitos(){
   var list=$('hab-list'); if(!list) return;
-  var feitosHoje=habitos.filter(function(h){ return h.doneDate===hojeStr; }).length;
-  var total=habitos.length;
+  // Filtra habitos que devem ser feitos hoje
+  var habitosHoje = habitos.filter(function(h){ return habitoDeveHoje(h); });
+  var feitosHoje = habitosHoje.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var totalHoje  = habitosHoje.length;
   var hbF=$('hb-feitos'); if(hbF) hbF.textContent=feitosHoje;
-  var hbP=$('hb-pend');   if(hbP) hbP.textContent=total-feitosHoje;
+  var hbP=$('hb-pend');   if(hbP) hbP.textContent=totalHoje-feitosHoje;
   var best=habitos.reduce(function(mx,h){ return Math.max(mx,h.streak||0); },0);
   var hbS=$('hb-streak'); if(hbS) hbS.textContent=best;
-  var pct=total>0?Math.round((feitosHoje/total)*100):0;
+  var pct=totalHoje>0?Math.round((feitosHoje/totalHoje)*100):0;
   var hbPT=$('hb-pct-txt'); if(hbPT) hbPT.textContent=pct+'%';
   var hbPB=$('hb-pct-bar'); if(hbPB) hbPB.style.width=pct+'%';
-  if(!total){
+  if(!habitos.length){
     list.innerHTML='<div style="text-align:center;padding:24px;color:var(--ink3)">Nenhum habito. Clique em + Habito.</div>';
     return;
   }
   list.innerHTML='';
-  habitos.forEach(function(h){
+  // Mostra primeiro os de hoje, depois os de outros dias
+  var ordenados = habitosHoje.concat(habitos.filter(function(h){ return !habitoDeveHoje(h); }));
+  ordenados.forEach(function(h){
     var feito = h.doneDate===hojeStr;
+    var eHoje = habitoDeveHoje(h);
     var item = document.createElement('div');
     item.className = 'hab-check-item';
-    item.style.background = feito ? 'var(--green-bg)' : '';
+    item.style.background = feito ? 'var(--green-bg)' : (eHoje ? '' : 'rgba(0,0,0,0.02)');
+    item.style.opacity = eHoje ? '1' : '0.55';
     var box = document.createElement('div');
     box.className = 'hab-check-box'+(feito?' done':'');
     box.textContent = feito ? 'ok' : '';
-    box.addEventListener('click', (function(id){ return function(){ toggleHabito(id); }; })(h.id));
+    if(eHoje) box.addEventListener('click', (function(id){ return function(){ toggleHabito(id); }; })(h.id));
     var lbl = document.createElement('div');
     lbl.style.flex = '1';
+    // Texto de recorrencia
+    var freqLabel = h.freq || 'Diario';
+    if(h.freq==='Personalizado' && h.dias && h.dias.length) freqLabel = h.dias.join(', ');
     lbl.innerHTML = '<div class="hab-check-label'+(feito?' done':'')+'">'+esc(h.nome)+'</div>'
-      +(h.hora||h.meta?'<div style="font-size:11px;color:var(--ink3);margin-top:1px;">'+(h.hora?h.hora+' ':'')+(h.meta?'| Meta: '+esc(h.meta):'')+'</div>':'');
+      +'<div style="font-size:11px;color:var(--ink3);margin-top:1px;">'
+        +(h.hora?h.hora+' | ':'')
+        +freqLabel
+        +(h.meta?' | Meta: '+esc(h.meta):'')
+        +(!eHoje?' | <em style="color:var(--amber-t)">Nao e hoje</em>':'')
+      +'</div>';
     var right = document.createElement('div');
-    right.style.cssText = 'display:flex;align-items:center;gap:6px;';
+    right.style.cssText = 'display:flex;align-items:center;gap:6px;flex-shrink:0;';
     right.innerHTML = '<span style="font-size:11px;color:var(--warm2);">'+(h.streak||0)+' dias</span>';
     var btnDel = document.createElement('button');
     btnDel.className='btn btn-d btn-sm'; btnDel.style.fontSize='11px'; btnDel.textContent='x';
@@ -2957,17 +3037,40 @@ function renderTreino(){
 
 function renderEventosHoje(){
   var el=$('eventos-hoje'); if(!el) return;
-  var evHoje=eventos.filter(function(e){ return e.data===hojeStr; }).sort(function(a,b){ return a.hora>b.hora?1:-1; });
-  if(!evHoje.length){ el.innerHTML='<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum evento hoje.</div>'; return; }
-  el.innerHTML=evHoje.map(function(e){ return '<div class="txi"><div class="txi-l"><div class="txi-av" style="background:var(--nude2);font-size:12px;font-weight:500;color:var(--ink2)">' + e.hora + '</div><div><div class="txi-name">' + esc(e.titulo) + '</div></div></div><button class="btn btn-d btn-sm" onclick="delEvento(\'' + e.id + '\')">x</button></div>'; }).join('');
+  var evHoje = eventos.filter(function(e){ return eventoAparece(e, hojeStr); })
+    .sort(function(a,b){ return (a.hora||'').localeCompare(b.hora||''); });
+  if(!evHoje.length){
+    el.innerHTML='<div style="font-size:12px;color:rgba(240,234,216,0.35);text-align:center;padding:8px;">Nenhum evento hoje</div>';
+    return;
+  }
+  el.innerHTML='';
+  evHoje.forEach(function(e){
+    var CORES={'':'ev-padrao','blue':'ev-azul','green':'ev-verde','red':'ev-vermelho','roxo':'ev-roxo','laranja':'ev-laranja','rosa':'ev-rosa'};
+    var corClass=CORES[e.cor||'']||'ev-padrao';
+    var feito=(e.feitoDatas||[]).indexOf(hojeStr)>=0;
+    var div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;margin-bottom:3px;cursor:pointer;';
+    div.innerHTML=
+      '<div style="width:8px;height:8px;border-radius:50%;background:'+(e.cor?'var(--'+e.cor+')':'var(--warm)')+';flex-shrink:0;"></div>'
+      +'<div style="flex:1;">'
+        +'<div style="font-size:12px;color:var(--cream);'+(feito?'text-decoration:line-through;opacity:.6;':'')+'">'+esc(e.titulo)+'</div>'
+        +(e.hora?'<div style="font-size:10px;color:rgba(240,234,216,0.4)">'+e.hora+'</div>':'')
+      +'</div>'
+      +'<div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;'+(feito?'background:rgba(255,255,255,0.2);':'')+'" >'+(feito?'ok':'')+'</div>';
+    div.querySelector('div:last-child').addEventListener('click',(function(id){ return function(e2){ e2.stopPropagation(); toggleEventoFeito(id,hojeStr); }; })(e.id));
+    el.appendChild(div);
+  });
 }
+
 function renderHabitosRapido(){
   var el=$('hab-rapido'); if(!el) return;
   if(!habitos.length){ el.innerHTML='<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum habito.</div>'; return; }
   el.innerHTML=habitos.slice(0,4).map(function(h){ var feito=h.doneDate===hojeStr; return '<div class="txi"><div class="txi-l"><div class="pl-chk ' + (feito?'done':'') + '" onclick="toggleHabito(\'' + h.id + '\')" style="flex-shrink:0">' + (feito?'ok':'') + '</div><span style="font-size:13px;' + (feito?'text-decoration:line-through;color:var(--ink3);':'') + '">' + esc(h.nome) + '</span></div><span style="font-size:11px;color:var(--warm2)">str ' + (h.streak||0) + '</span></div>'; }).join('') + (habitos.length>4?'<div style="text-align:center;padding:8px;font-size:12px;color:var(--ink3)">+' + (habitos.length-4) + ' mais</div>':'');
 }
 function updPlannerStats(){
-  var feitosHoje=habitos.filter(function(h){ return h.doneDate===hojeStr; }).length, total=habitos.length;
+  var habitosHoje2=habitos.filter(function(h){ return habitoDeveHoje(h); });
+  var feitosHoje=habitosHoje2.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var total=habitosHoje2.length;
   var plHc=$('pl-hc'); if(plHc) plHc.textContent=feitosHoje+'/'+total;
   var plMc=$('pl-mc'); if(plMc) plMc.textContent=metasVida.filter(function(m){ return !m.concluida; }).length;
   var plSc=$('pl-sc'); if(plSc) plSc.textContent=sonoLog[0]?sonoLog[0].horas+'h':'-';
@@ -3316,6 +3419,93 @@ function setDateVal(id, val) {
   }
 }
 
+
+// =====================================================
+// RECORRENCIA - UI helpers
+// =====================================================
+function toggleDiasHabito(){
+  var freq = $('hb-freq') ? $('hb-freq').value : '';
+  var wrap = $('hb-dias-wrap');
+  if(wrap) wrap.style.display = freq==='Personalizado' ? '' : 'none';
+}
+
+function toggleDiasEvento(){
+  var recorr = $('ev-recorr') ? $('ev-recorr').value : '0';
+  var wrap = $('ev-dias-wrap');
+  if(wrap) wrap.style.display = recorr==='semanal' ? '' : 'none';
+}
+
+function getDiasChecked(prefix){
+  var dias = [];
+  ['seg','ter','qua','qui','sex','sab','dom'].forEach(function(d){
+    var el = document.getElementById(prefix+'-'+d);
+    if(el && el.checked) dias.push(el.value);
+  });
+  return dias;
+}
+
+function setDiasChecked(prefix, dias){
+  ['seg','ter','qua','qui','sex','sab','dom'].forEach(function(d){
+    var el = document.getElementById(prefix+'-'+d);
+    if(el) el.checked = false;
+  });
+  if(!dias) return;
+  dias.forEach(function(dia){
+    var map = {Segunda:'seg',Terca:'ter',Quarta:'qua',Quinta:'qui',Sexta:'sex',Sabado:'sab',Domingo:'dom'};
+    var el = document.getElementById(prefix+'-'+map[dia]);
+    if(el) el.checked = true;
+  });
+}
+
+// Verifica se habito deve ser feito hoje baseado na frequencia
+function habitoDeveHoje(h){
+  var freq = h.freq || 'Diario';
+  var diaSem = hoje.getDay(); // 0=dom, 1=seg...
+  var DIAS_FULL = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  var diaAtual = DIAS_FULL[diaSem];
+  if(freq === 'Diario') return true;
+  if(freq === 'Seg-Sex') return diaSem >= 1 && diaSem <= 5;
+  if(freq === 'Fins de semana') return diaSem === 0 || diaSem === 6;
+  if(freq === '3x por semana') return [1,3,5].indexOf(diaSem) >= 0;
+  if(freq === 'Personalizado'){
+    if(!h.dias || !h.dias.length) return true;
+    return h.dias.indexOf(diaAtual) >= 0;
+  }
+  return true;
+}
+
+// Verifica se evento recorrente aparece em determinada data
+function eventoAparece(ev, dStr){
+  // Evento especifico (sem recorrencia)
+  if(!ev.recorrente || ev.recorrente === 0 || ev.recorrente === '0'){
+    return ev.data === dStr;
+  }
+  var dDate = new Date(dStr+'T12:00');
+  var diaSem = dDate.getDay();
+  var DIAS_FULL = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  var diaAtual = DIAS_FULL[diaSem];
+  if(ev.recorrente === 'diario') return true;
+  if(ev.recorrente === 'semanal'){
+    if(!ev.diasRecorr || !ev.diasRecorr.length) return ev.dia === diaAtual;
+    return ev.diasRecorr.indexOf(diaAtual) >= 0;
+  }
+  if(ev.recorrente === 'quinzenal'){
+    if(!ev.data) return false;
+    var dBase = new Date(ev.data+'T12:00');
+    var diff = Math.round((dDate - dBase) / (1000*60*60*24));
+    return diff >= 0 && diff % 14 === 0;
+  }
+  if(ev.recorrente === 'mensal'){
+    if(!ev.data) return false;
+    var dBase2 = new Date(ev.data+'T12:00');
+    return dDate.getDate() === dBase2.getDate() && dDate >= dBase2;
+  }
+  // Legado: recorrente=1 = toda semana no mesmo dia
+  if(ev.recorrente === 1 || ev.recorrente === '1'){
+    return ev.dia === diaAtual;
+  }
+  return false;
+}
 </script>
 
 <!-- Drawer mobile sidebar financas -->
