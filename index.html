@@ -307,8 +307,16 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 }
 
 /* ===== PLANNER BOARD SEMANAL ===== */
-.planner-board{display:grid;min-width:700px;}
-.pb-col{border-right:1px solid var(--border);min-height:400px;}
+.planner-board{display:grid;width:100%;}
+.pb-col{border-right:1px solid var(--border);min-height:300px;min-width:0;}
+@media(max-width:700px){
+  .pb-event{padding:3px 5px;}
+  .pb-ev-title{font-size:11px;line-height:1.2;}
+  .pb-ev-time{font-size:9px;}
+  .pb-col-hdr{padding:6px 3px;}
+  .pb-day-num{font-size:16px;}
+  .pb-day-name{font-size:9px;}
+}
 .pb-col:last-child{border-right:none;}
 .pb-col-hdr{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;}
 .pb-day-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#fff;}
@@ -934,7 +942,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   </div>
                 </div>
                 <div style="padding:0 0 8px;font-size:11px;color:var(--ink3);text-align:center;padding-top:6px;" id="sem-lbl"></div>
-                <div id="planner-board" style="overflow-x:auto;"></div>
+                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
               </div>
             </div>
             <!-- Habitos -->
@@ -2651,7 +2659,8 @@ function renderAgenda(){
   // Monta grid 7 colunas
   var grid = document.createElement('div');
   grid.className = 'planner-board';
-  grid.style.gridTemplateColumns = 'repeat(7, minmax(120px, 1fr))';
+  grid.style.gridTemplateColumns = 'repeat(7, minmax(110px, 1fr))';
+  grid.style.minWidth = '770px'; // 7 * 110px - for\u00E7a scroll no mobile
 
   DIAS_NOMES.forEach(function(dNome, i){
     var dDate = new Date(mon); dDate.setDate(mon.getDate()+i);
@@ -2913,8 +2922,9 @@ function addTreino(){
   var diaInput  = $('tr-dia')         ? $('tr-dia').value         : '';
   var horaInput = $('tr-hora')        ? $('tr-hora').value        : '';
   var dataInput = $('tr-data-input')  ? getDateVal('tr-data-input')  : '';
-  // data: usa data especifica se preenchida, senao usa dia da semana, senao hoje
-  var dataFinal = dataInput || hojeStr;
+  // Se tem dia da semana fixo, nao salva data (evita aparecer sempre como "Hoje")
+  // Data especifica so se preenchida manualmente
+  var dataFinal = dataInput || (diaInput ? '' : hojeStr);
   var t = {
     nome:  nome,
     tipo:  $('tr-tipo').value,
@@ -2958,7 +2968,10 @@ function renderTreino(){
   var grid=$('treino-grid'); if(!grid) return;
   var mon2=getMonday(0);
   var DIAS_FULL=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
-  var trHoje=treinos.filter(function(t){ return t.data===hojeStr||(t.dia&&DIAS_FULL[hoje.getDay()]===t.dia); });
+  var diaAtualNomeTr = DIAS_FULL[hoje.getDay()];
+  var trHoje=treinos.filter(function(t){
+    return (t.data && t.data===hojeStr) || (t.dia && t.dia===diaAtualNomeTr && !t.data);
+  });
   var trFH=trHoje.filter(function(t){ return (t.feitoDatas||[]).indexOf(hojeStr)>=0; }).length;
   var trSem=treinos.filter(function(t){ var d=new Date(t.data+'T12:00'); return d>=mon2&&d<=hoje; }).length;
   var trT=$('tr-total'); if(trT) trT.textContent=treinos.length;
@@ -2996,7 +3009,9 @@ function renderTreino(){
     grid.appendChild(hdr);
     lista.forEach(function(t){
       var fH=(t.feitoDatas||[]).indexOf(hojeStr)>=0;
-      var eH=t.data===hojeStr||(t.dia&&t.dia===DIAS_FULL[hoje.getDay()]);
+      // Eh hoje: data especifica = hoje, OU dia da semana = dia atual
+      var diaAtualNome = DIAS_FULL[hoje.getDay()];
+      var eH = (t.data && t.data===hojeStr) || (t.dia && t.dia===diaAtualNome && !t.data);
       var tF=(t.feitoDatas||[]).length;
       var card=document.createElement('div');
       card.className='treino-card';
