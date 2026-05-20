@@ -5171,6 +5171,97 @@ function confirmarReagendamento(){
     renderMissao();
   });
 }
+
+// =====================================================
+// METAS DE VIDA
+// =====================================================
+function addMetaVida(){
+  var nome = ($('mv-nome')?$('mv-nome').value:'').trim();
+  if(!nome){ alert('Digite o nome da meta.'); return; }
+  var m = {
+    nome: nome,
+    cat:  $('mv-cat')  ? $('mv-cat').value  : 'Pessoal',
+    prazo:getDateVal('mv-prazo'),
+    prog: parseInt($('mv-prog')?$('mv-prog').value:0)||0
+  };
+  DB.save('metas-vida', m).then(function(id){
+    if(id){
+      m.id=id; metasVida.push(m);
+      closeM('m-mvida');
+      if($('mv-nome')) $('mv-nome').value='';
+      if($('mv-prog')) $('mv-prog').value='';
+      setDateVal('mv-prazo','');
+      toast('Meta criada!');
+      renderMetasVida();
+    }
+  });
+}
+
+function delMetaVida(id){
+  if(!confirm('Excluir meta?')) return;
+  DB.delete('metas-vida', id).then(function(){
+    metasVida = metasVida.filter(function(m){ return m.id!==id; });
+    renderMetasVida();
+  });
+}
+
+function atualizarProgMeta(id, val){
+  var m = metasVida.find(function(x){ return x.id===id; }); if(!m) return;
+  m.prog = parseInt(val)||0;
+  DB.update('metas-vida', id, {prog: m.prog}).then(function(){
+    renderMetasVida();
+    if(m.prog >= 100) toast('Meta concluida! Parabens!');
+  });
+}
+
+function renderMetasVida(){
+  var list = $('plmetas-list'); if(!list) return;
+  if(!metasVida.length){
+    list.innerHTML='<div style="text-align:center;padding:24px;color:var(--ink3)">Nenhuma meta. Clique em + Meta para criar.</div>';
+    return;
+  }
+  list.innerHTML='';
+  metasVida.forEach(function(m){
+    var prog = Math.min(100, Math.max(0, m.prog||0));
+    var card = document.createElement('div');
+    card.className = 'panel';
+    card.style.cssText = 'margin-bottom:10px;padding:14px 16px;';
+    card.innerHTML =
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">'
+        +'<div>'
+          +'<div style="font-size:14px;font-weight:500;color:var(--ink)">'+esc(m.nome)+'</div>'
+          +'<div style="font-size:11px;color:var(--ink3);margin-top:2px">'
+            +m.cat+(m.prazo?' | Prazo: '+isoToDisplay(m.prazo):'')
+          +'</div>'
+        +'</div>'
+        +'<span style="font-family:var(--fs);font-size:20px;color:var(--warm2)" id="prog-txt-'+m.id+'">'+prog+'%</span>'
+      +'</div>'
+      +'<div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-bottom:8px;">'
+        +'<div id="prog-bar-'+m.id+'" style="background:var(--green);height:100%;border-radius:100px;width:'+prog+'%;transition:width .4s"></div>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;">'
+        +'<input type="range" min="0" max="100" value="'+prog+'" style="flex:1;accent-color:var(--green);" id="prog-range-'+m.id+'">'
+        +'<button class="btn btn-d btn-sm" style="font-size:11px" data-mvid="'+m.id+'">x</button>'
+      +'</div>';
+
+    // range listener
+    var range = card.querySelector('input[type="range"]');
+    range.addEventListener('input', (function(id){ return function(){
+      var v = parseInt(this.value)||0;
+      var bar = document.getElementById('prog-bar-'+id);
+      var txt = document.getElementById('prog-txt-'+id);
+      if(bar) bar.style.width = v+'%';
+      if(txt) txt.textContent = v+'%';
+      atualizarProgMeta(id, v);
+    }; })(m.id));
+
+    // del button
+    var btnDel = card.querySelector('[data-mvid]');
+    btnDel.addEventListener('click', (function(id){ return function(){ delMetaVida(id); }; })(m.id));
+
+    list.appendChild(card);
+  });
+}
 </script>
 
 <!-- Drawer mobile sidebar financas -->
