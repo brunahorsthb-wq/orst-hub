@@ -3434,10 +3434,22 @@ function initCharts(){
 function updateCharts(ent,sai,doMes,ano){
   var cats={};
   doMes.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cats[l.cat]=(cats[l.cat]||0)+Number(l.valor); });
-  var keys=Object.keys(cats);
+  // Ordena do maior para o menor
+  var keys=Object.keys(cats).sort(function(a,b){ return cats[b]-cats[a]; });
+  var total=keys.reduce(function(s,k){ return s+cats[k]; },0);
   if(charts.pie){ charts.pie.data.labels=keys.length?keys:['Sem dados']; charts.pie.data.datasets[0].data=keys.length?keys.map(function(k){ return cats[k]; }):[1]; charts.pie.data.datasets[0].backgroundColor=keys.length?keys.map(function(_,i){ return getColor(i); }):['#ede6d8']; charts.pie.update(); }
   var pieEl=$('pie-leg');
-  if(pieEl) pieEl.innerHTML=keys.length?keys.map(function(k,i){ return '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:7px;height:7px;border-radius:50%;background:' + getColor(i) + ';flex-shrink:0"></span>' + k + '</span><span style="font-size:11px;font-weight:500;color:var(--ink2)">' + fmt(cats[k]) + '</span></div>'; }).join(''):'<div style="color:var(--ink3);font-size:12px">Sem saidas este mes</div>';
+  if(pieEl) pieEl.innerHTML=keys.length?keys.map(function(k,i){
+    var pct = total>0 ? Math.round(cats[k]/total*100) : 0;
+    return '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;padding:4px 0;border-bottom:1px solid var(--border)">'
+      +'<span style="display:flex;align-items:center;gap:6px;font-size:12px">'
+        +'<span style="width:10px;height:10px;border-radius:3px;background:'+getColor(i)+';flex-shrink:0;"></span>'
+        +k
+        +'<span style="font-size:10px;color:var(--ink3)">'+pct+'%</span>'
+      +'</span>'
+      +'<span style="font-size:12px;font-weight:600;color:var(--ink2)">'+fmt(cats[k])+'</span>'
+    +'</div>';
+  }).join(''):'<div style="color:var(--ink3);font-size:12px">Sem saidas este mes</div>';
   if(!ano) ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
   var entD=[], saiD=[];
   for(var m=0;m<12;m++){
