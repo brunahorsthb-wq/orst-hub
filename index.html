@@ -377,6 +377,48 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .reag-vida{font-size:16px;cursor:default;}
 .agenda-score{background:var(--nude2);border-radius:var(--r-sm);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 
+/* ===== GAMIFICAÇÃO — MISSÃO DA SEMANA ===== */
+.missao-hero{background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 100%);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.missao-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(196,168,130,0.08);}
+.missao-titulo{font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.missao-nivel{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.missao-nivel-badge{background:var(--warm);color:var(--ink);font-size:11px;font-weight:700;padding:3px 12px;border-radius:100px;}
+.missao-nivel-nome{font-family:var(--fs);font-size:22px;font-weight:300;color:var(--cream);}
+.missao-xp{font-size:12px;color:rgba(240,234,216,0.5);margin-top:2px;}
+.missao-prog-wrap{background:rgba(255,255,255,0.1);border-radius:100px;height:10px;margin:12px 0 6px;overflow:hidden;}
+.missao-prog-bar{background:linear-gradient(90deg,var(--warm),#f0c060);height:100%;border-radius:100px;transition:width .5s ease;}
+.missao-prog-txt{display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);}
+.missao-stats{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.missao-stat{text-align:center;}
+.missao-stat-v{font-family:var(--fs);font-size:22px;font-weight:300;color:var(--warm);line-height:1;}
+.missao-stat-l{font-size:9px;color:rgba(240,234,216,0.35);text-transform:uppercase;letter-spacing:.07em;margin-top:2px;}
+.missao-vidas{display:flex;gap:4px;margin-top:12px;align-items:center;}
+.vida{font-size:16px;filter:none;}
+.vida.perdida{filter:grayscale(1);opacity:.3;}
+.missao-btn-meta{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--cream);font-size:11px;padding:5px 12px;border-radius:100px;cursor:pointer;font-family:var(--fn);margin-top:10px;}
+.missao-btn-meta:hover{background:rgba(255,255,255,0.2);}
+/* Premio modal */
+.premio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
+.premio-item{background:var(--nude2);border:2px solid transparent;border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;}
+.premio-item:hover{border-color:var(--warm);background:var(--nude3);}
+.premio-item.sel{border-color:var(--navy);background:rgba(13,45,79,0.06);}
+.premio-emoji{font-size:28px;margin-bottom:6px;}
+.premio-label{font-size:11px;color:var(--ink2);font-weight:500;}
+/* Reagendamento */
+.reag-badge{background:var(--amber-bg);color:var(--amber-t);font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;}
+.reag-count{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--ink3);}
+.reag-dot{width:10px;height:10px;border-radius:50%;background:var(--green);}
+.reag-dot.used{background:var(--nude3);}
+/* Nivel badges */
+.nivel-iniciante{background:#a0522d;}
+.nivel-guerreiro{background:#4682b4;}
+.nivel-consistente{background:#5a7a5a;}
+.nivel-elite{background:#7c3aed;}
+.nivel-lendario{background:linear-gradient(135deg,#f0c060,#c87941);}
+/* Confetti animation */
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease-in forwards;pointer-events:none;z-index:9999;}
+
 /* ===== PLANNER BOARD SEMANAL ===== */
 .planner-board{display:grid;width:100%;}
 .pb-col{border-right:1px solid var(--border);min-height:300px;min-width:0;}
@@ -1065,6 +1107,33 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 </div>
 
 <div class="page active" id="page-pl-agenda">
+              <!-- Hero Missão da Semana -->
+              <div class="missao-hero" id="missao-hero">
+                <div class="missao-titulo">Missão desta semana</div>
+                <div class="missao-nivel">
+                  <span class="missao-nivel-badge" id="missao-nivel-badge">Iniciante</span>
+                  <span class="missao-nivel-nome" id="missao-nivel-nome">Bruna</span>
+                </div>
+                <div class="missao-xp" id="missao-xp-txt">0 XP acumulado</div>
+                <div class="missao-prog-wrap">
+                  <div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div>
+                </div>
+                <div class="missao-prog-txt">
+                  <span id="missao-prog-label">0% da semana concluído</span>
+                  <span id="missao-meta-label">Meta: 5 eventos</span>
+                </div>
+                <div class="missao-vidas" id="missao-vidas"></div>
+                <div class="missao-stats">
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP Total</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta semana</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                  <button class="missao-btn-meta" onclick="openM('m-meta-semana')">⚙ Meta da semana</button>
+                  <button class="missao-btn-meta" onclick="openM('m-premio')">🏆 Meu prêmio</button>
+                </div>
+              </div>
               <!-- Hero do dia -->
               <div class="pl-hero">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;">
@@ -1564,6 +1633,115 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
 
 <div class="toast" id="toast"></div>
+
+<!-- Modal Definir Meta da Semana -->
+<div class="modal-ov" id="m-meta-semana" onclick="closeMBg(event,'m-meta-semana')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Meta da semana</div><button class="mx" onclick="closeM('m-meta-semana')">x</button></div>
+    <div style="background:var(--nude2);border-radius:var(--r-sm);padding:14px;margin-bottom:14px;font-size:13px;color:var(--ink3);line-height:1.6;">
+      Defina quantos eventos/treinos quer cumprir esta semana. Ao atingir a meta, voce ganha um premio!
+    </div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Meta de eventos (agenda)</label>
+        <select class="fsel" id="ms-meta-ev">
+          <option value="3">3 eventos</option><option value="5" selected>5 eventos</option>
+          <option value="7">7 eventos</option><option value="10">10 eventos</option>
+          <option value="14">14 eventos</option><option value="21">21 eventos</option>
+        </select>
+      </div>
+      <div class="fg2"><label class="fl2">Meta de treinos</label>
+        <select class="fsel" id="ms-meta-tr">
+          <option value="2">2 treinos</option><option value="3">3 treinos</option>
+          <option value="4">4 treinos</option><option value="5" selected>5 treinos</option>
+          <option value="6">6 treinos</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg2"><label class="fl2">Reagendamentos por semana</label>
+      <select class="fsel" id="ms-reag">
+        <option value="2">2 reagendamentos</option>
+        <option value="3" selected>3 reagendamentos</option>
+        <option value="5">5 reagendamentos</option>
+      </select>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeM('m-meta-semana')">Cancelar</button>
+      <button class="btn btn-p" onclick="salvarMetaSemana()">Salvar meta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Premio -->
+<div class="modal-ov" id="m-premio" onclick="closeMBg(event,'m-premio')">
+  <div class="modal">
+    <div class="mh"><div class="mt" id="m-premio-titulo">Escolha seu premio</div><button class="mx" onclick="closeM('m-premio')">x</button></div>
+    <div id="m-premio-body">
+      <p style="font-size:13px;color:var(--ink3);margin-bottom:4px;">Quando bater a meta, voce escolhe uma recompensa para si mesma.</p>
+      <div class="premio-grid">
+        <div class="premio-item" onclick="selPremio(this,'💆 Autocuidado')"><div class="premio-emoji">💆</div><div class="premio-label">Autocuidado</div></div>
+        <div class="premio-item" onclick="selPremio(this,'🍕 Refeição livre')"><div class="premio-emoji">🍕</div><div class="premio-label">Refeicao livre</div></div>
+        <div class="premio-item" onclick="selPremio(this,'🎮 Tempo de lazer')"><div class="premio-emoji">🎮</div><div class="premio-label">Lazer</div></div>
+        <div class="premio-item" onclick="selPremio(this,'👕 Comprar algo')"><div class="premio-emoji">👕</div><div class="premio-label">Comprar algo</div></div>
+        <div class="premio-item" onclick="selPremio(this,'🏖️ Passeio')"><div class="premio-emoji">🏖</div><div class="premio-label">Passeio</div></div>
+        <div class="premio-item" onclick="selPremio(this,'💤 Descanso premium')"><div class="premio-emoji">💤</div><div class="premio-label">Descanso</div></div>
+        <div class="premio-item" onclick="selPremio(this,'💅 Beleza')"><div class="premio-emoji">💅</div><div class="premio-label">Beleza</div></div>
+        <div class="premio-item" onclick="selPremio(this,'📚 Leitura')"><div class="premio-emoji">📚</div><div class="premio-label">Leitura</div></div>
+        <div class="premio-item" onclick="selPremio(this,'🎯 Sua escolha')"><div class="premio-emoji">🎯</div><div class="premio-label">Sua escolha</div></div>
+      </div>
+      <div class="fg2"><label class="fl2">Premio personalizado</label>
+        <input type="text" class="fi2" id="premio-custom" placeholder="Ex: Dia de spa, cinema, sorvete...">
+      </div>
+    </div>
+    <div class="mf"><button class="btn" onclick="closeM('m-premio')">Fechar</button>
+      <button class="btn btn-p" id="btn-resgatar-premio" style="display:none" onclick="resgatarPremio()">Resgatar premio!</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Parabens - Meta Batida -->
+<div class="modal-ov" id="m-parabens" onclick="closeMBg(event,'m-parabens')">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:60px;margin-bottom:10px;" id="par-emoji">🎉</div>
+    <div style="font-family:var(--fs);font-size:28px;font-weight:300;color:var(--ink);margin-bottom:6px;" id="par-titulo">Meta batida!</div>
+    <div style="font-size:14px;color:var(--ink3);margin-bottom:20px;" id="par-sub">Voce completou a missao desta semana!</div>
+    <div style="background:var(--nude2);border-radius:var(--r);padding:16px;margin-bottom:16px;">
+      <div id="par-stats" style="font-size:13px;color:var(--ink2);line-height:1.8;"></div>
+    </div>
+    <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:10px;">Seu premio desta semana:</div>
+    <div style="font-size:40px;margin-bottom:6px;" id="par-premio-emoji">🏆</div>
+    <div style="font-family:var(--fs);font-size:20px;color:var(--warm2);" id="par-premio-nome">Troféu desbloqueado!</div>
+    <div class="mf" style="justify-content:center;margin-top:16px;">
+      <button class="btn btn-p" onclick="closeM('m-parabens')">Incrivel!</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Reagendar Evento -->
+<div class="modal-ov" id="m-reagendar" onclick="closeMBg(event,'m-reagendar')">
+  <div class="modal">
+    <div class="mh"><div class="mt">Reagendar evento</div><button class="mx" onclick="closeM('m-reagendar')">x</button></div>
+    <div style="background:var(--amber-bg);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--amber-t);margin-bottom:14px;" id="reag-aviso"></div>
+    <div class="fg2"><label class="fl2">Evento</label>
+      <div style="font-size:14px;font-weight:500;padding:8px 0;" id="reag-titulo-ev"></div>
+    </div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Nova data</label>
+        <input type="text" class="fi2 date-input" id="reag-data" placeholder="dd/mm/aaaa" maxlength="10">
+      </div>
+      <div class="fg2"><label class="fl2">Novo horario inicio</label>
+        <input type="time" class="fi2" id="reag-hora">
+      </div>
+      <div class="fg2"><label class="fl2">Novo horario fim</label>
+        <input type="time" class="fi2" id="reag-hora-fim">
+      </div>
+    </div>
+    <input type="hidden" id="reag-ev-id">
+    <div class="mf">
+      <button class="btn" onclick="closeM('m-reagendar')">Cancelar</button>
+      <button class="btn btn-p" onclick="confirmarReagendamento()">Reagendar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal: Configurar Meta Semanal -->
 <div class="modal-ov" id="m-meta-treino" onclick="closeMBg(event,'m-meta-treino')">
@@ -2089,6 +2267,7 @@ function showApp(){
     loadMetaTreino();
     setTimeout(initDateInputs, 500);
     setTimeout(migrateTreinos, 1000);
+    setTimeout(loadMissao, 800);
   });
 }
 function lTab(t){
@@ -3051,6 +3230,14 @@ function renderAgenda(){
       delBtn.textContent='x';
       delBtn.addEventListener('click',(function(id){ return function(e){ e.stopPropagation(); delEvento(id); }; })(ev.id));
       evDiv.appendChild(delBtn);
+      // Botao reagendar
+      var reagBtn=document.createElement('button');
+      reagBtn.className='pb-ev-del';
+      reagBtn.style.cssText='position:absolute;bottom:3px;left:4px;background:rgba(196,168,130,0.3);border:none;color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;';
+      reagBtn.textContent='R';
+      reagBtn.title='Reagendar';
+      reagBtn.addEventListener('click',(function(id){ return function(e){ e.stopPropagation(); abrirReagendar(id); }; })(ev.id));
+      evDiv.appendChild(reagBtn);
 
       body.appendChild(evDiv);
     });
@@ -3082,6 +3269,7 @@ function toggleEventoFeito(id, dStr){
   DB.update('eventos', id, {feitoDatas: ev.feitoDatas}).then(function(){
     renderAgenda();
     renderEventosHoje();
+    renderMissao();
   });
 }
 
@@ -3529,6 +3717,7 @@ function toggleTreino(id){
   DB.update('treinos',id,{feito:t.feito,feitoDatas:t.feitoDatas}).then(function(){
     renderTreino();
     updPlannerStats();
+    renderMissao();
   });
 }
 function delTreino(id){ if(!confirm('Excluir treino?')) return; DB.delete('treinos',id).then(function(){ treinos=treinos.filter(function(t){ return t.id!==id; }); toast('Excluido.'); renderTreino(); }); }
@@ -4730,6 +4919,257 @@ function renderEvolucao(){
     ecB.querySelector('.hub-conquista-icon').textContent=msg.icon;
     ecB.querySelector('.hub-conquista-txt').innerHTML=msg.txt;
   }
+}
+
+// =====================================================
+// SISTEMA DE GAMIFICA\u00C7\u00C3O \u2014 MISS\u00C3O DA SEMANA
+// =====================================================
+
+// Estado local da miss\u00E3o (salvo no Firebase)
+var missaoState = {
+  metaEventos: 5,
+  metaTreinos: 5,
+  maxReag: 3,
+  reagUsados: 0,
+  streakSemanas: 0,
+  xpTotal: 0,
+  premioCurrent: '\u1F3C6 Trof\u00E9u',
+  semanaInicio: '',
+  historicoSemanas: []
+};
+
+var NIVEIS = [
+  {nome:'Iniciante',   xp:0,    emoji:'\u1F331', css:'nivel-iniciante'},
+  {nome:'Guerreiro',   xp:100,  emoji:'\u2694\uFE0F',  css:'nivel-guerreiro'},
+  {nome:'Consistente', xp:300,  emoji:'\u1F525', css:'nivel-consistente'},
+  {nome:'Elite',       xp:700,  emoji:'\u1F48E', css:'nivel-elite'},
+  {nome:'Lend\u00E1rio',    xp:1500, emoji:'\u1F451', css:'nivel-lendario'},
+];
+
+function getNivel(xp){
+  var n = NIVEIS[0];
+  for(var i=0;i<NIVEIS.length;i++){ if(xp >= NIVEIS[i].xp) n = NIVEIS[i]; }
+  return n;
+}
+
+function getProxNivel(xp){
+  for(var i=0;i<NIVEIS.length;i++){ if(NIVEIS[i].xp > xp) return NIVEIS[i]; }
+  return null;
+}
+
+function loadMissao(){
+  DB.getUser(G.user.uid).then(function(ud){
+    if(ud && ud.missao){
+      Object.assign(missaoState, ud.missao);
+      // Verifica se semana mudou (reset reagendamentos)
+      var mon = getMonday(0).toISOString().slice(0,10);
+      if(missaoState.semanaInicio !== mon){
+        missaoState.semanaInicio = mon;
+        missaoState.reagUsados = 0;
+        saveMissao();
+      }
+    }
+    renderMissao();
+  });
+}
+
+function saveMissao(){
+  DB.setUser(G.user.uid, {missao: missaoState});
+}
+
+function renderMissao(){
+  var mon = getMonday(0);
+  var sun = new Date(mon); sun.setDate(mon.getDate()+6);
+
+  // Conta eventos feitos esta semana
+  var evFeitos = 0, evTotal = 0;
+  eventos.forEach(function(ev){
+    for(var i=0;i<7;i++){
+      var d = new Date(mon); d.setDate(mon.getDate()+i);
+      var ds = d.toISOString().slice(0,10);
+      if(eventoAparece(ev,ds)){
+        evTotal++;
+        if((ev.feitoDatas||[]).indexOf(ds)>=0) evFeitos++;
+      }
+    }
+  });
+
+  // Conta treinos feitos esta semana
+  var trFeitos = 0, trTotal = 0;
+  var DIAS_FULL = ['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  treinos.forEach(function(t){
+    for(var i=0;i<7;i++){
+      var d = new Date(mon); d.setDate(mon.getDate()+i);
+      var ds = d.toISOString().slice(0,10);
+      var diaD = DIAS_FULL[d.getDay()];
+      var pertence = (t.data && t.data===ds) || (t.dia && t.dia===diaD && !t.data);
+      if(pertence){
+        trTotal++;
+        if((t.feitoDatas||[]).indexOf(ds)>=0) trFeitos++;
+      }
+    }
+  });
+
+  var totalFeitos = evFeitos + trFeitos;
+  var totalMeta   = missaoState.metaEventos + missaoState.metaTreinos;
+  var pct = totalMeta>0 ? Math.min(100, Math.round(totalFeitos/totalMeta*100)) : 0;
+  var xp  = missaoState.xpTotal;
+  var nivel = getNivel(xp);
+  var proxNivel = getProxNivel(xp);
+
+  // Atualiza hero
+  var badge = $('missao-nivel-badge');
+  if(badge){ badge.textContent = nivel.emoji+' '+nivel.nome; badge.className='missao-nivel-badge '+nivel.css; }
+  var nomeEl = $('missao-nivel-nome');
+  if(nomeEl) nomeEl.textContent = G.name || 'Voce';
+  var xpTxt = $('missao-xp-txt');
+  if(xpTxt) xpTxt.textContent = xp+' XP'+( proxNivel?' \u2014 faltam '+(proxNivel.xp-xp)+' para '+proxNivel.nome:'\u2014 nivel maximo!');
+  var bar = $('missao-prog-bar');
+  if(bar) bar.style.width = pct+'%';
+  var progLbl = $('missao-prog-label');
+  if(progLbl) progLbl.textContent = pct+'% da semana concluido';
+  var metaLbl = $('missao-meta-label');
+  if(metaLbl) metaLbl.textContent = 'Meta: '+totalMeta+' atividades';
+  var streakEl = $('missao-streak');
+  if(streakEl) streakEl.textContent = missaoState.streakSemanas;
+  var xpEl = $('missao-xp');
+  if(xpEl) xpEl.textContent = xp;
+  var feitosEl = $('missao-feitos');
+  if(feitosEl) feitosEl.textContent = totalFeitos+'/'+totalMeta;
+  var reagEl = $('missao-reag');
+  if(reagEl) reagEl.textContent = (missaoState.maxReag - missaoState.reagUsados);
+
+  // Vidas (reagendamentos restantes)
+  var vidasEl = $('missao-vidas');
+  if(vidasEl){
+    vidasEl.innerHTML = '';
+    var totalVidas = missaoState.maxReag;
+    var usadas = missaoState.reagUsados;
+    for(var v=0;v<totalVidas;v++){
+      var sp = document.createElement('span');
+      sp.className = 'vida'+(v < usadas ? ' perdida':'');
+      sp.textContent = '\u2764\uFE0F';
+      vidasEl.appendChild(sp);
+    }
+    var rl = document.createElement('span');
+    rl.style.cssText = 'font-size:10px;color:rgba(240,234,216,0.4);margin-left:4px;';
+    rl.textContent = 'reagendamentos esta semana';
+    vidasEl.appendChild(rl);
+  }
+
+  // Verifica se bateu a meta
+  if(pct >= 100 && !missaoState._premioJaExibido){
+    missaoState._premioJaExibido = true;
+    setTimeout(function(){ mostrarParabens(evFeitos, trFeitos, totalMeta); }, 800);
+  }
+}
+
+function salvarMetaSemana(){
+  var mev = parseInt($('ms-meta-ev') ? $('ms-meta-ev').value : 5) || 5;
+  var mtr = parseInt($('ms-meta-tr') ? $('ms-meta-tr').value : 5) || 5;
+  var mr  = parseInt($('ms-reag')    ? $('ms-reag').value    : 3) || 3;
+  missaoState.metaEventos = mev;
+  missaoState.metaTreinos = mtr;
+  missaoState.maxReag     = mr;
+  missaoState._premioJaExibido = false;
+  saveMissao();
+  closeM('m-meta-semana');
+  toast('Meta salva!');
+  renderMissao();
+}
+
+var _premioCurrent = '\u1F3C6 Trof\u00E9u';
+function selPremio(el, nome){
+  document.querySelectorAll('.premio-item').forEach(function(p){ p.classList.remove('sel'); });
+  el.classList.add('sel');
+  _premioCurrent = ($('premio-custom') && $('premio-custom').value.trim()) || nome;
+}
+
+function mostrarParabens(evF, trF, total){
+  var xpGanho = total * 10 + (missaoState.streakSemanas * 5);
+  missaoState.xpTotal += xpGanho;
+  missaoState.streakSemanas += 1;
+  missaoState._premioJaExibido = true;
+  saveMissao();
+  lancarConfetti();
+  var titulo = $('par-titulo');
+  var sub    = $('par-sub');
+  var stats  = $('par-stats');
+  var pEmoji = $('par-premio-emoji');
+  var pNome  = $('par-premio-nome');
+  if(titulo) titulo.textContent = 'Meta da semana batida!';
+  if(sub)    sub.textContent    = 'Voce completou a missao! +'+xpGanho+' XP';
+  if(stats)  stats.innerHTML    = '\u2705 '+evF+' eventos concluidos<br>\u1F3CB\uFE0F '+trF+' treinos feitos<br>\u1F525 '+missaoState.streakSemanas+' semanas consecutivas<br>\u2B50 '+missaoState.xpTotal+' XP total';
+  var nivel = getNivel(missaoState.xpTotal);
+  if(pEmoji) pEmoji.textContent = nivel.emoji;
+  if(pNome)  pNome.textContent  = missaoState.premioCurrent || nivel.nome+' desbloqueado!';
+  openM('m-parabens');
+  renderMissao();
+}
+
+function resgatarPremio(){
+  var custom = $('premio-custom') ? $('premio-custom').value.trim() : '';
+  missaoState.premioCurrent = custom || _premioCurrent;
+  saveMissao();
+  closeM('m-premio');
+  toast('Premio definido: '+missaoState.premioCurrent);
+}
+
+function lancarConfetti(){
+  var cores = ['#c4a882','#5a7a5a','#1e6faa','#c94040','#f0c060','#7c3aed'];
+  for(var i=0;i<40;i++){
+    (function(i){
+      setTimeout(function(){
+        var c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.cssText = 'left:'+Math.random()*100+'vw;top:-10px;background:'+cores[Math.floor(Math.random()*cores.length)]+';animation-duration:'+(1.5+Math.random())+'s;animation-delay:'+Math.random()*0.5+'s;transform:rotate('+Math.random()*360+'deg);';
+        document.body.appendChild(c);
+        setTimeout(function(){ c.remove(); }, 3000);
+      }, i*30);
+    })(i);
+  }
+}
+
+// =====================================================
+// REAGENDAMENTO DE EVENTOS
+// =====================================================
+var _reagEvId = null;
+function abrirReagendar(id){
+  var reag = missaoState.maxReag - missaoState.reagUsados;
+  if(reag <= 0){
+    toast('Sem reagendamentos disponiveis esta semana!'); return;
+  }
+  var ev = eventos.find(function(e){ return e.id===id; });
+  if(!ev) return;
+  _reagEvId = id;
+  var aviso = $('reag-aviso');
+  if(aviso) aviso.textContent = 'Voce tem '+reag+' reagendamento(s) restante(s) esta semana. Usar 1 agora?';
+  var tit = $('reag-titulo-ev');
+  if(tit) tit.textContent = ev.titulo;
+  setDateVal('reag-data', ev.data||'');
+  if($('reag-hora')) $('reag-hora').value = ev.hora||'';
+  if($('reag-hora-fim')) $('reag-hora-fim').value = ev.horaFim||'';
+  openM('m-reagendar');
+}
+
+function confirmarReagendamento(){
+  if(!_reagEvId) return;
+  var novaData  = getDateVal('reag-data');
+  var novaHora  = $('reag-hora') ? $('reag-hora').value : '';
+  var novaHFim  = $('reag-hora-fim') ? $('reag-hora-fim').value : '';
+  if(!novaData){ toast('Informe a nova data.'); return; }
+  var updates = {data:novaData, hora:novaHora, horaFim:novaHFim, recorrente:'0', reagendado:true};
+  DB.update('eventos', _reagEvId, updates).then(function(){
+    var ev = eventos.find(function(e){ return e.id===_reagEvId; });
+    if(ev) Object.assign(ev, updates);
+    missaoState.reagUsados++;
+    missaoState._premioJaExibido = false;
+    saveMissao();
+    closeM('m-reagendar');
+    toast('Reagendado! \u2764\uFE0F '+(missaoState.maxReag-missaoState.reagUsados)+' restante(s)');
+    renderAgenda();
+    renderMissao();
+  });
 }
 </script>
 
