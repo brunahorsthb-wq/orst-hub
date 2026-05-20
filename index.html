@@ -415,6 +415,27 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .date-input { letter-spacing: 1px; }
 .date-input.valid { border-color: var(--green) !important; }
 .date-input.invalid { border-color: var(--red) !important; }
+
+/* ===== MISSAO HERO ===== */
+.missao-hero{background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 100%);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden;}
+.missao-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(196,168,130,0.08);}
+.missao-titulo{font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.missao-nivel{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.missao-nivel-badge{background:var(--warm);color:var(--ink);font-size:11px;font-weight:700;padding:3px 12px;border-radius:100px;}
+.missao-nivel-nome{font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);}
+.missao-xp{font-size:11px;color:rgba(240,234,216,0.5);margin-bottom:10px;}
+.missao-prog-wrap{background:rgba(255,255,255,0.1);border-radius:100px;height:10px;margin:8px 0 4px;overflow:hidden;}
+.missao-prog-bar{background:linear-gradient(90deg,var(--warm),#f0c060);height:100%;border-radius:100px;transition:width .5s;}
+.missao-prog-txt{display:flex;justify-content:space-between;font-size:10px;color:rgba(240,234,216,0.4);}
+.missao-stats{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+.missao-stat{text-align:center;}
+.missao-stat-v{font-family:var(--fs);font-size:20px;font-weight:300;color:var(--warm);line-height:1;}
+.missao-stat-l{font-size:9px;color:rgba(240,234,216,0.35);text-transform:uppercase;letter-spacing:.07em;margin-top:2px;}
+.missao-vidas{display:flex;gap:4px;margin-top:10px;align-items:center;flex-wrap:wrap;}
+.vida{font-size:15px;} .vida.perdida{filter:grayscale(1);opacity:.3;}
+.missao-btn-meta{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--cream);font-size:11px;padding:5px 12px;border-radius:100px;cursor:pointer;font-family:var(--fn);margin-top:8px;}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease-in forwards;pointer-events:none;z-index:9999;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -919,15 +940,20 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         <div class="sidebar">
           <div class="sb-g">
             <div class="sb-l">Planner</div>
+            <div class="sb-i"        data-page="pl-dash"    onclick="goPP(this)"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
             <div class="sb-i active" data-page="pl-agenda"  onclick="goPP(this)"><span class="sb-ic">C</span><span>Agenda</span></div>
             <div class="sb-i"        data-page="pl-habitos" onclick="goPP(this)"><span class="sb-ic">V</span><span>Habitos</span></div>
             <div class="sb-i"        data-page="pl-metas"   onclick="goPP(this)"><span class="sb-ic">O</span><span>Metas</span></div>
           </div>
           <div class="sb-g">
             <div class="sb-l">Saude</div>
-            <div class="sb-i" data-page="pl-alim"   onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
-            <div class="sb-i" data-page="pl-sono"   onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
-            <div class="sb-i" data-page="pl-treino" onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
+            <div class="sb-i" data-page="pl-alim"    onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
+            <div class="sb-i" data-page="pl-sono"    onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
+            <div class="sb-i" data-page="pl-treino"  onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
+          </div>
+          <div class="sb-g">
+            <div class="sb-l">Evolucao</div>
+            <div class="sb-i" data-page="pl-evolucao" onclick="goPP(this)"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
           </div>
           <div class="sb-foot">
             <div class="sb-ui">
@@ -945,6 +971,30 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="pg-area">
             <!-- Agenda/Dashboard -->
             <div class="page active" id="page-pl-agenda">
+              <!-- Hero Missao da Semana -->
+              <div class="missao-hero">
+                <div class="missao-titulo">Missao desta semana</div>
+                <div class="missao-nivel">
+                  <span class="missao-nivel-badge" id="missao-nivel-badge">&#127807; Iniciante</span>
+                  <span class="missao-nivel-nome" id="missao-nivel-nome">Voce</span>
+                </div>
+                <div class="missao-xp" id="missao-xp-txt">0 XP acumulado</div>
+                <div class="missao-prog-wrap"><div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div></div>
+                <div class="missao-prog-txt">
+                  <span id="missao-prog-label">0% concluido</span>
+                  <span id="missao-meta-label">Meta: 10 atividades</span>
+                </div>
+                <div class="missao-vidas" id="missao-vidas"></div>
+                <div class="missao-stats">
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP Total</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta semana</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                  <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
+                </div>
+              </div>
               <!-- Hero do dia -->
               <div class="pl-hero">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;">
@@ -979,6 +1029,170 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
               </div>
             </div>
+<div class="page" id="page-pl-dash">
+              <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;">
+                <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Dashboard da Semana</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                  <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
+                  <div style="display:flex;gap:6px;">
+                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">&#8592;</button>
+                    <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">Hoje</button>
+                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">&#8594;</button>
+                  </div>
+                </div>
+                <div style="margin-top:12px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;">
+                    <span>Consistencia geral da semana</span>
+                    <span id="pld-pct-txt">0%</span>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:10px;overflow:hidden;">
+                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;background:linear-gradient(90deg,var(--warm),#5a7a5a);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Calendario -->
+              <div class="panel">
+                <div class="ph"><div class="pt">Calendario da semana</div></div>
+                <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;"></div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--ink3);">
+                  <span>&#11088; Dia perfeito</span>
+                  <span>&#128994; Treino+habitos</span>
+                  <span>&#128993; Parcial</span>
+                  <span>&#128308; Perdido</span>
+                  <span>&#9711; Futuro</span>
+                </div>
+              </div>
+
+              <!-- Cards 4 sistemas -->
+              <div class="g4" style="grid-template-columns:repeat(2,1fr);">
+                <div class="mc" style="flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:16px;">&#128197;</span>
+                    <div class="mc-l">Agenda</div>
+                  </div>
+                  <div class="mc-v b" id="pld-ev-num" style="font-size:22px;">0/0</div>
+                  <div style="font-size:10px;color:var(--ink3);">eventos feitos</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
+                    <div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
+                  </div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:16px;">&#10003;</span>
+                    <div class="mc-l">Habitos</div>
+                  </div>
+                  <div class="mc-v g" id="pld-hab-num" style="font-size:22px;">0%</div>
+                  <div style="font-size:10px;color:var(--ink3);">taxa de conclusao</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
+                    <div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
+                  </div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:16px;">&#127947;</span>
+                    <div class="mc-l">Treinos</div>
+                  </div>
+                  <div class="mc-v a" id="pld-tr-num" style="font-size:22px;">0/0</div>
+                  <div style="font-size:10px;color:var(--ink3);">treinos feitos</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
+                    <div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
+                  </div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:6px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:16px;">&#128564;</span>
+                    <div class="mc-l">Sono</div>
+                  </div>
+                  <div class="mc-v b" id="pld-sono-num" style="font-size:22px;">0h</div>
+                  <div style="font-size:10px;color:var(--ink3);">media semanal</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
+                    <div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Eventos da semana -->
+              <div class="panel">
+                <div class="ph"><div class="pt">Eventos desta semana</div></div>
+                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div>
+              </div>
+
+              <!-- Habitos da semana -->
+              <div class="panel">
+                <div class="ph"><div class="pt">Habitos desta semana</div></div>
+                <div id="pld-habitos-list"></div>
+              </div>
+            </div>
+
+            <!-- ============ EVOLUÇÃO PESSOAL ============ -->
+            <div class="page" id="page-pl-evolucao">
+              <!-- Frase do dia -->
+              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;">
+                <div style="position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
+                <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Frase do dia</div>
+                <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
+                <div style="font-size:11px;color:var(--warm);margin-top:10px;" id="ev-frase-autor"></div>
+              </div>
+
+              <!-- Nivel -->
+              <div class="panel">
+                <div class="ph"><div class="pt">Nivel de evolucao</div></div>
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                  <div style="font-size:44px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
+                  <div style="flex:1;">
+                    <div style="font-family:var(--fs);font-size:20px;font-weight:400;color:var(--ink);" id="ev-nivel-nome">Iniciante</div>
+                    <div style="font-size:11px;color:var(--ink3);margin-top:2px;" id="ev-nivel-xp">0 XP</div>
+                    <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-top:8px;">
+                      <div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="g4" style="grid-template-columns:repeat(4,1fr);">
+                  <div class="mc"><div class="mc-l">XP</div><div class="mc-v b" id="ev-xp">0</div></div>
+                  <div class="mc"><div class="mc-l">Semanas</div><div class="mc-v g" id="ev-streak-sem">0</div></div>
+                  <div class="mc"><div class="mc-l">Dias</div><div class="mc-v a" id="ev-streak-dias">0</div></div>
+                  <div class="mc"><div class="mc-l">Reagend.</div><div class="mc-v" id="ev-reag">3</div></div>
+                </div>
+              </div>
+
+              <!-- Semana visual -->
+              <div class="panel">
+                <div class="ph"><div class="pt">Esta semana</div></div>
+                <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
+                <div class="g4" style="grid-template-columns:repeat(2,1fr);">
+                  <div class="mc"><div class="mc-l">Treinos</div><div class="mc-v g" id="ev-rc-treinos">0/0</div></div>
+                  <div class="mc"><div class="mc-l">Habitos</div><div class="mc-v b" id="ev-rc-habitos">0%</div></div>
+                  <div class="mc"><div class="mc-l">Eventos</div><div class="mc-v a" id="ev-rc-eventos">0/0</div></div>
+                  <div class="mc"><div class="mc-l">Vidas</div><div class="mc-v r" id="ev-rc-vidas">3/3</div></div>
+                </div>
+                <div style="margin-top:12px;">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;">
+                    <span>Meta de treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
+                    <span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span>
+                  </div>
+                  <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;">
+                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;background:var(--green);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mensagem -->
+              <div class="panel ev-conquista-box">
+                <div class="ph"><div class="pt">Mensagem da semana</div></div>
+                <div style="display:flex;gap:12px;align-items:center;padding:4px 0;">
+                  <div class="hub-conquista-icon" style="font-size:32px;flex-shrink:0;"></div>
+                  <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.7;"></div>
+                </div>
+              </div>
+
+              <!-- Trofeus -->
+              <div class="panel" id="ev-trofeus-panel" style="display:none;">
+                <div class="ph"><div class="pt">&#127942; Trofeus conquistados</div></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;" id="ev-trofeus-lista"></div>
+              </div>
+            </div>
+
             <!-- Habitos -->
             <div class="page" id="page-pl-habitos">
               <div class="g3">
@@ -1444,6 +1658,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
 
 <div class="toast" id="toast"></div>
+
+
 
 <!-- Modal: Configurar Meta Semanal -->
 <div class="modal-ov" id="m-meta-treino" onclick="closeMBg(event,'m-meta-treino')">
@@ -1965,6 +2181,7 @@ function showApp(){
     loadReceber();
     loadInvest();
     loadPatrimonio();
+    setTimeout(loadMetaFromDB, 700);
     loadRefeicoes();
     loadMetaTreino();
     setTimeout(initDateInputs, 500);
@@ -2099,12 +2316,14 @@ function goPP(el){
   document.querySelectorAll('#sis-planner .page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
-  var T = {'pl-agenda':'Agenda semanal','pl-habitos':'Habitos diarios','pl-metas':'Metas de vida',
+  var T = {'pl-dash':'Dashboard da semana','pl-evolucao':'Evolucao Pessoal','pl-agenda':'Agenda semanal','pl-habitos':'Habitos diarios','pl-metas':'Metas de vida',
     'pl-alim':'Alimentacao','pl-sono':'Qualidade do sono','pl-treino':'Fichas de treino'};
   var AB = {'pl-agenda':'m-evento','pl-habitos':'m-hab','pl-metas':'m-mvida','pl-alim':'m-ref','pl-treino':'m-treino'};
   $('pl-ttl').textContent = T[pid] || pid;
   var ab = $('pl-add');
   if(AB[pid]){ ab.style.display=''; ab.onclick = function(){ openM(AB[pid]); }; } else ab.style.display='none';
+  if(pid==='pl-dash')     renderPlDash();
+  if(pid==='pl-evolucao') renderEvolucao();
   if(pid==='pl-habitos')  renderHabitos();
   if(pid==='pl-metas')    renderMetasVida();
   if(pid==='pl-alim')     renderAlimentacao();
@@ -3881,8 +4100,23 @@ function initDateInputs() {
 // Pega valor ISO de um campo de data
 function getDateVal(id) {
   var el = $(id); if (!el) return '';
-  return displayToIso(el.value) || el.value;
+  var v = el.value || '';
+  if (!v) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  return displayToIso(v) || v;
 }
+
+function setDateVal(id, val) {
+  var el = $(id); if (!el) return;
+  if (!val) { el.value = ''; return; }
+  if (el.type === 'date') {
+    el.value = val.match(/^\d{4}-\d{2}-\d{2}$/) ? val : (displayToIso(val) || '');
+  } else {
+    el.value = val.match(/^\d{4}-\d{2}-\d{2}$/) ? isoToDisplay(val) : val;
+  }
+}
+
+
 
 // Define valor em campo de data (aceita ISO ou display)
 function setDateVal(id, val) {
@@ -4326,6 +4560,390 @@ function confirmarReagendar(){
     renderAgenda();
   });
 }
+
+// =====================================================
+// GAMIFICA\u00C7\u00C3O \u2014 MISS\u00C3O DA SEMANA
+// =====================================================
+function saveMetaState(){
+  if(!G.user) return;
+  DB.setUser(G.user.uid, {gmeta: G_META});
+}
+
+function loadMetaFromDB(){
+  if(!G.user) return;
+  DB.getUser(G.user.uid).then(function(ud){
+    if(ud && ud.gmeta) Object.assign(G_META, ud.gmeta);
+    var mon = getMonday(0).toISOString().slice(0,10);
+    if(G_META.ultimaVerificacao !== mon){
+      G_META.reagendamentos = 3;
+      G_META.ultimaVerificacao = mon;
+      G_META._premioExibido = false;
+      saveMetaState();
+    }
+    renderMissao();
+    renderEvolucao();
+  });
+}
+
+function renderMissao(){
+  var mon = getMonday(0);
+  var semIni = mon.toISOString().slice(0,10);
+  var semFimD = new Date(mon); semFimD.setDate(mon.getDate()+6);
+  var semFim = semFimD.toISOString().slice(0,10);
+  var evFeitos=0, evTotal=0;
+  eventos.forEach(function(ev){
+    for(var i=0;i<7;i++){
+      var d=new Date(mon); d.setDate(mon.getDate()+i);
+      var ds=d.toISOString().slice(0,10);
+      if(eventoAparece(ev,ds)){ evTotal++; if((ev.feitoDatas||[]).indexOf(ds)>=0) evFeitos++; }
+    }
+  });
+  var trFeitos=0;
+  treinos.forEach(function(t){
+    if((t.feitoDatas||[]).some(function(d){ return d>=semIni&&d<=semFim; })) trFeitos++;
+  });
+  var totalFeitos=evFeitos+trFeitos;
+  var totalMeta=(G_META.metaEventos||5)+(G_META.qtd||5);
+  var pct=totalMeta>0?Math.min(100,Math.round(totalFeitos/totalMeta*100)):0;
+  var niv=getNivel(G_META.xpTotal||0);
+  var badge=$('missao-nivel-badge'); if(badge) badge.textContent=niv.icon+' '+niv.nome;
+  var nomeEl=$('missao-nivel-nome'); if(nomeEl) nomeEl.textContent=G.name||'Voce';
+  var xpTxt=$('missao-xp-txt');
+  if(xpTxt){
+    var prox=null;
+    for(var ni=0;ni<NIVEIS.length;ni++){ if(NIVEIS[ni].min>(G_META.xpTotal||0)){ prox=NIVEIS[ni]; break; } }
+    xpTxt.textContent=(G_META.xpTotal||0)+' XP'+(prox?' | faltam '+(prox.min-(G_META.xpTotal||0))+' para '+prox.nome:'');
+  }
+  var bar=$('missao-prog-bar'); if(bar) bar.style.width=pct+'%';
+  var pL=$('missao-prog-label'); if(pL) pL.textContent=pct+'% concluido';
+  var mL=$('missao-meta-label'); if(mL) mL.textContent='Meta: '+totalMeta+' atividades';
+  var stk=$('missao-streak'); if(stk) stk.textContent=G_META.streakSemanas||0;
+  var xpEl=$('missao-xp'); if(xpEl) xpEl.textContent=G_META.xpTotal||0;
+  var fEl=$('missao-feitos'); if(fEl) fEl.textContent=totalFeitos+'/'+totalMeta;
+  var rEl=$('missao-reag'); if(rEl) rEl.textContent=G_META.reagendamentos||3;
+  var vidasEl=$('missao-vidas');
+  if(vidasEl){
+    vidasEl.innerHTML='';
+    var usados=3-(G_META.reagendamentos||3);
+    for(var v=0;v<3;v++){
+      var sp=document.createElement('span');
+      sp.className='vida'+(v<usados?' perdida':'');
+      sp.textContent='\u2764\uFE0F';
+      vidasEl.appendChild(sp);
+    }
+    var rl=document.createElement('span');
+    rl.style.cssText='font-size:10px;color:rgba(240,234,216,0.4);margin-left:4px;';
+    rl.textContent='reagendamentos';
+    vidasEl.appendChild(rl);
+  }
+  if(pct>=100&&!G_META._premioExibido){
+    G_META._premioExibido=true; saveMetaState();
+    setTimeout(function(){ mostrarParabens(evFeitos,trFeitos,totalMeta); },800);
+  }
+}
+
+var FRASES_MOTIV = [
+  'Quando voc\u00EA tem valor, voc\u00EA tem controle.',
+  'Decidir ser exigente \u00E9 meu jeito de dizer que sei o que quero.',
+  'Seja obcecada por resultado, porque o resultado resolve tudo.',
+  'Abrir m\u00E3o do bom para que o excelente chegue.',
+  'A paz exige escolhas que o ego jamais faria.',
+  'Eu sou forte, corajosa e decidida. Eu me escolho.',
+  'Cair n\u00E3o quebra o progresso. Desistir sim.',
+  'Ser aut\u00EAntica. A originalidade \u00E9 a minha maior for\u00E7a.',
+  'Consist\u00EAncia n\u00E3o \u00E9 perfei\u00E7\u00E3o. \u00C9 continuar mesmo nos dias dif\u00EDceis.',
+  'O objetivo n\u00E3o \u00E9 ser perfeita. \u00C9 continuar evoluindo.',
+  'Voc\u00EA est\u00E1 aprendendo a confiar em si mesma.',
+  'Pequenas escolhas criam grandes mudan\u00E7as.',
+  'A verdadeira for\u00E7a est\u00E1 em ser humilde.',
+  'Reorganizar tamb\u00E9m \u00E9 continuar.',
+  'Cair e levantar faz parte da vida. S\u00F3 acontece com quem est\u00E1 vivendo.'
+];
+
+function renderEvolucao(){
+  var mon3 = getMonday(0);
+  var semIniE = mon3.toISOString().slice(0,10);
+  var semFimDE = new Date(mon3); semFimDE.setDate(mon3.getDate()+6);
+  var semFimE = semFimDE.toISOString().slice(0,10);
+  var DIAS_FULL=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  var fIdx=(hoje.getDate()+hoje.getMonth())%FRASES_MOTIV.length;
+  var efEl=$('ev-frase-txt'); if(efEl) efEl.innerHTML='\u201C'+FRASES_MOTIV[fIdx]+'\u201D';
+  var eaEl=$('ev-frase-autor'); if(eaEl) eaEl.textContent='';
+  var niv=getNivel(G_META.xpTotal||0);
+  var nivIdx=0;
+  for(var ni=0;ni<NIVEIS.length;ni++){ if(NIVEIS[ni].nome===niv.nome) nivIdx=ni; }
+  var nextNiv=NIVEIS[Math.min(nivIdx+1,NIVEIS.length-1)];
+  var xpPct=nextNiv.min>niv.min?Math.min(100,Math.round(((G_META.xpTotal||0)-niv.min)/(nextNiv.min-niv.min)*100)):100;
+  var eI=$('ev-nivel-icon'); if(eI) eI.textContent=niv.icon;
+  var eN=$('ev-nivel-nome'); if(eN) eN.textContent=niv.nome;
+  var eX=$('ev-nivel-xp'); if(eX) eX.textContent=(G_META.xpTotal||0)+' XP'+(xpPct<100?' \u00B7 faltam '+(nextNiv.min-(G_META.xpTotal||0))+' XP':'');
+  var eP=$('ev-nivel-prog'); if(eP) eP.style.width=xpPct+'%';
+  var exEl=$('ev-xp'); if(exEl) exEl.textContent=G_META.xpTotal||0;
+  var esEl=$('ev-streak-sem'); if(esEl) esEl.textContent=G_META.streakSemanas||0;
+  var edEl=$('ev-streak-dias'); if(edEl) edEl.textContent=G_META.streakDias||0;
+  var erEl=$('ev-reag'); if(erEl) erEl.textContent=G_META.reagendamentos||3;
+  var trFeitosSem=0;
+  treinos.forEach(function(t){
+    if((t.feitoDatas||[]).some(function(d){ return d>=semIniE&&d<=semFimE; })) trFeitosSem++;
+  });
+  var metaPct=G_META.qtd>0?Math.min(100,Math.round(trFeitosSem/G_META.qtd*100)):0;
+  var emP=$('ev-meta-pct'); if(emP) emP.textContent=metaPct+'%';
+  var emB=$('ev-meta-bar'); if(emB){ emB.style.width=metaPct+'%'; }
+  var etF=$('ev-tr-feitos'); if(etF) etF.textContent=trFeitosSem;
+  var etM=$('ev-tr-meta'); if(etM) etM.textContent=G_META.qtd;
+  var habHoje2=habitos.filter(function(h){ return habitoDeveHoje(h); });
+  var habFeitos2=habHoje2.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var habPct2=habHoje2.length>0?Math.round(habFeitos2/habHoje2.length*100):0;
+  var evHoje2=eventos.filter(function(e){ return eventoAparece(e,hojeStr); });
+  var evFeitos2=evHoje2.filter(function(e){ return (e.feitoDatas||[]).indexOf(hojeStr)>=0; }).length;
+  var ercT=$('ev-rc-treinos'); if(ercT) ercT.textContent=trFeitosSem+'/'+G_META.qtd;
+  var ercH=$('ev-rc-habitos'); if(ercH) ercH.textContent=habPct2+'%';
+  var ercE=$('ev-rc-eventos'); if(ercE) ercE.textContent=evFeitos2+'/'+evHoje2.length;
+  var ercV=$('ev-rc-vidas'); if(ercV) ercV.textContent=(G_META.reagendamentos||3)+'/3';
+  var sgEl=$('ev-semana-grid');
+  if(sgEl){
+    sgEl.innerHTML='';
+    for(var d2=0;d2<7;d2++){
+      var dDate2=new Date(mon3); dDate2.setDate(mon3.getDate()+d2);
+      var dStr2=dDate2.toISOString().slice(0,10);
+      var diaN2=DIAS_FULL[dDate2.getDay()];
+      var isHj2=dDate2.toDateString()===hoje.toDateString();
+      var isFut=dDate2>hoje;
+      var trD2=treinos.filter(function(t){ return (t.data&&t.data===dStr2)||(t.dia&&t.dia===diaN2&&!t.data); });
+      var fezTr=trD2.some(function(t){ return (t.feitoDatas||[]).indexOf(dStr2)>=0; });
+      var habDia=habitos.filter(function(h){ return habitoDeveHoje(h); });
+      var habFD=habDia.filter(function(h){ return (h.doneDatas||[]).indexOf(dStr2)>=0||(h.doneDate===dStr2); });
+      var habOk=habDia.length>0&&habFD.length>=habDia.length*0.7;
+      var div=document.createElement('div');
+      div.style.cssText='border-radius:8px;padding:6px 4px;text-align:center;background:'+(isHj2?'var(--nude2)':'transparent')+';border:2px solid '+(isHj2?'var(--warm)':'transparent')+';';
+      var icon=isFut?'O':fezTr&&habOk?'*':fezTr||habOk?'+':isHj2?'-':'x';
+      div.innerHTML='<div style="font-size:9px;font-weight:600;color:var(--ink3);">'+['D','S','T','Q','Q','S','S'][dDate2.getDay()]+'</div><div style="font-size:16px;margin:2px 0;color:'+(fezTr&&habOk?'var(--warm)':fezTr||habOk?'var(--green)':isFut?'var(--nude3)':'var(--red)')+'">'+icon+'</div><div style="font-size:10px;color:'+(isHj2?'var(--warm)':'var(--ink3)')+'">'+dDate2.getDate()+'</div>';
+      sgEl.appendChild(div);
+    }
+  }
+  var tPanel=$('ev-trofeus-panel'),tLista=$('ev-trofeus-lista');
+  if(tPanel&&tLista){
+    if(G_META.trofeus&&G_META.trofeus.length){
+      tPanel.style.display='';
+      tLista.innerHTML='';
+      G_META.trofeus.forEach(function(id){
+        var def=TROFEUS_DEF.find(function(t){ return t.id===id; }); if(!def) return;
+        var div=document.createElement('div');
+        div.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;background:var(--nude2);border-radius:var(--r-sm);min-width:60px;';
+        div.innerHTML='<span style="font-size:24px">'+def.icon+'</span><span style="font-size:10px;color:var(--ink3);text-align:center">'+def.nome+'</span>';
+        tLista.appendChild(div);
+      });
+    } else { tPanel.style.display='none'; }
+  }
+  var msgs=['Voce esta no caminho. Cada dia conta.','Voce cumpriu o que prometeu para si mesma.','Reorganizar tambem e continuar.','Consistencia silenciosa.','Pequenas escolhas criam grandes mudancas.','Cair nao quebra o progresso. Desistir sim.'];
+  var icons=['\uD83D\uDD25','\uD83D\uDCAA','\u2728','\uD83C\uDFC6','\uD83C\uDF31','\u26A1'];
+  var mIdx=(G_META.streakSemanas+hoje.getDate())%msgs.length;
+  var ecB=$('ev-conquista-box');
+  if(ecB){
+    var icEl=ecB.querySelector('.hub-conquista-icon'); if(icEl) icEl.textContent=icons[mIdx];
+    var txEl=ecB.querySelector('.hub-conquista-txt'); if(txEl) txEl.textContent=msgs[mIdx];
+  }
+}
+
+function mostrarParabens(evF,trF,total){
+  var xpGanho=total*10+(G_META.streakSemanas||0)*5;
+  G_META.xpTotal=(G_META.xpTotal||0)+xpGanho;
+  G_META.streakSemanas=(G_META.streakSemanas||0)+1;
+  G_META._premioExibido=true;
+  checkTrofeus(); saveMetaState(); lancarConfetti();
+  var titulo=$('par-titulo'); if(titulo) titulo.textContent='Meta da semana batida!';
+  var sub=$('par-sub'); if(sub) sub.textContent='Incrivel! +'+xpGanho+' XP';
+  var stats=$('par-stats');
+  if(stats) stats.innerHTML='\u2705 '+evF+' eventos<br>\uD83C\uDFCB '+trF+' treinos<br>\uD83D\uDD25 '+G_META.streakSemanas+' semanas<br>\u2B50 '+G_META.xpTotal+' XP';
+  var niv=getNivel(G_META.xpTotal);
+  var pEmo=$('par-premio-emoji'); if(pEmo) pEmo.textContent=niv.icon;
+  var pNome=$('par-premio-nome'); if(pNome) pNome.textContent=(G_META.premio||'Premio')+'!';
+  openM('m-parabens'); renderMissao(); renderEvolucao();
+}
+
+function checkTrofeus(){
+  var t=G_META.trofeus||[];
+  function add(id){ if(t.indexOf(id)<0) t.push(id); }
+  if(G_META.streakSemanas>=1) add('primeira_semana');
+  if(G_META.streakSemanas>=3) add('semana3');
+  if(G_META.streakSemanas>=5) add('semana5');
+  if(G_META.streakSemanas>=10) add('semana10');
+  if((G_META.xpTotal||0)>=500) add('xp500');
+  if((G_META.xpTotal||0)>=1000) add('xp1000');
+  G_META.trofeus=t;
+}
+
+function lancarConfetti(){
+  var cores=['#c4a882','#5a7a5a','#1e6faa','#c94040','#f0c060','#7c3aed'];
+  for(var i=0;i<40;i++){
+    (function(i2){ setTimeout(function(){
+      var c=document.createElement('div'); c.className='confetti-piece';
+      c.style.cssText='left:'+Math.random()*100+'vw;top:-10px;background:'+cores[Math.floor(Math.random()*cores.length)]+';animation-duration:'+(1.5+Math.random())+'s;';
+      document.body.appendChild(c); setTimeout(function(){ c.remove(); },3000);
+    },i2*30); })(i);
+  }
+}
+
+function salvarMetaSemana(){
+  G_META.metaEventos=parseInt($('ms-meta-ev')?$('ms-meta-ev').value:5)||5;
+  G_META.qtd=parseInt($('ms-meta-tr')?$('ms-meta-tr').value:5)||5;
+  G_META.premio=($('ms-premio')?$('ms-premio').value:'Autocuidado')||'Autocuidado';
+  G_META._premioExibido=false;
+  saveMetaState(); closeM('m-meta-semana'); toast('Meta salva!');
+  renderMissao(); renderEvolucao();
+}
+
+// Dashboard Semanal
+var _pldOffset=0;
+function pldSemana(dir){ if(dir===0) _pldOffset=0; else _pldOffset+=dir; renderPlDash(); }
+
+function renderPlDash(){
+  var mon=getMonday(_pldOffset);
+  var semIni=mon.toISOString().slice(0,10);
+  var semFimD=new Date(mon); semFimD.setDate(mon.getDate()+6);
+  var semFim=semFimD.toISOString().slice(0,10);
+  var DIAS_FULL=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  var DIAS_PT=['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+  var MESES2=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  var lbl=$('pld-semana-label');
+  if(lbl) lbl.textContent=_pldOffset===0?'Esta semana':_pldOffset===-1?'Semana passada':mon.getDate()+'/'+MESES2[mon.getMonth()]+' a '+semFimD.getDate()+'/'+MESES2[semFimD.getMonth()];
+  // Eventos
+  var evSem=[],evFeitosSem=0;
+  for(var d=0;d<7;d++){
+    var dDate=new Date(mon); dDate.setDate(mon.getDate()+d);
+    var ds=dDate.toISOString().slice(0,10);
+    eventos.forEach(function(ev){
+      if(eventoAparece(ev,ds)){
+        var feito=(ev.feitoDatas||[]).indexOf(ds)>=0;
+        evSem.push({ev:ev,ds:ds,feito:feito,dDate:dDate});
+        if(feito) evFeitosSem++;
+      }
+    });
+  }
+  var evTotal=evSem.length, evPct=evTotal>0?Math.round(evFeitosSem/evTotal*100):0;
+  var trFeitosSem=0;
+  treinos.forEach(function(t){
+    if((t.feitoDatas||[]).some(function(d2){ return d2>=semIni&&d2<=semFim; })) trFeitosSem++;
+  });
+  var trPct=treinos.length>0?Math.round(trFeitosSem/treinos.length*100):0;
+  var habFeitos=0,habTotal=0;
+  for(var d3=0;d3<7;d3++){
+    var dDate3=new Date(mon); dDate3.setDate(mon.getDate()+d3);
+    var ds3=dDate3.toISOString().slice(0,10);
+    habitos.forEach(function(h){
+      if(habitoDeveHoje(h)){ habTotal++; if((h.doneDatas||[]).indexOf(ds3)>=0||(h.doneDate===ds3)) habFeitos++; }
+    });
+  }
+  var habPct=habTotal>0?Math.round(habFeitos/habTotal*100):0;
+  var sonoSem=sonoLog.filter(function(s){ return s.data>=semIni&&s.data<=semFim; });
+  var sonoMedia=sonoSem.length>0?Math.round(sonoSem.reduce(function(a,s){ return a+(s.horas||0); },0)/sonoSem.length*10)/10:0;
+  var sonoPct=Math.min(100,Math.round(sonoMedia/8*100));
+  var score=Math.round((evPct+habPct+trPct+sonoPct)/4);
+  var pb=$('pld-pct-bar'); if(pb){ pb.style.width=score+'%'; pb.style.background=score>=80?'linear-gradient(90deg,var(--warm),#5a7a5a)':score>=50?'linear-gradient(90deg,var(--warm),#c87941)':'linear-gradient(90deg,#c94040,var(--warm))'; }
+  var pt=$('pld-pct-txt'); if(pt) pt.textContent=score+'%';
+  var evNum=$('pld-ev-num'); if(evNum) evNum.textContent=evFeitosSem+'/'+evTotal;
+  var evBar=$('pld-ev-bar'); if(evBar) evBar.style.width=evPct+'%';
+  var habNum=$('pld-hab-num'); if(habNum) habNum.textContent=habPct+'%';
+  var habBar=$('pld-hab-bar'); if(habBar) habBar.style.width=habPct+'%';
+  var trNum=$('pld-tr-num'); if(trNum) trNum.textContent=trFeitosSem+'/'+treinos.length;
+  var trBar=$('pld-tr-bar'); if(trBar) trBar.style.width=trPct+'%';
+  var sonoNum=$('pld-sono-num'); if(sonoNum) sonoNum.textContent=sonoMedia+'h';
+  var sonoBar=$('pld-sono-bar'); if(sonoBar) sonoBar.style.width=sonoPct+'%';
+  // Calendario
+  var cal=$('pld-cal');
+  if(cal){
+    cal.innerHTML='';
+    for(var d4=0;d4<7;d4++){
+      var dDate4=new Date(mon); dDate4.setDate(mon.getDate()+d4);
+      var ds4=dDate4.toISOString().slice(0,10);
+      var isHj4=dDate4.toDateString()===hoje.toDateString();
+      var isFut4=dDate4>hoje;
+      var evD=evSem.filter(function(e){ return e.ds===ds4; });
+      var evFD=evD.filter(function(e){ return e.feito; }).length;
+      var diaN4=DIAS_FULL[dDate4.getDay()];
+      var trD=treinos.filter(function(t){ return (t.data&&t.data===ds4)||(t.dia&&t.dia===diaN4&&!t.data); });
+      var fezTr=trD.some(function(t){ return (t.feitoDatas||[]).indexOf(ds4)>=0; });
+      var habD=habitos.filter(function(h){ return habitoDeveHoje(h); });
+      var habFD=habD.filter(function(h){ return (h.doneDatas||[]).indexOf(ds4)>=0||(h.doneDate===ds4); });
+      var habOk=habD.length>0&&habFD.length>=habD.length*0.7;
+      var icon,cor,iconColor;
+      if(isFut4){ icon='O'; cor='var(--nude2)'; iconColor='var(--nude3)'; }
+      else if(evD.length>0&&evFD===evD.length&&fezTr&&habOk){ icon='\u2605'; cor='rgba(240,192,96,0.12)'; iconColor='var(--warm)'; }
+      else if(fezTr&&habOk){ icon='\u25CF'; cor='rgba(90,122,90,0.08)'; iconColor='var(--green)'; }
+      else if(fezTr||habOk||evFD>0){ icon='\u25D0'; cor='rgba(196,168,130,0.1)'; iconColor='var(--warm2)'; }
+      else if(isHj4){ icon='\u25A1'; cor='rgba(13,45,79,0.04)'; iconColor='var(--ink3)'; }
+      else{ icon='\u25A0'; cor='rgba(201,64,64,0.07)'; iconColor='var(--red)'; }
+      var cell=document.createElement('div');
+      cell.style.cssText='border-radius:8px;padding:8px 4px;text-align:center;background:'+cor+';border:2px solid '+(isHj4?'var(--warm)':'transparent')+';';
+      cell.innerHTML='<div style="font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;">'+DIAS_PT[dDate4.getDay()]+'</div>'
+        +'<div style="font-size:18px;margin:2px 0;color:'+iconColor+'">'+icon+'</div>'
+        +'<div style="font-size:12px;font-weight:500;color:'+(isHj4?'var(--warm)':'var(--ink3)')+'">'+dDate4.getDate()+'</div>'
+        +(fezTr?'<div style="font-size:8px;color:var(--warm2)">treino</div>':evFD>0?'<div style="font-size:8px;color:var(--ink3)">'+evFD+' ev</div>':'');
+      cal.appendChild(cell);
+    }
+  }
+  // Lista eventos
+  var evList=$('pld-eventos-list');
+  if(evList){
+    evList.innerHTML='';
+    if(!evSem.length){ evList.innerHTML='<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum evento esta semana</div>'; }
+    else {
+      for(var d5=0;d5<7;d5++){
+        var dDate5=new Date(mon); dDate5.setDate(mon.getDate()+d5);
+        var ds5=dDate5.toISOString().slice(0,10);
+        var evDia5=evSem.filter(function(e){ return e.ds===ds5; });
+        if(!evDia5.length) continue;
+        var dhdr=document.createElement('div');
+        dhdr.style.cssText='font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;padding:8px 0 4px;border-bottom:1px solid var(--border);margin-bottom:4px;';
+        dhdr.textContent=DIAS_PT[dDate5.getDay()]+' '+dDate5.getDate();
+        evList.appendChild(dhdr);
+        evDia5.forEach(function(e){
+          var CORES={'':'#0d2d4f','blue':'#1e6faa','green':'#5a7a5a','red':'#c94040','roxo':'#7c3aed','laranja':'#c87941','rosa':'#b5537a'};
+          var corEv=CORES[e.ev.cor||'']||CORES[''];
+          var item=document.createElement('div');
+          item.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);';
+          item.innerHTML='<div style="width:3px;height:36px;border-radius:2px;background:'+corEv+';flex-shrink:0;"></div>'
+            +'<div style="flex:1;"><div style="font-size:12px;font-weight:500;'+(e.feito?'text-decoration:line-through;color:var(--ink3)':'color:var(--ink)')+'">'+esc(e.ev.titulo)+'</div>'
+            +(e.ev.hora?'<div style="font-size:10px;color:var(--ink3)">'+(e.ev.horaFim?e.ev.hora+' - '+e.ev.horaFim:e.ev.hora)+'</div>':'')
+            +'</div><span style="font-size:11px;color:'+(e.feito?'var(--green)':'var(--ink3)')+'">'+(e.feito?'\u2713 Feito':'Pendente')+'</span>';
+          var btnR=document.createElement('button');
+          btnR.className='btn btn-sm'; btnR.style.fontSize='10px'; btnR.textContent='Remarcar';
+          btnR.addEventListener('click',(function(id){ return function(){ abrirReagendar(id); }; })(e.ev.id));
+          item.appendChild(btnR);
+          evList.appendChild(item);
+        });
+      }
+    }
+  }
+  // Habitos
+  var habList=$('pld-habitos-list');
+  if(habList){
+    habList.innerHTML='';
+    if(!habitos.length){ habList.innerHTML='<div style="text-align:center;padding:12px;color:var(--ink3);font-size:12px">Nenhum habito cadastrado</div>'; }
+    else {
+      habitos.forEach(function(h){
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);';
+        var cnt=0;
+        var dotsHtml='';
+        for(var d6=0;d6<7;d6++){
+          var dDate6=new Date(mon); dDate6.setDate(mon.getDate()+d6);
+          var ds6=dDate6.toISOString().slice(0,10);
+          var isFut6=dDate6>hoje;
+          var fez6=(h.doneDatas||[]).indexOf(ds6)>=0||(h.doneDate===ds6);
+          if(fez6) cnt++;
+          dotsHtml+='<div style="width:12px;height:12px;border-radius:50%;background:'+(isFut6?'var(--nude3)':fez6?'var(--green)':'rgba(201,64,64,0.2)')+';"></div>';
+        }
+        row.innerHTML='<div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--ink)">'+esc(h.nome)+'</div><div style="font-size:10px;color:var(--ink3)">'+(h.freq||'Diario')+'</div></div>'
+          +'<div style="display:flex;gap:3px;">'+dotsHtml+'</div>'
+          +'<div style="font-size:12px;font-weight:600;color:var(--warm2);min-width:24px;text-align:right;">'+cnt+'x</div>';
+        habList.appendChild(row);
+      });
+    }
+  }
+}
+
+// Atualiza showApp para loadMetaFromDB
 </script>
 
 <!-- Drawer mobile sidebar financas -->
@@ -4366,15 +4984,20 @@ function confirmarReagendar(){
     <button class="mob-sidebar-close" onclick="fecharMobSidebar('pl')">x Fechar menu</button>
     <div class="sb-g">
       <div class="sb-l">Planner</div>
+      <div class="sb-i" data-page="pl-dash"    onclick="mobGoFP(this,'pl')"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
       <div class="sb-i" data-page="pl-agenda"  onclick="mobGoFP(this,'pl')"><span class="sb-ic">C</span><span>Agenda</span></div>
       <div class="sb-i" data-page="pl-habitos" onclick="mobGoFP(this,'pl')"><span class="sb-ic">V</span><span>Habitos</span></div>
       <div class="sb-i" data-page="pl-metas"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">O</span><span>Metas</span></div>
     </div>
     <div class="sb-g">
       <div class="sb-l">Saude</div>
-      <div class="sb-i" data-page="pl-alim"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">F</span><span>Alimentacao</span></div>
-      <div class="sb-i" data-page="pl-sono"   onclick="mobGoFP(this,'pl')"><span class="sb-ic">Z</span><span>Sono</span></div>
-      <div class="sb-i" data-page="pl-treino" onclick="mobGoFP(this,'pl')"><span class="sb-ic">T</span><span>Treino</span></div>
+      <div class="sb-i" data-page="pl-alim"    onclick="mobGoFP(this,'pl')"><span class="sb-ic">F</span><span>Alimentacao</span></div>
+      <div class="sb-i" data-page="pl-sono"    onclick="mobGoFP(this,'pl')"><span class="sb-ic">Z</span><span>Sono</span></div>
+      <div class="sb-i" data-page="pl-treino"  onclick="mobGoFP(this,'pl')"><span class="sb-ic">T</span><span>Treino</span></div>
+    </div>
+    <div class="sb-g">
+      <div class="sb-l">Evolucao</div>
+      <div class="sb-i" data-page="pl-evolucao" onclick="mobGoFP(this,'pl')"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
     </div>
   </div>
 </div>
