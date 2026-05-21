@@ -755,17 +755,25 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               <div style="background:var(--navy);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;">
                 <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">Pagamentos por forma</div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                  <select class="fsel" id="ff-mes" onchange="renderFormas()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15);color:var(--cream);font-size:12px;width:auto;">
+                    <option value="0">Janeiro</option><option value="1">Fevereiro</option>
+                    <option value="2">Marco</option><option value="3">Abril</option>
+                    <option value="4">Maio</option><option value="5">Junho</option>
+                    <option value="6">Julho</option><option value="7">Agosto</option>
+                    <option value="8">Setembro</option><option value="9">Outubro</option>
+                    <option value="10">Novembro</option><option value="11">Dezembro</option>
+                  </select>
+                  <select class="fsel" id="ff-ano" onchange="renderFormas()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15);color:var(--cream);font-size:12px;width:auto;"></select>
                   <select class="fsel" id="ff-status" onchange="renderFormas()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15);color:var(--cream);font-size:12px;width:auto;">
-                    <option value="">Todos os status</option>
-                    <option value="Pago">Somente pagos</option>
-                    <option value="Pendente">Somente pendentes</option>
+                    <option value="">Todos status</option>
+                    <option value="Pago">Pagos</option>
+                    <option value="Pendente">Pendentes</option>
                   </select>
                   <select class="fsel" id="ff-tipo" onchange="renderFormas()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15);color:var(--cream);font-size:12px;width:auto;">
                     <option value="">Entrada e Saida</option>
-                    <option value="Entrada">Somente entradas</option>
-                    <option value="Saida">Somente saidas</option>
+                    <option value="Entrada">Entradas</option>
+                    <option value="Saida">Saidas</option>
                   </select>
-                  <div style="font-size:11px;color:rgba(240,234,216,0.4);margin-left:auto;" id="ff-periodo-label"></div>
                 </div>
               </div>
 
@@ -5376,14 +5384,34 @@ function salvarEditInvest(){
 // =====================================================
 // POR FORMA DE PAGAMENTO
 // =====================================================
+function populateFFAno(){
+  var sel = $('ff-ano'); if(!sel||sel.options.length>1) return;
+  var anoAtual = hoje.getFullYear();
+  sel.innerHTML='';
+  for(var a=anoAtual+2;a>=2000;a--){
+    var opt=document.createElement('option');
+    opt.value=a; opt.text=a;
+    if(a===anoAtual) opt.selected=true;
+    sel.appendChild(opt);
+  }
+}
+
 function renderFormas(){
-  var mes = parseInt($('month-sel') ? $('month-sel').value : hoje.getMonth());
-  var ano = parseInt($('year-sel')  ? $('year-sel').value  : hoje.getFullYear());
+  // Inicializa o ano se necessario
+  populateFFAno();
+  // Define mes e ano default se n\u00E3o tiver valor
+  var ffMesSel = $('ff-mes');
+  if(ffMesSel && !ffMesSel.dataset.init){
+    ffMesSel.value = String(hoje.getMonth());
+    ffMesSel.dataset.init = '1';
+  }
+  var mes = parseInt($('ff-mes') ? $('ff-mes').value : hoje.getMonth());
+  var ano = parseInt($('ff-ano') ? $('ff-ano').value : hoje.getFullYear());
   var stFil = $('ff-status') ? $('ff-status').value : '';
   var tpFil = $('ff-tipo')   ? $('ff-tipo').value   : '';
   var MESES = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  var plEl = $('ff-periodo-label');
-  if(plEl) plEl.textContent = MESES[mes] + ' ' + ano;
+  // periodo label removido
+
 
   // Filtra lancamentos do mes
   var base = [];
