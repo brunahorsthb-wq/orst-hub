@@ -434,6 +434,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .missao-vidas{display:flex;gap:4px;margin-top:10px;align-items:center;flex-wrap:wrap;}
 .vida{font-size:15px;} .vida.perdida{filter:grayscale(1);opacity:.3;}
 .missao-btn-meta{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--cream);font-size:11px;padding:5px 12px;border-radius:100px;cursor:pointer;font-family:var(--fn);margin-top:8px;}
+.missao-btn-meta:hover{background:rgba(255,255,255,0.18);}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease-in forwards;pointer-events:none;z-index:9999;}
 </style>
@@ -971,29 +972,24 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="pg-area">
             <!-- Agenda/Dashboard -->
             <div class="page active" id="page-pl-agenda">
-              <!-- Hero Missao da Semana -->
+              <!-- Missao da Semana -->
               <div class="missao-hero">
                 <div class="missao-titulo">Missao desta semana</div>
                 <div class="missao-nivel">
-                  <span class="missao-nivel-badge" id="missao-nivel-badge">&#127807; Iniciante</span>
+                  <span class="missao-nivel-badge" id="missao-nivel-badge">Iniciante</span>
                   <span class="missao-nivel-nome" id="missao-nivel-nome">Voce</span>
                 </div>
-                <div class="missao-xp" id="missao-xp-txt">0 XP acumulado</div>
+                <div class="missao-xp" id="missao-xp-txt">0 XP</div>
                 <div class="missao-prog-wrap"><div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div></div>
-                <div class="missao-prog-txt">
-                  <span id="missao-prog-label">0% concluido</span>
-                  <span id="missao-meta-label">Meta: 10 atividades</span>
-                </div>
+                <div class="missao-prog-txt"><span id="missao-prog-label">0%</span><span id="missao-meta-label">Meta: 10</span></div>
                 <div class="missao-vidas" id="missao-vidas"></div>
                 <div class="missao-stats">
                   <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP Total</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta semana</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta sem.</div></div>
                   <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
                 </div>
-                <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-                  <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
-                </div>
+                <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
               </div>
               <!-- Hero do dia -->
               <div class="pl-hero">
@@ -1029,119 +1025,80 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
               </div>
             </div>
-<div class="page" id="page-pl-dash">
+            <!-- DASHBOARD SEMANAL -->
+            <div class="page" id="page-pl-dash">
               <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;">
                 <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Dashboard da Semana</div>
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
                   <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
                   <div style="display:flex;gap:6px;">
-                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">&#8592;</button>
-                    <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">Hoje</button>
-                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:13px;">&#8594;</button>
+                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8592;</button>
+                    <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
+                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8594;</button>
                   </div>
                 </div>
                 <div style="margin-top:12px;">
                   <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;">
-                    <span>Consistencia geral da semana</span>
-                    <span id="pld-pct-txt">0%</span>
+                    <span>Consistencia geral</span><span id="pld-pct-txt">0%</span>
                   </div>
                   <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:10px;overflow:hidden;">
-                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;background:linear-gradient(90deg,var(--warm),#5a7a5a);"></div>
+                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
                   </div>
                 </div>
               </div>
-
-              <!-- Calendario -->
               <div class="panel">
                 <div class="ph"><div class="pt">Calendario da semana</div></div>
                 <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;"></div>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--ink3);">
-                  <span>&#11088; Dia perfeito</span>
-                  <span>&#128994; Treino+habitos</span>
-                  <span>&#128993; Parcial</span>
-                  <span>&#128308; Perdido</span>
-                  <span>&#9711; Futuro</span>
+                  <span>&#9733; Perfeito &nbsp; &#9679; Treino+hab &nbsp; &#9680; Parcial &nbsp; &#9632; Perdido &nbsp; &#9675; Futuro</span>
                 </div>
               </div>
-
-              <!-- Cards 4 sistemas -->
               <div class="g4" style="grid-template-columns:repeat(2,1fr);">
-                <div class="mc" style="flex-direction:column;gap:6px;">
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:16px;">&#128197;</span>
-                    <div class="mc-l">Agenda</div>
-                  </div>
-                  <div class="mc-v b" id="pld-ev-num" style="font-size:22px;">0/0</div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#128197; Agenda</div>
+                  <div class="mc-v b" id="pld-ev-num" style="font-size:24px;">0/0</div>
                   <div style="font-size:10px;color:var(--ink3);">eventos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
-                    <div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
-                  </div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
                 </div>
-                <div class="mc" style="flex-direction:column;gap:6px;">
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:16px;">&#10003;</span>
-                    <div class="mc-l">Habitos</div>
-                  </div>
-                  <div class="mc-v g" id="pld-hab-num" style="font-size:22px;">0%</div>
-                  <div style="font-size:10px;color:var(--ink3);">taxa de conclusao</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
-                    <div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
-                  </div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#10003; Habitos</div>
+                  <div class="mc-v g" id="pld-hab-num" style="font-size:24px;">0%</div>
+                  <div style="font-size:10px;color:var(--ink3);">taxa conclusao</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
                 </div>
-                <div class="mc" style="flex-direction:column;gap:6px;">
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:16px;">&#127947;</span>
-                    <div class="mc-l">Treinos</div>
-                  </div>
-                  <div class="mc-v a" id="pld-tr-num" style="font-size:22px;">0/0</div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#127947; Treinos</div>
+                  <div class="mc-v a" id="pld-tr-num" style="font-size:24px;">0/0</div>
                   <div style="font-size:10px;color:var(--ink3);">treinos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
-                    <div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
-                  </div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
                 </div>
-                <div class="mc" style="flex-direction:column;gap:6px;">
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:16px;">&#128564;</span>
-                    <div class="mc-l">Sono</div>
-                  </div>
-                  <div class="mc-v b" id="pld-sono-num" style="font-size:22px;">0h</div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#128564; Sono</div>
+                  <div class="mc-v b" id="pld-sono-num" style="font-size:24px;">0h</div>
                   <div style="font-size:10px;color:var(--ink3);">media semanal</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;">
-                    <div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div>
-                  </div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
                 </div>
               </div>
-
-              <!-- Eventos da semana -->
-              <div class="panel">
-                <div class="ph"><div class="pt">Eventos desta semana</div></div>
-                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div>
-              </div>
-
-              <!-- Habitos da semana -->
-              <div class="panel">
-                <div class="ph"><div class="pt">Habitos desta semana</div></div>
-                <div id="pld-habitos-list"></div>
-              </div>
+              <div class="panel"><div class="ph"><div class="pt">Eventos desta semana</div></div>
+                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div></div>
+              <div class="panel"><div class="ph"><div class="pt">Habitos desta semana</div></div>
+                <div id="pld-habitos-list"></div></div>
             </div>
 
-            <!-- ============ EVOLUÇÃO PESSOAL ============ -->
+            <!-- EVOLUCAO PESSOAL -->
             <div class="page" id="page-pl-evolucao">
-              <!-- Frase do dia -->
-              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;">
+              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;overflow:hidden;position:relative;">
                 <div style="position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
                 <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Frase do dia</div>
                 <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
                 <div style="font-size:11px;color:var(--warm);margin-top:10px;" id="ev-frase-autor"></div>
               </div>
-
-              <!-- Nivel -->
               <div class="panel">
                 <div class="ph"><div class="pt">Nivel de evolucao</div></div>
                 <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
                   <div style="font-size:44px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
                   <div style="flex:1;">
-                    <div style="font-family:var(--fs);font-size:20px;font-weight:400;color:var(--ink);" id="ev-nivel-nome">Iniciante</div>
+                    <div style="font-family:var(--fs);font-size:20px;" id="ev-nivel-nome">Iniciante</div>
                     <div style="font-size:11px;color:var(--ink3);margin-top:2px;" id="ev-nivel-xp">0 XP</div>
                     <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-top:8px;">
                       <div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
@@ -1155,8 +1112,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   <div class="mc"><div class="mc-l">Reagend.</div><div class="mc-v" id="ev-reag">3</div></div>
                 </div>
               </div>
-
-              <!-- Semana visual -->
               <div class="panel">
                 <div class="ph"><div class="pt">Esta semana</div></div>
                 <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
@@ -1168,16 +1123,14 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 </div>
                 <div style="margin-top:12px;">
                   <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;">
-                    <span>Meta de treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
+                    <span>Meta treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
                     <span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span>
                   </div>
                   <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;">
-                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;background:var(--green);"></div>
+                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;background:var(--green);transition:width .5s;"></div>
                   </div>
                 </div>
               </div>
-
-              <!-- Mensagem -->
               <div class="panel ev-conquista-box">
                 <div class="ph"><div class="pt">Mensagem da semana</div></div>
                 <div style="display:flex;gap:12px;align-items:center;padding:4px 0;">
@@ -1185,10 +1138,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.7;"></div>
                 </div>
               </div>
-
-              <!-- Trofeus -->
               <div class="panel" id="ev-trofeus-panel" style="display:none;">
-                <div class="ph"><div class="pt">&#127942; Trofeus conquistados</div></div>
+                <div class="ph"><div class="pt">&#127942; Trofeus</div></div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;" id="ev-trofeus-lista"></div>
               </div>
             </div>
@@ -1329,7 +1280,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   <div class="modal">
     <div class="mh"><div class="mt" id="m-lanc-titulo">Novo lancamento</div><button class="mx" onclick="closeM('m-lanc')">x</button></div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="nl-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Data</label><input type="date" class="fi2" id="nl-data"></div>
       <div class="fg2"><label class="fl2">Tipo</label><select class="fsel" id="nl-tipo"><option>Entrada</option><option>Saida</option></select></div>
       <div class="fg2"><label class="fl2">Categoria</label><select class="fsel" id="nl-cat"></select></div>
       <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="nl-valor" placeholder="0,00" min="0" step="0.01"></div>
@@ -1351,7 +1302,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Valor total R$</label><input type="number" class="fi2" id="p-total" oninput="calcParc()" min="0"></div>
       <div class="fg2"><label class="fl2">Nr parcelas</label><input type="number" class="fi2" id="p-qtd" min="2" max="60" oninput="calcParc()"></div>
-      <div class="fg2"><label class="fl2">Data inicial</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="p-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Data inicial</label><input type="date" class="fi2" id="p-data"></div>
       <div class="fg2"><label class="fl2">Categoria</label><select class="fsel" id="p-cat"><option>Eletronicos</option><option>Moveis</option><option>Vestuario</option><option>Saude</option><option>Educacao</option><option>Outros</option></select></div>
     </div>
     <div id="p-prev" style="display:none;background:var(--nude2);border-radius:var(--r-sm);padding:10px;font-size:13px;margin-bottom:8px;">Parcela mensal: <strong id="p-calc">R$ 0</strong></div>
@@ -1398,7 +1349,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fg2"><label class="fl2">Descricao / Devedor</label><input type="text" class="fi2" id="rc-desc" placeholder="Ex: Joao - venda de produto"></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="rc-valor" min="0" step="0.01" placeholder="0,00"></div>
-      <div class="fg2"><label class="fl2">Vencimento</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="rc-venc-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="rc-venc-data"></div>
     </div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Categoria</label>
@@ -1429,7 +1380,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fg2"><label class="fl2">Descricao</label><input type="text" class="fi2" id="ap-desc" placeholder="Ex: Fatura Nubank"></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="ap-valor" min="0"></div>
-      <div class="fg2"><label class="fl2">Vencimento</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="ap-venc-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="ap-venc-data"></div>
       <div class="fg2"><label class="fl2">Status</label><select class="fsel" id="ap-status"><option>Pendente</option><option>Vencida</option><option>Pago</option></select></div>
     </div>
     <div class="mf"><button class="btn" onclick="closeM('m-apagar')">Cancelar</button><button class="btn btn-p" onclick="addApagar()">Salvar</button></div>
@@ -1443,7 +1394,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
       <div class="fg2"><label class="fl2">Tipo</label><select class="fsel" id="iv-tipo"><option>Renda fixa</option><option>Renda variavel</option><option>FII</option><option>Acoes</option><option>Criptomoeda</option><option>Outro</option></select></div>
       <div class="fg2"><label class="fl2">Valor investido R$</label><input type="number" class="fi2" id="iv-valor" min="0"></div>
       <div class="fg2"><label class="fl2">Rendimento R$</label><input type="number" class="fi2" id="iv-rend" placeholder="0"></div>
-      <div class="fg2"><label class="fl2">Vencimento</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="iv-venc" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="iv-venc"></div>
     </div>
     <div class="mf"><button class="btn" onclick="closeM('m-invest')">Cancelar</button><button class="btn btn-p" onclick="addInvest()">Salvar</button></div>
   </div>
@@ -1659,7 +1610,50 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
 <div class="toast" id="toast"></div>
 
+<!-- Modal Meta da Semana -->
+<div class="modal-ov" id="m-meta-semana" onclick="closeMBg(event,'m-meta-semana')">
+  <div class="modal">
+    <div class="mh"><div class="mt">&#9881; Meta da semana</div><button class="mx" onclick="closeM('m-meta-semana')">x</button></div>
+    <div style="background:var(--nude2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--ink3);">
+      Ao atingir sua meta semanal voce ganha XP, sobe de nivel e conquista um premio!
+    </div>
+    <div class="fgrid">
+      <div class="fg2"><label class="fl2">Meta de eventos</label>
+        <select class="fsel" id="ms-meta-ev"><option value="3">3</option><option value="5" selected>5</option><option value="7">7</option><option value="10">10</option><option value="14">14</option></select>
+      </div>
+      <div class="fg2"><label class="fl2">Meta de treinos</label>
+        <select class="fsel" id="ms-meta-tr"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option></select>
+      </div>
+    </div>
+    <div class="fg2"><label class="fl2">Premio da semana</label>
+      <select class="fsel" id="ms-premio">
+        <option>Autocuidado</option><option>Refeicao livre</option>
+        <option>Tempo de lazer</option><option>Comprar algo</option>
+        <option>Passeio</option><option>Descanso</option>
+      </select>
+    </div>
+    <div class="mf"><button class="btn" onclick="closeM('m-meta-semana')">Cancelar</button>
+      <button class="btn btn-p" onclick="salvarMetaSemana()">Salvar meta</button></div>
+  </div>
+</div>
 
+<!-- Modal Parabens -->
+<div class="modal-ov" id="m-parabens" onclick="closeMBg(event,'m-parabens')">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:56px;margin-bottom:8px;">&#127881;</div>
+    <div style="font-family:var(--fs);font-size:26px;font-weight:300;color:var(--ink);margin-bottom:6px;" id="par-titulo">Meta batida!</div>
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:14px;" id="par-sub">Incrivel!</div>
+    <div style="background:var(--nude2);border-radius:var(--r);padding:14px;margin-bottom:14px;text-align:left;">
+      <div id="par-stats" style="font-size:13px;color:var(--ink2);line-height:1.9;"></div>
+    </div>
+    <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px;">Seu premio:</div>
+    <div style="font-size:38px;margin-bottom:4px;" id="par-premio-emoji">&#127942;</div>
+    <div style="font-family:var(--fs);font-size:18px;color:var(--warm2);margin-bottom:16px;" id="par-premio-nome"></div>
+    <div class="mf" style="justify-content:center;">
+      <button class="btn btn-p" onclick="closeM('m-parabens')">Incrivel! &#127942;</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal: Configurar Meta Semanal -->
 <div class="modal-ov" id="m-meta-treino" onclick="closeMBg(event,'m-meta-treino')">
@@ -1719,7 +1713,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div style="font-size:12px;color:var(--ink3);margin-bottom:4px;">Reagendamentos disponíveis esta semana:</div>
     <div style="font-size:22px;margin-bottom:14px;" id="reag-vidas-display">❤️❤️❤️</div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Nova data</label><input type="text" class="fi2 date-input" id="reag-data" placeholder="dd/mm/aaaa" maxlength="10"></div>
+      <div class="fg2"><label class="fl2">Nova data</label><input type="date" class="fi2" id="reag-data"></div>
       <div class="fg2"><label class="fl2">Novo horário</label><input type="time" class="fi2" id="reag-hora"></div>
     </div>
     <div class="fg2"><label class="fl2">Motivo (opcional)</label>
@@ -1808,7 +1802,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fg2"><label class="fl2">Descricao</label><input type="text" class="fi2" id="eap-desc"></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="eap-valor" min="0" step="0.01"></div>
-      <div class="fg2"><label class="fl2">Vencimento</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="eap-venc" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="eap-venc"></div>
       <div class="fg2"><label class="fl2">Status</label>
         <select class="fsel" id="eap-status"><option>Pendente</option><option>Vencida</option><option>Pago</option></select>
       </div>
@@ -1825,7 +1819,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <div class="fg2"><label class="fl2">Descricao / Devedor</label><input type="text" class="fi2" id="erc-desc"></div>
     <div class="fgrid">
       <div class="fg2"><label class="fl2">Valor R$</label><input type="number" class="fi2" id="erc-valor" min="0" step="0.01"></div>
-      <div class="fg2"><label class="fl2">Vencimento</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="erc-venc" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Vencimento</label><input type="date" class="fi2" id="erc-venc"></div>
       <div class="fg2"><label class="fl2">Categoria</label>
         <select class="fsel" id="erc-cat">
           <option>Venda</option><option>Servico</option><option>Emprestimo</option>
@@ -1850,7 +1844,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
       <button class="mx" onclick="closeM('m-edit-lanc')">x</button>
     </div>
     <div class="fgrid">
-      <div class="fg2"><label class="fl2">Data</label><input type="text" class="fi2 date-input" placeholder="dd/mm/aaaa" id="el-data" data-dtype="date"></div>
+      <div class="fg2"><label class="fl2">Data</label><input type="date" class="fi2" id="el-data"></div>
       <div class="fg2"><label class="fl2">Tipo</label>
         <select class="fsel" id="el-tipo">
           <option>Entrada</option><option>Saida</option>
@@ -2181,12 +2175,11 @@ function showApp(){
     loadReceber();
     loadInvest();
     loadPatrimonio();
-    setTimeout(loadMetaFromDB, 700);
     loadRefeicoes();
     loadMetaTreino();
     setTimeout(initDateInputs, 500);
-    // Corrige treinos antigos com data errada
     setTimeout(migrateTreinos, 1000);
+    setTimeout(loadMetaFromDB, 800);
   });
 }
 function lTab(t){
@@ -2316,7 +2309,8 @@ function goPP(el){
   document.querySelectorAll('#sis-planner .page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
-  var T = {'pl-dash':'Dashboard da semana','pl-evolucao':'Evolucao Pessoal','pl-agenda':'Agenda semanal','pl-habitos':'Habitos diarios','pl-metas':'Metas de vida',
+  var T = {'pl-dash':'Dashboard Semanal','pl-evolucao':'Evolucao Pessoal',
+    'pl-agenda':'Agenda semanal','pl-habitos':'Habitos diarios','pl-metas':'Metas de vida',
     'pl-alim':'Alimentacao','pl-sono':'Qualidade do sono','pl-treino':'Fichas de treino'};
   var AB = {'pl-agenda':'m-evento','pl-habitos':'m-hab','pl-metas':'m-mvida','pl-alim':'m-ref','pl-treino':'m-treino'};
   $('pl-ttl').textContent = T[pid] || pid;
@@ -3181,6 +3175,7 @@ function toggleEventoFeito(id, dStr){
   DB.update('eventos', id, {feitoDatas: ev.feitoDatas}).then(function(){
     renderAgenda();
     renderEventosHoje();
+    if(typeof renderMissao==='function') renderMissao();
   });
 }
 
@@ -3628,6 +3623,7 @@ function toggleTreino(id){
   DB.update('treinos',id,{feito:t.feito,feitoDatas:t.feitoDatas}).then(function(){
     renderTreino();
     updPlannerStats();
+    if(typeof renderMissao==='function') renderMissao();
   });
 }
 function delTreino(id){ if(!confirm('Excluir treino?')) return; DB.delete('treinos',id).then(function(){ treinos=treinos.filter(function(t){ return t.id!==id; }); toast('Excluido.'); renderTreino(); }); }
@@ -4106,27 +4102,14 @@ function getDateVal(id) {
   return displayToIso(v) || v;
 }
 
+// Define valor em campo de data (suporta type=date e type=text)
 function setDateVal(id, val) {
   var el = $(id); if (!el) return;
   if (!val) { el.value = ''; return; }
   if (el.type === 'date') {
-    el.value = val.match(/^\d{4}-\d{2}-\d{2}$/) ? val : (displayToIso(val) || '');
+    el.value = /^\d{4}-\d{2}-\d{2}$/.test(val) ? val : (displayToIso(val) || '');
   } else {
-    el.value = val.match(/^\d{4}-\d{2}-\d{2}$/) ? isoToDisplay(val) : val;
-  }
-}
-
-
-
-// Define valor em campo de data (aceita ISO ou display)
-function setDateVal(id, val) {
-  var el = $(id); if (!el) return;
-  if (!val) { el.value = ''; return; }
-  // Se vier em formato ISO, converte para display
-  if (val.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    el.value = isoToDisplay(val);
-  } else {
-    el.value = val;
+    el.value = /^\d{4}-\d{2}-\d{2}$/.test(val) ? isoToDisplay(val) : val;
   }
 }
 
@@ -4562,7 +4545,7 @@ function confirmarReagendar(){
 }
 
 // =====================================================
-// GAMIFICA\u00C7\u00C3O \u2014 MISS\u00C3O DA SEMANA
+// MISSAO DA SEMANA \u2014 Gamificacao
 // =====================================================
 function saveMetaState(){
   if(!G.user) return;
@@ -4590,6 +4573,7 @@ function renderMissao(){
   var semIni = mon.toISOString().slice(0,10);
   var semFimD = new Date(mon); semFimD.setDate(mon.getDate()+6);
   var semFim = semFimD.toISOString().slice(0,10);
+  // Eventos feitos na semana
   var evFeitos=0, evTotal=0;
   eventos.forEach(function(ev){
     for(var i=0;i<7;i++){
@@ -4598,14 +4582,16 @@ function renderMissao(){
       if(eventoAparece(ev,ds)){ evTotal++; if((ev.feitoDatas||[]).indexOf(ds)>=0) evFeitos++; }
     }
   });
+  // Treinos feitos na semana (qualquer dia)
   var trFeitos=0;
   treinos.forEach(function(t){
     if((t.feitoDatas||[]).some(function(d){ return d>=semIni&&d<=semFim; })) trFeitos++;
   });
-  var totalFeitos=evFeitos+trFeitos;
-  var totalMeta=(G_META.metaEventos||5)+(G_META.qtd||5);
-  var pct=totalMeta>0?Math.min(100,Math.round(totalFeitos/totalMeta*100)):0;
-  var niv=getNivel(G_META.xpTotal||0);
+  var totalFeitos = evFeitos + trFeitos;
+  var totalMeta   = (G_META.metaEventos||5) + (G_META.qtd||5);
+  var pct = totalMeta>0 ? Math.min(100, Math.round(totalFeitos/totalMeta*100)) : 0;
+  var niv = getNivel(G_META.xpTotal||0);
+  // Atualiza hero
   var badge=$('missao-nivel-badge'); if(badge) badge.textContent=niv.icon+' '+niv.nome;
   var nomeEl=$('missao-nivel-nome'); if(nomeEl) nomeEl.textContent=G.name||'Voce';
   var xpTxt=$('missao-xp-txt');
@@ -4617,10 +4603,11 @@ function renderMissao(){
   var bar=$('missao-prog-bar'); if(bar) bar.style.width=pct+'%';
   var pL=$('missao-prog-label'); if(pL) pL.textContent=pct+'% concluido';
   var mL=$('missao-meta-label'); if(mL) mL.textContent='Meta: '+totalMeta+' atividades';
-  var stk=$('missao-streak'); if(stk) stk.textContent=G_META.streakSemanas||0;
-  var xpEl=$('missao-xp'); if(xpEl) xpEl.textContent=G_META.xpTotal||0;
-  var fEl=$('missao-feitos'); if(fEl) fEl.textContent=totalFeitos+'/'+totalMeta;
-  var rEl=$('missao-reag'); if(rEl) rEl.textContent=G_META.reagendamentos||3;
+  var stk=$('missao-streak');   if(stk)  stk.textContent=G_META.streakSemanas||0;
+  var xpEl=$('missao-xp');      if(xpEl) xpEl.textContent=G_META.xpTotal||0;
+  var fEl=$('missao-feitos');   if(fEl)  fEl.textContent=totalFeitos+'/'+totalMeta;
+  var rEl=$('missao-reag');     if(rEl)  rEl.textContent=G_META.reagendamentos||3;
+  // Vidas
   var vidasEl=$('missao-vidas');
   if(vidasEl){
     vidasEl.innerHTML='';
@@ -4636,9 +4623,10 @@ function renderMissao(){
     rl.textContent='reagendamentos';
     vidasEl.appendChild(rl);
   }
-  if(pct>=100&&!G_META._premioExibido){
+  // Verifica meta batida
+  if(pct>=100 && !G_META._premioExibido){
     G_META._premioExibido=true; saveMetaState();
-    setTimeout(function(){ mostrarParabens(evFeitos,trFeitos,totalMeta); },800);
+    setTimeout(function(){ mostrarParabens(evFeitos,trFeitos,totalMeta); }, 800);
   }
 }
 
@@ -4661,14 +4649,16 @@ var FRASES_MOTIV = [
 ];
 
 function renderEvolucao(){
-  var mon3 = getMonday(0);
-  var semIniE = mon3.toISOString().slice(0,10);
-  var semFimDE = new Date(mon3); semFimDE.setDate(mon3.getDate()+6);
-  var semFimE = semFimDE.toISOString().slice(0,10);
+  var mon3=getMonday(0);
+  var semIniE=mon3.toISOString().slice(0,10);
+  var semFimDE=new Date(mon3); semFimDE.setDate(mon3.getDate()+6);
+  var semFimE=semFimDE.toISOString().slice(0,10);
   var DIAS_FULL=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
+  // Frase do dia
   var fIdx=(hoje.getDate()+hoje.getMonth())%FRASES_MOTIV.length;
   var efEl=$('ev-frase-txt'); if(efEl) efEl.innerHTML='\u201C'+FRASES_MOTIV[fIdx]+'\u201D';
   var eaEl=$('ev-frase-autor'); if(eaEl) eaEl.textContent='';
+  // Nivel
   var niv=getNivel(G_META.xpTotal||0);
   var nivIdx=0;
   for(var ni=0;ni<NIVEIS.length;ni++){ if(NIVEIS[ni].nome===niv.nome) nivIdx=ni; }
@@ -4682,24 +4672,27 @@ function renderEvolucao(){
   var esEl=$('ev-streak-sem'); if(esEl) esEl.textContent=G_META.streakSemanas||0;
   var edEl=$('ev-streak-dias'); if(edEl) edEl.textContent=G_META.streakDias||0;
   var erEl=$('ev-reag'); if(erEl) erEl.textContent=G_META.reagendamentos||3;
+  // Treinos semana
   var trFeitosSem=0;
   treinos.forEach(function(t){
     if((t.feitoDatas||[]).some(function(d){ return d>=semIniE&&d<=semFimE; })) trFeitosSem++;
   });
   var metaPct=G_META.qtd>0?Math.min(100,Math.round(trFeitosSem/G_META.qtd*100)):0;
   var emP=$('ev-meta-pct'); if(emP) emP.textContent=metaPct+'%';
-  var emB=$('ev-meta-bar'); if(emB){ emB.style.width=metaPct+'%'; }
+  var emB=$('ev-meta-bar'); if(emB){ emB.style.width=metaPct+'%'; emB.style.background=metaPct>=100?'var(--green)':'linear-gradient(90deg,var(--warm),var(--green))'; }
   var etF=$('ev-tr-feitos'); if(etF) etF.textContent=trFeitosSem;
   var etM=$('ev-tr-meta'); if(etM) etM.textContent=G_META.qtd;
-  var habHoje2=habitos.filter(function(h){ return habitoDeveHoje(h); });
-  var habFeitos2=habHoje2.filter(function(h){ return h.doneDate===hojeStr; }).length;
-  var habPct2=habHoje2.length>0?Math.round(habFeitos2/habHoje2.length*100):0;
-  var evHoje2=eventos.filter(function(e){ return eventoAparece(e,hojeStr); });
-  var evFeitos2=evHoje2.filter(function(e){ return (e.feitoDatas||[]).indexOf(hojeStr)>=0; }).length;
-  var ercT=$('ev-rc-treinos'); if(ercT) ercT.textContent=trFeitosSem+'/'+G_META.qtd;
-  var ercH=$('ev-rc-habitos'); if(ercH) ercH.textContent=habPct2+'%';
-  var ercE=$('ev-rc-eventos'); if(ercE) ercE.textContent=evFeitos2+'/'+evHoje2.length;
+  // Habitos hoje
+  var habHoje=habitos.filter(function(h){ return habitoDeveHoje(h); });
+  var habFeitos=habHoje.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var habPct=habHoje.length>0?Math.round(habFeitos/habHoje.length*100):0;
+  var evHoje=eventos.filter(function(e){ return eventoAparece(e,hojeStr); });
+  var evFeitosHj=evHoje.filter(function(e){ return (e.feitoDatas||[]).indexOf(hojeStr)>=0; }).length;
+  var ercT=$('ev-rc-treinos'); if(ercT) ercT.textContent=trFeitosSem+'/'+(G_META.qtd||5);
+  var ercH=$('ev-rc-habitos'); if(ercH) ercH.textContent=habPct+'%';
+  var ercE=$('ev-rc-eventos'); if(ercE) ercE.textContent=evFeitosHj+'/'+evHoje.length;
   var ercV=$('ev-rc-vidas'); if(ercV) ercV.textContent=(G_META.reagendamentos||3)+'/3';
+  // Grid semana
   var sgEl=$('ev-semana-grid');
   if(sgEl){
     sgEl.innerHTML='';
@@ -4714,13 +4707,21 @@ function renderEvolucao(){
       var habDia=habitos.filter(function(h){ return habitoDeveHoje(h); });
       var habFD=habDia.filter(function(h){ return (h.doneDatas||[]).indexOf(dStr2)>=0||(h.doneDate===dStr2); });
       var habOk=habDia.length>0&&habFD.length>=habDia.length*0.7;
+      var icon,cor;
+      if(isFut){ icon='\u25CB'; cor='var(--nude2)'; }
+      else if(fezTr&&habOk){ icon='\u2605'; cor='rgba(240,192,96,0.15)'; }
+      else if(fezTr||habOk){ icon='\u25D0'; cor='rgba(90,122,90,0.1)'; }
+      else if(isHj2){ icon='\u25A1'; cor='rgba(13,45,79,0.04)'; }
+      else{ icon='\u25A0'; cor='rgba(201,64,64,0.07)'; }
       var div=document.createElement('div');
-      div.style.cssText='border-radius:8px;padding:6px 4px;text-align:center;background:'+(isHj2?'var(--nude2)':'transparent')+';border:2px solid '+(isHj2?'var(--warm)':'transparent')+';';
-      var icon=isFut?'O':fezTr&&habOk?'*':fezTr||habOk?'+':isHj2?'-':'x';
-      div.innerHTML='<div style="font-size:9px;font-weight:600;color:var(--ink3);">'+['D','S','T','Q','Q','S','S'][dDate2.getDay()]+'</div><div style="font-size:16px;margin:2px 0;color:'+(fezTr&&habOk?'var(--warm)':fezTr||habOk?'var(--green)':isFut?'var(--nude3)':'var(--red)')+'">'+icon+'</div><div style="font-size:10px;color:'+(isHj2?'var(--warm)':'var(--ink3)')+'">'+dDate2.getDate()+'</div>';
+      div.style.cssText='border-radius:8px;padding:6px 4px;text-align:center;background:'+cor+';border:2px solid '+(isHj2?'var(--warm)':'transparent')+';';
+      div.innerHTML='<div style="font-size:9px;font-weight:600;color:var(--ink3);">'+['D','S','T','Q','Q','S','S'][dDate2.getDay()]+'</div>'
+        +'<div style="font-size:16px;margin:2px 0;color:'+(fezTr&&habOk?'var(--warm)':fezTr||habOk?'var(--green)':isHj2?'var(--ink3)':'var(--red)')+'">'+icon+'</div>'
+        +'<div style="font-size:10px;color:'+(isHj2?'var(--warm)':'var(--ink3)')+'">'+dDate2.getDate()+'</div>';
       sgEl.appendChild(div);
     }
   }
+  // Trofeus
   var tPanel=$('ev-trofeus-panel'),tLista=$('ev-trofeus-lista');
   if(tPanel&&tLista){
     if(G_META.trofeus&&G_META.trofeus.length){
@@ -4729,19 +4730,26 @@ function renderEvolucao(){
       G_META.trofeus.forEach(function(id){
         var def=TROFEUS_DEF.find(function(t){ return t.id===id; }); if(!def) return;
         var div=document.createElement('div');
-        div.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;background:var(--nude2);border-radius:var(--r-sm);min-width:60px;';
-        div.innerHTML='<span style="font-size:24px">'+def.icon+'</span><span style="font-size:10px;color:var(--ink3);text-align:center">'+def.nome+'</span>';
+        div.style.cssText='display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px;background:var(--nude2);border-radius:var(--r-sm);min-width:60px;text-align:center;';
+        div.innerHTML='<span style="font-size:24px">'+def.icon+'</span><span style="font-size:10px;color:var(--ink3)">'+def.nome+'</span>';
         tLista.appendChild(div);
       });
     } else { tPanel.style.display='none'; }
   }
-  var msgs=['Voce esta no caminho. Cada dia conta.','Voce cumpriu o que prometeu para si mesma.','Reorganizar tambem e continuar.','Consistencia silenciosa.','Pequenas escolhas criam grandes mudancas.','Cair nao quebra o progresso. Desistir sim.'];
-  var icons=['\uD83D\uDD25','\uD83D\uDCAA','\u2728','\uD83C\uDFC6','\uD83C\uDF31','\u26A1'];
-  var mIdx=(G_META.streakSemanas+hoje.getDate())%msgs.length;
+  // Mensagem motivacional
+  var MSGS=[
+    {i:'\uD83D\uDD25',t:'Voce esta no caminho. Cada dia conta.'},
+    {i:'\uD83D\uDCAA',t:'Voce cumpriu o que prometeu para si mesma.'},
+    {i:'\u2728',t:'Reorganizar tambem e continuar.'},
+    {i:'\uD83C\uDFC6',t:'Consistencia silenciosa. Voce treina mesmo quando ninguem ve.'},
+    {i:'\uD83C\uDF31',t:'Pequenas escolhas criam grandes mudancas.'},
+    {i:'\u26A1',t:'Cair nao quebra o progresso. Desistir sim.'},
+  ];
+  var mIdx=(G_META.streakSemanas+hoje.getDate())%MSGS.length;
   var ecB=$('ev-conquista-box');
   if(ecB){
-    var icEl=ecB.querySelector('.hub-conquista-icon'); if(icEl) icEl.textContent=icons[mIdx];
-    var txEl=ecB.querySelector('.hub-conquista-txt'); if(txEl) txEl.textContent=msgs[mIdx];
+    var icEl=ecB.querySelector('.hub-conquista-icon'); if(icEl) icEl.textContent=MSGS[mIdx].i;
+    var txEl=ecB.querySelector('.hub-conquista-txt'); if(txEl) txEl.textContent=MSGS[mIdx].t;
   }
 }
 
@@ -4752,24 +4760,26 @@ function mostrarParabens(evF,trF,total){
   G_META._premioExibido=true;
   checkTrofeus(); saveMetaState(); lancarConfetti();
   var titulo=$('par-titulo'); if(titulo) titulo.textContent='Meta da semana batida!';
-  var sub=$('par-sub'); if(sub) sub.textContent='Incrivel! +'+xpGanho+' XP';
+  var sub=$('par-sub'); if(sub) sub.textContent='Incrivel! +'+xpGanho+' XP ganhos';
   var stats=$('par-stats');
-  if(stats) stats.innerHTML='\u2705 '+evF+' eventos<br>\uD83C\uDFCB '+trF+' treinos<br>\uD83D\uDD25 '+G_META.streakSemanas+' semanas<br>\u2B50 '+G_META.xpTotal+' XP';
+  if(stats) stats.innerHTML='\u2705 '+evF+' eventos<br>\uD83C\uDFCB '+trF+' treinos<br>\uD83D\uDD25 '+G_META.streakSemanas+' semanas<br>\u2B50 '+G_META.xpTotal+' XP total';
   var niv=getNivel(G_META.xpTotal);
   var pEmo=$('par-premio-emoji'); if(pEmo) pEmo.textContent=niv.icon;
-  var pNome=$('par-premio-nome'); if(pNome) pNome.textContent=(G_META.premio||'Premio')+'!';
-  openM('m-parabens'); renderMissao(); renderEvolucao();
+  var pNome=$('par-premio-nome'); if(pNome) pNome.textContent=(G_META.premio||'Conquista')+'!';
+  openM('m-parabens');
+  renderMissao(); renderEvolucao();
 }
 
 function checkTrofeus(){
   var t=G_META.trofeus||[];
   function add(id){ if(t.indexOf(id)<0) t.push(id); }
-  if(G_META.streakSemanas>=1) add('primeira_semana');
-  if(G_META.streakSemanas>=3) add('semana3');
-  if(G_META.streakSemanas>=5) add('semana5');
+  if(G_META.streakSemanas>=1)  add('primeira_semana');
+  if(G_META.streakSemanas>=3)  add('semana3');
+  if(G_META.streakSemanas>=5)  add('semana5');
   if(G_META.streakSemanas>=10) add('semana10');
-  if((G_META.xpTotal||0)>=500) add('xp500');
+  if((G_META.xpTotal||0)>=500)  add('xp500');
   if((G_META.xpTotal||0)>=1000) add('xp1000');
+  if(G_META.reagendamentos>=3)  add('sem_reagendar');
   G_META.trofeus=t;
 }
 
@@ -4778,8 +4788,11 @@ function lancarConfetti(){
   for(var i=0;i<40;i++){
     (function(i2){ setTimeout(function(){
       var c=document.createElement('div'); c.className='confetti-piece';
-      c.style.cssText='left:'+Math.random()*100+'vw;top:-10px;background:'+cores[Math.floor(Math.random()*cores.length)]+';animation-duration:'+(1.5+Math.random())+'s;';
-      document.body.appendChild(c); setTimeout(function(){ c.remove(); },3000);
+      c.style.cssText='left:'+Math.random()*100+'vw;top:-10px;background:'
+        +cores[Math.floor(Math.random()*cores.length)]
+        +';animation-duration:'+(1.5+Math.random())+'s;animation-delay:'+Math.random()*0.3+'s;';
+      document.body.appendChild(c);
+      setTimeout(function(){ c.remove(); },3000);
     },i2*30); })(i);
   }
 }
@@ -4789,11 +4802,16 @@ function salvarMetaSemana(){
   G_META.qtd=parseInt($('ms-meta-tr')?$('ms-meta-tr').value:5)||5;
   G_META.premio=($('ms-premio')?$('ms-premio').value:'Autocuidado')||'Autocuidado';
   G_META._premioExibido=false;
-  saveMetaState(); closeM('m-meta-semana'); toast('Meta salva!');
-  renderMissao(); renderEvolucao();
+  saveMetaState();
+  closeM('m-meta-semana');
+  toast('Meta salva!');
+  renderMissao();
+  renderEvolucao();
 }
 
-// Dashboard Semanal
+// =====================================================
+// DASHBOARD SEMANAL
+// =====================================================
 var _pldOffset=0;
 function pldSemana(dir){ if(dir===0) _pldOffset=0; else _pldOffset+=dir; renderPlDash(); }
 
@@ -4805,8 +4823,10 @@ function renderPlDash(){
   var DIAS_FULL=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado'];
   var DIAS_PT=['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
   var MESES2=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  // Label
   var lbl=$('pld-semana-label');
-  if(lbl) lbl.textContent=_pldOffset===0?'Esta semana':_pldOffset===-1?'Semana passada':mon.getDate()+'/'+MESES2[mon.getMonth()]+' a '+semFimD.getDate()+'/'+MESES2[semFimD.getMonth()];
+  if(lbl) lbl.textContent=_pldOffset===0?'Esta semana':_pldOffset===-1?'Semana passada':
+    mon.getDate()+'/'+MESES2[mon.getMonth()]+' a '+semFimD.getDate()+'/'+MESES2[semFimD.getMonth()];
   // Eventos
   var evSem=[],evFeitosSem=0;
   for(var d=0;d<7;d++){
@@ -4815,32 +4835,41 @@ function renderPlDash(){
     eventos.forEach(function(ev){
       if(eventoAparece(ev,ds)){
         var feito=(ev.feitoDatas||[]).indexOf(ds)>=0;
-        evSem.push({ev:ev,ds:ds,feito:feito,dDate:dDate});
+        evSem.push({ev:ev,ds:ds,feito:feito});
         if(feito) evFeitosSem++;
       }
     });
   }
   var evTotal=evSem.length, evPct=evTotal>0?Math.round(evFeitosSem/evTotal*100):0;
+  // Treinos
   var trFeitosSem=0;
   treinos.forEach(function(t){
     if((t.feitoDatas||[]).some(function(d2){ return d2>=semIni&&d2<=semFim; })) trFeitosSem++;
   });
   var trPct=treinos.length>0?Math.round(trFeitosSem/treinos.length*100):0;
+  // Habitos
   var habFeitos=0,habTotal=0;
   for(var d3=0;d3<7;d3++){
     var dDate3=new Date(mon); dDate3.setDate(mon.getDate()+d3);
     var ds3=dDate3.toISOString().slice(0,10);
     habitos.forEach(function(h){
-      if(habitoDeveHoje(h)){ habTotal++; if((h.doneDatas||[]).indexOf(ds3)>=0||(h.doneDate===ds3)) habFeitos++; }
+      if(habitoDeveHoje(h)){
+        habTotal++;
+        if((h.doneDatas||[]).indexOf(ds3)>=0||(h.doneDate===ds3)) habFeitos++;
+      }
     });
   }
   var habPct=habTotal>0?Math.round(habFeitos/habTotal*100):0;
+  // Sono
   var sonoSem=sonoLog.filter(function(s){ return s.data>=semIni&&s.data<=semFim; });
   var sonoMedia=sonoSem.length>0?Math.round(sonoSem.reduce(function(a,s){ return a+(s.horas||0); },0)/sonoSem.length*10)/10:0;
   var sonoPct=Math.min(100,Math.round(sonoMedia/8*100));
   var score=Math.round((evPct+habPct+trPct+sonoPct)/4);
-  var pb=$('pld-pct-bar'); if(pb){ pb.style.width=score+'%'; pb.style.background=score>=80?'linear-gradient(90deg,var(--warm),#5a7a5a)':score>=50?'linear-gradient(90deg,var(--warm),#c87941)':'linear-gradient(90deg,#c94040,var(--warm))'; }
+  // Barra geral
+  var pb=$('pld-pct-bar');
+  if(pb){ pb.style.width=score+'%'; pb.style.background=score>=80?'linear-gradient(90deg,var(--warm),#5a7a5a)':score>=50?'linear-gradient(90deg,var(--warm),#c87941)':'linear-gradient(90deg,#c94040,var(--warm))'; }
   var pt=$('pld-pct-txt'); if(pt) pt.textContent=score+'%';
+  // Cards
   var evNum=$('pld-ev-num'); if(evNum) evNum.textContent=evFeitosSem+'/'+evTotal;
   var evBar=$('pld-ev-bar'); if(evBar) evBar.style.width=evPct+'%';
   var habNum=$('pld-hab-num'); if(habNum) habNum.textContent=habPct+'%';
@@ -4858,16 +4887,16 @@ function renderPlDash(){
       var ds4=dDate4.toISOString().slice(0,10);
       var isHj4=dDate4.toDateString()===hoje.toDateString();
       var isFut4=dDate4>hoje;
+      var diaN4=DIAS_FULL[dDate4.getDay()];
       var evD=evSem.filter(function(e){ return e.ds===ds4; });
       var evFD=evD.filter(function(e){ return e.feito; }).length;
-      var diaN4=DIAS_FULL[dDate4.getDay()];
       var trD=treinos.filter(function(t){ return (t.data&&t.data===ds4)||(t.dia&&t.dia===diaN4&&!t.data); });
       var fezTr=trD.some(function(t){ return (t.feitoDatas||[]).indexOf(ds4)>=0; });
       var habD=habitos.filter(function(h){ return habitoDeveHoje(h); });
       var habFD=habD.filter(function(h){ return (h.doneDatas||[]).indexOf(ds4)>=0||(h.doneDate===ds4); });
       var habOk=habD.length>0&&habFD.length>=habD.length*0.7;
       var icon,cor,iconColor;
-      if(isFut4){ icon='O'; cor='var(--nude2)'; iconColor='var(--nude3)'; }
+      if(isFut4){ icon='\u25CB'; cor='var(--nude2)'; iconColor='var(--nude3)'; }
       else if(evD.length>0&&evFD===evD.length&&fezTr&&habOk){ icon='\u2605'; cor='rgba(240,192,96,0.12)'; iconColor='var(--warm)'; }
       else if(fezTr&&habOk){ icon='\u25CF'; cor='rgba(90,122,90,0.08)'; iconColor='var(--green)'; }
       else if(fezTr||habOk||evFD>0){ icon='\u25D0'; cor='rgba(196,168,130,0.1)'; iconColor='var(--warm2)'; }
@@ -4887,7 +4916,7 @@ function renderPlDash(){
   if(evList){
     evList.innerHTML='';
     if(!evSem.length){ evList.innerHTML='<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px">Nenhum evento esta semana</div>'; }
-    else {
+    else{
       for(var d5=0;d5<7;d5++){
         var dDate5=new Date(mon); dDate5.setDate(mon.getDate()+d5);
         var ds5=dDate5.toISOString().slice(0,10);
@@ -4905,7 +4934,7 @@ function renderPlDash(){
           item.innerHTML='<div style="width:3px;height:36px;border-radius:2px;background:'+corEv+';flex-shrink:0;"></div>'
             +'<div style="flex:1;"><div style="font-size:12px;font-weight:500;'+(e.feito?'text-decoration:line-through;color:var(--ink3)':'color:var(--ink)')+'">'+esc(e.ev.titulo)+'</div>'
             +(e.ev.hora?'<div style="font-size:10px;color:var(--ink3)">'+(e.ev.horaFim?e.ev.hora+' - '+e.ev.horaFim:e.ev.hora)+'</div>':'')
-            +'</div><span style="font-size:11px;color:'+(e.feito?'var(--green)':'var(--ink3)')+'">'+(e.feito?'\u2713 Feito':'Pendente')+'</span>';
+            +'</div><span style="font-size:11px;color:'+(e.feito?'var(--green)':'var(--ink3)')+'">'+(e.feito?'\u2713':'pendente')+'</span>';
           var btnR=document.createElement('button');
           btnR.className='btn btn-sm'; btnR.style.fontSize='10px'; btnR.textContent='Remarcar';
           btnR.addEventListener('click',(function(id){ return function(){ abrirReagendar(id); }; })(e.ev.id));
@@ -4920,12 +4949,9 @@ function renderPlDash(){
   if(habList){
     habList.innerHTML='';
     if(!habitos.length){ habList.innerHTML='<div style="text-align:center;padding:12px;color:var(--ink3);font-size:12px">Nenhum habito cadastrado</div>'; }
-    else {
+    else{
       habitos.forEach(function(h){
-        var row=document.createElement('div');
-        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);';
-        var cnt=0;
-        var dotsHtml='';
+        var cnt=0; var dotsHtml='';
         for(var d6=0;d6<7;d6++){
           var dDate6=new Date(mon); dDate6.setDate(mon.getDate()+d6);
           var ds6=dDate6.toISOString().slice(0,10);
@@ -4934,7 +4960,10 @@ function renderPlDash(){
           if(fez6) cnt++;
           dotsHtml+='<div style="width:12px;height:12px;border-radius:50%;background:'+(isFut6?'var(--nude3)':fez6?'var(--green)':'rgba(201,64,64,0.2)')+';"></div>';
         }
-        row.innerHTML='<div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--ink)">'+esc(h.nome)+'</div><div style="font-size:10px;color:var(--ink3)">'+(h.freq||'Diario')+'</div></div>'
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);';
+        row.innerHTML='<div style="flex:1;"><div style="font-size:12px;font-weight:500;color:var(--ink)">'+esc(h.nome)+'</div>'
+          +'<div style="font-size:10px;color:var(--ink3)">'+(h.freq||'Diario')+'</div></div>'
           +'<div style="display:flex;gap:3px;">'+dotsHtml+'</div>'
           +'<div style="font-size:12px;font-weight:600;color:var(--warm2);min-width:24px;text-align:right;">'+cnt+'x</div>';
         habList.appendChild(row);
@@ -4942,8 +4971,6 @@ function renderPlDash(){
     }
   }
 }
-
-// Atualiza showApp para loadMetaFromDB
 </script>
 
 <!-- Drawer mobile sidebar financas -->
