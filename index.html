@@ -460,6 +460,19 @@ body.dark-mode{--nude:#1a1a2e;--nude2:#16213e;--nude3:#0f3460;--ink:#e0e0e0;--in
 body.dark-mode .panel{background:#1e1e3a;}
 body.dark-mode .fi2,body.dark-mode .fsel{background:#16213e;color:#e0e0e0;border-color:#2a2a4a;}
 body.dark-mode .modal{background:#1e1e3a;}
+
+/* Layout responsivo */
+@media (max-width:900px){
+  .hub-left{ display:none !important; }
+  .hub-right{ padding:20px; }
+}
+@media (max-width:700px){
+  .sidebar{ display:none; }
+  .pg-area{ padding:12px; }
+}
+
+/* Fix área branca - sistemas inativos não ocupam espaço */
+.sistema:not(.active){position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -6073,6 +6086,7 @@ function toggleDarkMode(){
       <div class="sb-l">Principal</div>
       <div class="sb-i" data-page="f-dash"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">+</span><span>Dashboard</span></div>
       <div class="sb-i" data-page="f-lanc"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">$</span><span>Lancamentos</span></div>
+      <div class="sb-i" data-page="f-formas" onclick="mobGoFP(this,'fin')"><span class="sb-ic">&#128179;</span><span>Por Forma</span></div>
       <div class="sb-i" data-page="f-formas" onclick="mobGoFP(this,'fin')"><span class="sb-ic">&#128179;</span><span>Por Forma</span></div>
       <div class="sb-i" data-page="f-contas" onclick="mobGoFP(this,'fin')"><span class="sb-ic">@</span><span>Contas</span></div>
       <div class="sb-i" data-page="f-parc"   onclick="mobGoFP(this,'fin')"><span class="sb-ic">#</span><span>Parceladas</span></div>
