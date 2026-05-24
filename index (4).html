@@ -453,8 +453,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .ia-sug-btn{background:var(--nude2);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--ink2);cursor:pointer;white-space:nowrap;}
 .ia-sug-btn:hover{background:var(--warm);}
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
-.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall 2s ease-in forwards;pointer-events:none;z-index:9999;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -603,7 +601,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 
     <!-- FINANCAS -->
     <div class="sistema" id="sis-ia">
-      <div style="max-width:680px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="max-width:680px;margin:0 auto;height:100%;display:flex;flex-direction:column;">
         <div style="background:var(--navy);padding:14px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
           <button onclick="goSis('hub')" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:100px;cursor:pointer;font-size:13px;">&#8592;</button>
           <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--warm),#c94040);display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:16px;font-weight:700;color:var(--ink);flex-shrink:0;">O</div>
@@ -626,7 +624,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="sb-g">
             <div class="sb-l">Principal</div>
             <div class="sb-i active" data-page="f-dash"   onclick="goFP(this)"><span class="sb-ic">+</span><span>Dashboard</span></div>
-            <div class="sb-i"        data-page="f-pat" onclick="goFP(this)"><span class="sb-ic">&#127968;</span><span>Patrimonio</span></div>
+            <div class="sb-i"        data-page="f-patdash" onclick="goFP(this)"><span class="sb-ic">P</span><span>Patrimonio</span></div>
             <div class="sb-i"        data-page="f-lanc"   onclick="goFP(this)"><span class="sb-ic">$</span><span>Lancamentos</span></div>
             <div class="sb-i"        data-page="f-formas" onclick="goFP(this)"><span class="sb-ic">&#128179;</span><span>Por Forma</span></div>
             <div class="sb-i"        data-page="f-contas" onclick="goFP(this)"><span class="sb-ic">@</span><span>Contas</span></div>
@@ -2420,7 +2418,7 @@ function goFP(el){
   document.querySelectorAll('#sis-financas .page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('#sis-financas .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
-  var T = {'f-dash':'Dashboard','f-pat':'Patrim\u00F4nio','f-lanc':'Lancamentos','f-formas':'Por Forma de Pagamento','f-contas':'Contas','f-parc':'Parceladas',
+  var T = {'f-dash':'Dashboard','f-patdash':'Patrimonio','f-lanc':'Lancamentos','f-formas':'Por Forma de Pagamento','f-contas':'Contas','f-parc':'Parceladas',
     'f-metas':'Metas','f-apagar':'A pagar','f-receber':'A receber','f-invest':'Investimentos','f-anual':'Visao anual',
     'f-pat':'Patrimonio','f-planos':'Planos','f-cats':'Categorias','f-admin':'Painel Admin'};
   $('f-ttl').textContent = T[pid] || pid;
@@ -2433,11 +2431,9 @@ function goFP(el){
   if(pid==='f-apagar'){ if(!apagar.length) loadApagar(); else renderApagar(); }
   if(pid==='f-receber'){ if(!receber.length) loadReceber(); else renderReceber(); }
   if(pid==='f-invest'){ if(!investimentos.length) loadInvest(); else renderInvest(); }
-  if(pid==='f-pat'){
-    if(!ativos.length) loadPatrimonio().then(function(){ renderPatrimonio(); renderPatrimonioDash(); });
-    else{ renderPatrimonio(); renderPatrimonioDash(); }
-  }
-  if(pid==='f-cats') renderCategorias();
+  if(pid==='f-pat')   { if(!ativos.length) loadPatrimonio(); else renderPatrimonio(); }
+  if(pid==='f-cats')    renderCategorias();
+  if(pid==='f-patdash') renderPatrimonioDash();
   if(pid==='f-formas')  renderFormas();
 }
 function goFPid(pid){
@@ -5244,6 +5240,16 @@ function salvarEditInvest(){
 // =====================================================
 // POR FORMA DE PAGAMENTO
 // =====================================================
+function populateFFAno(){
+  var sel=$('ff-ano'); if(!sel||sel.options.length>1) return;
+  var anoAtual=hoje.getFullYear();
+  for(var a=anoAtual+1;a>=2020;a--){
+    var opt=document.createElement('option'); opt.value=a; opt.text=a;
+    if(a===anoAtual) opt.selected=true;
+    sel.appendChild(opt);
+  }
+}
+
 function renderFormas(){
   var mes = parseInt($('month-sel') ? $('month-sel').value : hoje.getMonth());
   var ano = parseInt($('year-sel')  ? $('year-sel').value  : hoje.getFullYear());
@@ -5500,16 +5506,20 @@ function renderFormasLista(){
 
 
 // ===== IA LOCAL ORST =====
-var _iaHistorico=[],_iaIniciado=false;
-var IA_SUGESTOES=['Como foi meu mes?','Maiores gastos','Quanto tenho a pagar?','Resumo do patrimonio','Habitos e treinos','Qual meu nivel e XP?','Dicas para economizar','Saldo em contas'];
+var _iaIniciado=false;
+var IA_SUGESTOES=['Como foi meu mes?','Maiores gastos','Quanto tenho a pagar?',
+  'Resumo do patrimonio','Habitos e treinos','Qual meu nivel e XP?',
+  'Dicas para economizar','Saldo em contas'];
+
 function initIA(){
   if(_iaIniciado) return;
   _iaIniciado=true;
   var msgs=$('ia-msgs'); if(msgs) msgs.innerHTML='';
   var nome=G.name?G.name.split(' ')[0]:'';
-  iaAddMsg('bot','Ola'+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nSou sua assistente ORST. Analiso seus dados em tempo real!\n\nPosso responder:\n\u2022 Como foi meu mes?\n\u2022 Maiores gastos\n\u2022 Contas a pagar\n\u2022 Patrimonio e investimentos\n\u2022 Habitos, treinos, planner\n\nPergunte!');
+  iaAddMsg('bot','Ola'+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nSou sua assistente ORST. Analiso seus dados em tempo real!\n\nPosso responder:\n\u2022 Como foi meu mes?\n\u2022 Maiores gastos\n\u2022 Contas a pagar\n\u2022 Patrimonio e investimentos\n\u2022 Habitos, treinos e planner\n\nPergunte!');
   renderIASugestoes();
 }
+
 function renderIASugestoes(){
   var el=$('ia-sugestoes'); if(!el) return; el.innerHTML='';
   IA_SUGESTOES.forEach(function(s){
@@ -5518,6 +5528,7 @@ function renderIASugestoes(){
     el.appendChild(btn);
   });
 }
+
 function iaAddMsg(tipo,texto){
   var msgs=$('ia-msgs'); if(!msgs) return;
   var d=document.createElement('div'); d.className='ia-msg '+tipo;
@@ -5526,6 +5537,7 @@ function iaAddMsg(tipo,texto){
   var b=document.createElement('div'); b.className='ia-bubble '+tipo; b.textContent=texto;
   d.appendChild(av); d.appendChild(b); msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
 }
+
 function iaAddTyping(){
   var msgs=$('ia-msgs'); if(!msgs) return;
   var d=document.createElement('div'); d.className='ia-msg bot'; d.id='ia-typ';
@@ -5534,12 +5546,16 @@ function iaAddTyping(){
   b.innerHTML='<div class="ia-dot"></div><div class="ia-dot"></div><div class="ia-dot"></div>';
   d.appendChild(av); d.appendChild(b); msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
 }
+
 function iaRemoveTyping(){ var t=document.getElementById('ia-typ'); if(t) t.remove(); }
+
 function iaKeyDown(e){
   if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); iaEnviar(); }
   var ta=$('ia-input'); if(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,110)+'px'; }
 }
+
 function iaPerguntar(txt){ var inp=$('ia-input'); if(inp){ inp.value=txt; iaEnviar(); } }
+
 function iaEnviar(){
   var inp=$('ia-input'); if(!inp) return;
   var txt=(inp.value||'').trim(); if(!txt) return;
@@ -5548,39 +5564,43 @@ function iaEnviar(){
   iaAddMsg('user',txt); iaAddTyping();
   setTimeout(function(){ iaRemoveTyping(); iaAddMsg('bot',iaResponderLocal(txt)); },400);
 }
+
 function iaResponderLocal(pergunta){
   var p=pergunta.toLowerCase()
-    .replace(/[\u00E1\u00E0\u00E3\u00E2\u00E4]/g,'a').replace(/[\u00E9\u00E8\u00EA\u00EB]/g,'e').replace(/[\u00ED\u00EC\u00EE\u00EF]/g,'i')
-    .replace(/[\u00F3\u00F2\u00F5\u00F4\u00F6]/g,'o').replace(/[\u00FA\u00F9\u00FB\u00FC]/g,'u').replace(/\u00E7/g,'c');
+    .replace(/[\u00E1\u00E0\u00E3\u00E2]/g,'a').replace(/[\u00E9\u00EA]/g,'e').replace(/[\u00EDi]/g,'i')
+    .replace(/[\u00F3\u00F5\u00F4]/g,'o').replace(/[\u00FA]/g,'u').replace(/[\u00E7]/g,'c');
   var mes=parseInt($('month-sel')?$('month-sel').value:hoje.getMonth());
   var ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
-  var MN=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  // Dados financeiros
-  var lM=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); return d.getMonth()===mes&&d.getFullYear()===ano; });
+  var MN=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto',
+          'Setembro','Outubro','Novembro','Dezembro'];
+  var lM=lancamentos.filter(function(l){
+    var d=new Date((l.data||'2000-01-01')+'T12:00');
+    return d.getMonth()===mes&&d.getFullYear()===ano;
+  });
   var tE=lM.filter(function(l){ return l.tipo==='Entrada'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
   var tS=lM.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
   var sdo=tE-tS;
   var cM={};
   lM.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cM[l.cat]=(cM[l.cat]||0)+(l.valor||0); });
   var cS=Object.keys(cM).sort(function(a,b){ return cM[b]-cM[a]; });
-  // Patrim\u00F4nio
   var tA=ativos.reduce(function(s,a){ return s+(a.valor||0); },0);
-  var tP=passivos.reduce(function(s,p){ return s+(p.valor||0); },0);
+  var tP=passivos.reduce(function(s,p2){ return s+(p2.valor||0); },0);
   var tI=investimentos.reduce(function(s,i){ return s+(i.valor||0); },0);
   var tC=contas.reduce(function(s,c){ return s+(c.saldo||0); },0);
   var aPP=apagar.filter(function(a){ return a.status!=='Pago'; });
   var aRP=receber.filter(function(r){ return r.status!=='Recebido'; });
   var tPag=aPP.reduce(function(s,a){ return s+(a.valor||0); },0);
   var tRec=aRP.reduce(function(s,r){ return s+(r.valor||0); },0);
-  // Planner
   var niv=getNivel(G_META?G_META.xpTotal||0:0);
   var hHj=habitos.filter(function(h){ return habitoDeveHoje(h); });
   var hFHj=hHj.filter(function(h){ return h.doneDate===hojeStr; }).length;
   var mIA=getMonday(0); var sI=mIA.toISOString().slice(0,10);
   var sFD=new Date(mIA); sFD.setDate(mIA.getDate()+6); var sF=sFD.toISOString().slice(0,10);
   var tSem=treinos.filter(function(t){ return (t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); }).length;
-  // Matching
-  if(p.match(/^(oi|ola|bom|boa|tudo)/)) return 'Ola! Pronta para analisar seus dados.\nPergunte sobre financas, patrim\u00F4nio ou planner!';
+
+  if(p.match(/^(oi|ola|bom|boa|tudo)/))
+    return 'Ola! Pronta para analisar seus dados.\nPergunte sobre financas, patrimonio ou planner!';
+
   if(p.match(/resumo|visao|geral|como estou|tudo|panorama/)){
     var r='\uD83D\uDCCB Resumo \u2014 '+MN[mes]+'/'+ano+'\n\n\uD83D\uDCB0 FINANCAS\nEntradas: '+fmt(tE)+'\nSaidas: '+fmt(tS)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo);
     if(cS.length) r+='\nMaior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+')';
@@ -5590,20 +5610,20 @@ function iaResponderLocal(pergunta){
     return r;
   }
   if(p.match(/gast|despesa|saida|quanto sai/)){
-    var r2='\uD83D\uDCC8 Gastos \u2014 '+MN[mes]+'/'+ano+'\n\nTotal saidas: '+fmt(tS)+'\nEntradas: '+fmt(tE)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo)+'\n';
+    var r2='\uD83D\uDCC8 Gastos \u2014 '+MN[mes]+'/'+ano+'\n\nTotal: '+fmt(tS)+'\nEntradas: '+fmt(tE)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo)+'\n';
     if(cS.length){ r2+='\nCategorias:\n'; cS.slice(0,6).forEach(function(c){ var pct=tS>0?Math.round(cM[c]/tS*100):0; r2+='\u2022 '+c+': '+fmt(cM[c])+' ('+pct+'%)\n'; }); }
     else r2+='Nenhum lancamento de saida neste mes.';
     return r2;
   }
   if(p.match(/maior gasto|mais gast|categoria|onde gast/)){
     if(!cS.length) return 'Nenhum gasto em '+MN[mes]+'/'+ano+'.';
-    var r3='Maiores gastos \u2014 '+MN[mes]+'/'+ano+':\n\n';
+    var r3='\uD83D\uDD0D Maiores gastos \u2014 '+MN[mes]+'/'+ano+':\n\n';
     cS.slice(0,6).forEach(function(c,i){ r3+=(i+1)+'. '+c+': '+fmt(cM[c])+'\n'; });
     return r3;
   }
-  if(p.match(/saldo|sobrou|resultado/)){
+  if(p.match(/saldo|sobrou|resultado/))
     return 'Resultado '+MN[mes]+'/'+ano+':\n\nEntradas: +'+fmt(tE)+'\nSaidas: -'+fmt(tS)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F -')+fmt(Math.abs(sdo))+'\n\n'+(sdo<0?'Gastos superam entradas!':'Mes no positivo!');
-  }
+
   if(p.match(/pagar|conta|venc|divida|boleto|pendente/)){
     if(!aPP.length) return '\u2705 Nenhuma conta pendente!';
     var r4='A pagar:\n\nTotal: '+fmt(tPag)+'\n'+aPP.length+' conta(s)\n\n';
@@ -5618,7 +5638,7 @@ function iaResponderLocal(pergunta){
   }
   if(p.match(/patrimonio|ativo|passivo|bens|riqueza|liquido|quanto tenho/)){
     var r6='Patrim\u00F4nio:\n\nAtivos: '+fmt(tA)+' ('+ativos.length+')\nPassivos: '+fmt(tP)+'\nLiquido: '+fmt(tA-tP)+'\nInvestimentos: '+fmt(tI)+'\nContas: '+fmt(tC)+'\n';
-    if(ativos.length){ r6+='\nPrincipais ativos:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,3).forEach(function(a){ r6+='\u2022 '+esc(a.desc)+': '+fmt(a.valor)+'\n'; }); }
+    if(ativos.length){ r6+='\nPrincipais:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,3).forEach(function(a){ r6+='\u2022 '+esc(a.desc)+': '+fmt(a.valor)+'\n'; }); }
     return r6;
   }
   if(p.match(/invest|rendimento|aplicacao/)){
@@ -5638,26 +5658,27 @@ function iaResponderLocal(pergunta){
     treinos.forEach(function(t){ var f=(t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); r9+=(f?'\u2705 ':'\u25CB ')+(t.dia||'Livre')+': '+esc(t.nome||t.tipo||'Treino')+'\n'; });
     return r9;
   }
-  if(p.match(/planner|nivel|xp|evolucao|streak/)){
+  if(p.match(/planner|nivel|xp|evolucao|streak/))
     return 'Planner:\n\nNivel: '+niv.icon+' '+niv.nome+'\nXP: '+(G_META?G_META.xpTotal||0:0)+'\nSemanas: '+(G_META?G_META.streakSemanas||0:0)+'\nHabitos hoje: '+hFHj+'/'+hHj.length+'\nTreinos semana: '+tSem+'/'+treinos.length;
-  }
+
   if(p.match(/dica|conselho|economiz|poupar/)){
     var dicas=[];
-    if(sdo<0) dicas.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'. Reduza gastos em '+cS[0]+'.');
+    if(sdo<0) dicas.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'. Reduza gastos em '+(cS[0]||'outras categorias')+'.');
     if(aPP.length>3) dicas.push(aPP.length+' contas pendentes. Priorize as com vencimento proximo.');
-    if(!investimentos.length&&tC>500) dicas.push('Considere investir parte do saldo em contas ('+fmt(tC)+').');
+    if(!investimentos.length&&tC>500) dicas.push('Considere investir parte do saldo ('+fmt(tC)+').');
     if(!dicas.length) dicas.push(sdo>0?'Mes positivo! Continue assim.':'Continue acompanhando suas financas.');
     return 'Dicas:\n\n'+dicas.map(function(d){ return '\u2022 '+d; }).join('\n');
   }
   if(p.match(/conta bancaria|banco|saldo conta/)){
-    if(!contas.length) return 'Nenhuma conta cadastrada.';
+    if(!contas.length) return 'Nenhuma conta bancaria cadastrada.';
     var r12='Contas:\n\nTotal: '+fmt(tC)+'\n\n';
     contas.forEach(function(c){ r12+='\u2022 '+esc(c.nome)+': '+fmt(c.saldo)+'\n'; });
     return r12;
   }
-  if(p.match(/meta de vida|objetivo/)){
-    if(!metasVida||!metasVida.length) return 'Nenhuma meta de vida cadastrada. Va em Planner > Metas.';
-    var r13='Metas de vida:\n\n'; metasVida.forEach(function(m){ r13+='\u2022 '+esc(m.nome)+': '+(m.prog||0)+'%\n'; }); return r13;
+  if(p.match(/sono|dormi/)){
+    if(!sonoLog||!sonoLog.length) return 'Nenhum registro de sono. Va em Planner > Sono.';
+    var ult=sonoLog[sonoLog.length-1]; var med=sonoLog.slice(-7).reduce(function(s,sl){ return s+(sl.horas||0); },0)/Math.min(7,sonoLog.length);
+    return 'Sono:\n\nUltima noite: '+(ult.horas||0)+'h\nMedia 7 dias: '+med.toFixed(1)+'h\n'+(med<6?'\u26A0\uFE0F Abaixo do ideal (7-9h)':'\u2705 Boa media!');
   }
   return 'Nao entendi. Tente:\n"Como foi meu mes?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Resumo do patrimonio"';
 }
