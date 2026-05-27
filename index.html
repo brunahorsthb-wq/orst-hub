@@ -717,8 +717,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             <select id="year-sel" onchange="loadFDash(); if(document.getElementById('page-f-lanc').classList.contains('active')) renderLanc();" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;"></select>
             <button class="btn btn-p btn-sm" onclick="openM('m-lanc')">+ Lancamento</button>
           </div>
-          <div class="pg-area">
-            <!-- Dashboard -->
+                              <div class="pg-area">
             <div class="page active" id="page-f-dash">
               <div class="g4">
                 <div class="mc"><div class="mc-l">Entradas</div><div class="mc-v g" id="fd-ent">R$ 0</div><div class="mc-s">Este mes</div></div>
@@ -744,7 +743,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div class="txl" id="fd-tx"><div style="text-align:center;padding:20px;color:var(--ink3)">Carregando...</div></div>
               </div>
             </div>
-            <!-- Dashboard Patrimônio -->
+
             <div class="page" id="page-f-patdash">
               <!-- Resumo Patrimônio Líquido -->
               <div style="background:var(--navy);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
@@ -812,26 +811,27 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
             </div>
 
-            <!-- Lancamentos -->
             <div class="page" id="page-f-lanc">
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-tipo">
-                  <option value="">Todos tipos</option>
-                  <option>Entrada</option><option>Saida</option>
+                  <option value="">Todos tipos</option><option>Entrada</option><option>Saida</option>
                 </select>
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-cat">
                   <option value="">Todas categorias</option>
                 </select>
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-st">
-                  <option value="">Todos status</option>
-                  <option>Pago</option><option>Pendente</option>
+                  <option value="">Todos status</option><option>Pago</option><option>Pendente</option>
                 </select>
                 <button class="btn btn-sm" onclick="renderLanc()" style="font-size:12px;">Filtrar</button>
-                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar filtros</button>
+                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar</button>
                 <button class="btn btn-p btn-sm" onclick="openM('m-lanc')" style="font-size:12px;">+ Novo</button>
               </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Transacoes</div><span id="lanc-cnt" style="font-size:12px;color:var(--ink3)"></span></div>
+                <div class="txl" id="lanc-list"></div>
+              </div>
             </div>
-            <!-- POR FORMA DE PAGAMENTO -->
+
             <div class="page" id="page-f-formas">
               <!-- Filtros topo -->
               <div style="background:var(--navy);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;">
@@ -880,12 +880,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
             </div>
 
-              <div class="panel">
-                <div class="ph"><div class="pt">Transacoes</div><span id="lanc-cnt" style="font-size:12px;color:var(--ink3)"></span></div>
-                <div class="txl" id="lanc-list"></div>
-              </div>
-            
-            <!-- Contas -->
             <div class="page" id="page-f-contas">
               <div class="g4" id="contas-cards">
                 <div class="mc"><div class="mc-l">Total em contas</div><div class="mc-v b" id="contas-total">R$ 0</div></div>
@@ -905,7 +899,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <button class="btn btn-p" onclick="addTransferencia()">Registrar transferencia</button>
               </div>
             </div>
-            <!-- Parceladas -->
+
             <div class="page" id="page-f-parc">
               <div class="g3">
                 <div class="mc"><div class="mc-l">Total parcelado</div><div class="mc-v r" id="par-tot">R$ 0</div></div>
@@ -917,35 +911,32 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 <div id="parc-list"></div>
               </div>
             </div>
-            <!-- Metas -->
+
             <div class="page" id="page-f-metas">
               <div class="panel">
                 <div class="ph"><div class="pt">Metas financeiras</div><button class="btn btn-p btn-sm" onclick="openM('m-mfin')">+ Meta</button></div>
                 <div id="fmetas-list"></div>
-              
-
+              </div>
             </div>
-            <!-- A Pagar -->
-              </div><div class="page" id="page-f-apagar">
+
+            <div class="page" id="page-f-apagar">
               <div class="g3">
                 <div class="mc"><div class="mc-l">Total a pagar</div><div class="mc-v r" id="ap-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Vencidas</div><div class="mc-v r" id="ap-venc">0</div></div>
                 <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v a" id="ap-pend">0</div></div>
-              
-
+              </div>
               <div class="panel">
                 <div class="ph"><div class="pt">Contas a pagar</div><button class="btn btn-p btn-sm" onclick="openM('m-apagar')">+ Conta</button></div>
                 <div class="txl" id="apagar-list"></div>
               </div>
             </div>
-            <!-- Contas a Receber -->
-              </div><div class="page" id="page-f-receber">
+
+            <div class="page" id="page-f-receber">
               <div class="g3">
                 <div class="mc"><div class="mc-l">Total a receber</div><div class="mc-v g" id="rc-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Vencidas</div><div class="mc-v r" id="rc-venc">0</div></div>
                 <div class="mc"><div class="mc-l">A vencer</div><div class="mc-v a" id="rc-pend">0</div></div>
-              
-
+              </div>
               <div class="panel">
                 <div class="ph">
                   <div class="pt">Contas a receber</div>
@@ -964,33 +955,31 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 </div>
               </div>
             </div>
-            <!-- Investimentos -->
-              </div><div class="page" id="page-f-invest">
+
+            <div class="page" id="page-f-invest">
               <div class="g4">
                 <div class="mc"><div class="mc-l">Total investido</div><div class="mc-v b" id="inv-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Rendimento</div><div class="mc-v g" id="inv-rend">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Rentabilidade</div><div class="mc-v g" id="inv-rent">0%</div></div>
                 <div class="mc"><div class="mc-l">Ativos</div><div class="mc-v a" id="inv-qtd">0</div></div>
-              
-
+              </div>
               <div class="panel">
                 <div class="ph"><div class="pt">Carteira de investimentos</div><button class="btn btn-p btn-sm" onclick="openM('m-invest')">+ Investimento</button></div>
                 <div class="txl" id="invest-list"></div>
               </div>
             </div>
-            <!-- Anual -->
-              </div><div class="page" id="page-f-anual">
+
+            <div class="page" id="page-f-anual">
               <div class="g4" id="anual-cards">
                 <div class="mc"><div class="mc-l">Melhor mes</div><div class="mc-v g" style="font-size:16px" id="an-best">-</div></div>
                 <div class="mc"><div class="mc-l">Total entradas</div><div class="mc-v g" id="an-ent">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Total saidas</div><div class="mc-v r" id="an-sai">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Saldo do ano</div><div class="mc-v b" id="an-sal">R$ 0</div></div>
-              
-
+              </div>
               <div class="panel"><div class="ph"><div class="pt">Entradas vs Saidas</div></div><div style="height:240px"><canvas id="anualChart"></canvas></div></div>
             </div>
-            <!-- Patrimonio -->
-              </div><div class="page" id="page-f-pat">
+
+            <div class="page" id="page-f-pat">
               <div class="two-col">
                 <div class="panel">
                   <div class="ph"><div class="pt" style="color:var(--green)">Ativos</div><button class="btn btn-p btn-sm" onclick="openM('m-ativo')">+ Ativo</button></div>
@@ -1002,179 +991,56 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   <div class="txl" id="passivos-list"></div>
                   <div class="txi" style="border-top:2px solid var(--red);margin-top:8px"><span style="font-weight:500">Total passivos</span><span class="tv-n" style="font-size:17px" id="total-passivos">R$ 0</span></div>
                 </div>
-              
-
+              </div>
               <div style="background:var(--navy);border-radius:var(--r);padding:22px;text-align:center;">
                 <div style="font-size:12px;color:rgba(240,234,216,0.5);margin-bottom:6px">Patrimonio liquido</div>
                 <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:#5dd4a0" id="pat-liq">R$ 0</div>
               </div>
             </div>
-            <!-- Planos -->
-              </div><div class="page" id="page-f-planos">
-              <!-- HERO -->
-              <div class="vendas-hero">
-                <div class="vendas-badge">&#10024; Novo — Versão 2.0</div>
-                <div class="vendas-titulo">ORST Hub</div>
-                <div style="font-family:var(--fs);font-size:14px;color:var(--warm);margin-bottom:10px;">Gestão Pessoal Completa</div>
-                <div class="vendas-sub">Finanças, Planner, IA Assistente e Gamificação<br>tudo em um só lugar — do seu jeito.</div>
-                <div class="vendas-stats">
-                  <div class="vendas-stat"><div class="vendas-stat-n">15</div><div class="vendas-stat-l">Módulos</div></div>
-                  <div class="vendas-stat"><div class="vendas-stat-n">179</div><div class="vendas-stat-l">Funções</div></div>
-                  <div class="vendas-stat"><div class="vendas-stat-n">IA</div><div class="vendas-stat-l">Assistente</div></div>
-                  <div class="vendas-stat"><div class="vendas-stat-n">100%</div><div class="vendas-stat-l">Seu dado</div></div>
-                </div>
-              </div>
 
-              <!-- PLANOS -->
-              <div class="planos-grid">
-                <!-- Free -->
-                <div class="plano-card">
-                  <div class="plano-nome">Free</div>
-                  <div class="plano-preco">R$ 0<span>/mês</span></div>
-                  <div class="plano-desc">Para começar a organizar</div>
-                  <div class="plano-sep"></div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Dashboard financeiro</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Lançamentos ilimitados</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Por Forma de pagamento</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Contas bancárias</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>A pagar e a receber</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Alertas automáticos</div>
-                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Investimentos</div>
-                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Patrimônio completo</div>
-                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Planner e rotina</div>
-                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>IA Assistente</div>
-                  <button class="plano-cta free" disabled>Plano atual</button>
-                </div>
-                <!-- Premium -->
-                <div class="plano-card destaque">
-                  <div class="plano-badge">&#11088; RECOMENDADO</div>
-                  <div class="plano-nome">Premium</div>
-                  <div class="plano-preco">R$ 29<span style="font-size:18px;color:var(--warm);font-family:var(--fs)">,90</span><span>/mês</span></div>
-                  <div class="plano-desc">Controle total da sua vida</div>
-                  <div class="plano-sep"></div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Tudo do plano Free</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Investimentos + histórico</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Patrimônio com depreciação</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Visão anual</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Planner completo</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Hábitos, Treinos, Sono</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Gamificação + XP + Níveis</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>IA Assistente ORST</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Meta de economia mensal</div>
-                  <div class="plano-item"><span class="plano-check">&#10003;</span>Metas de vida</div>
-                  <button class="plano-cta premium" onclick="toast('Entre em contato: brunahorsthb@gmail.com')">Assinar Premium &#8594;</button>
-                </div>
-              </div>
-
-              <!-- FUNCIONALIDADES -->
-              <div class="vendas-funcoes">
-                <div class="vendas-funcoes-titulo">O que está incluído no Premium</div>
-                <div class="funcoes-grid">
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#128200;</div>
-                    <div><div class="funcao-nome">Dashboard Financeiro</div><div class="funcao-desc">Gráfico pizza, alertas automáticos, meta de economia com barra de progresso</div></div>
+            <div class="page" id="page-f-planos">
+              <div class="panel"><div class="ph"><div class="pt">Planos ORST</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="plan-card">
+                    <div class="plan-name">Free</div>
+                    <div class="plan-price">R$ 0<span>/mes</span></div>
+                    <div class="plan-feat ok">Dashboard mensal</div>
+                    <div class="plan-feat ok">Lancamentos ilimitados</div>
+                    <div class="plan-feat ok">Contas e Parceladas</div>
+                    <div class="plan-feat ok">A pagar basico</div>
+                    <div class="plan-feat no">Metas e Investimentos</div>
+                    <div class="plan-feat no">Visao anual e Patrimonio</div>
+                    <div class="plan-feat no">Planner e Rotina</div>
+                    <button class="btn" style="width:100%;margin-top:14px" disabled>Plano atual</button>
                   </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#128179;</div>
-                    <div><div class="funcao-nome">Por Forma de Pagamento</div><div class="funcao-desc">Análise por Pix, Débito, Crédito + Banco. Cards com % pago e pendente</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#127968;</div>
-                    <div><div class="funcao-nome">Patrimônio Completo</div><div class="funcao-desc">Ativos com depreciação anual, caixa de manutenção, passivos com parcelas</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#128185;</div>
-                    <div><div class="funcao-nome">Investimentos</div><div class="funcao-desc">Carteira com rendimento, histórico de aportes, resgates e ajustes</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#128197;</div>
-                    <div><div class="funcao-nome">Agenda Semanal</div><div class="funcao-desc">Eventos com recorrência, grade visual, missão da semana integrada</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#9989;</div>
-                    <div><div class="funcao-nome">Hábitos Diários</div><div class="funcao-desc">Recorrência personalizada, histórico, streaks e integração com XP</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#127947;</div>
-                    <div><div class="funcao-nome">Fichas de Treino</div><div class="funcao-desc">Por dia da semana, toggle de realização, histórico de datas</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#128164;</div>
-                    <div><div class="funcao-nome">Qualidade do Sono</div><div class="funcao-desc">Registro diário de horas e qualidade, média semanal</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#11088;</div>
-                    <div><div class="funcao-nome">Gamificação</div><div class="funcao-desc">5 níveis (Iniciante → Lendário), XP, troféus, streak de semanas, confetti</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#127775;</div>
-                    <div><div class="funcao-nome">IA Assistente ORST</div><div class="funcao-desc">Analisa seus dados em tempo real. Pergunte sobre gastos, patrimônio, planner e muito mais</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#127919;</div>
-                    <div><div class="funcao-nome">Metas de Vida</div><div class="funcao-desc">Objetivos pessoais com prazo, categoria e slider de progresso 0-100%</div></div>
-                  </div>
-                  <div class="funcao-card">
-                    <div class="funcao-icon">&#127829;</div>
-                    <div><div class="funcao-nome">Alimentação</div><div class="funcao-desc">Cardápio semanal com macros automáticos, base de 50+ alimentos</div></div>
+                  <div class="plan-card featured">
+                    <div class="plan-name">Premium</div>
+                    <div class="plan-price">R$ 29,90<span>/mes</span></div>
+                    <div class="plan-feat ok">Tudo do Free</div>
+                    <div class="plan-feat ok">Metas financeiras</div>
+                    <div class="plan-feat ok">Investimentos</div>
+                    <div class="plan-feat ok">Visao anual e Patrimonio</div>
+                    <div class="plan-feat ok">Planner completo</div>
+                    <div class="plan-feat ok">Habitos, Sono e Treino</div>
+                    <div class="plan-feat ok">Alimentacao e Metas de vida</div>
+                    <a href="vendas.html" target="_blank" class="btn btn-p" style="width:100%;margin-top:14px;display:block;text-align:center;text-decoration:none;">Ver planos e assinar</a>
                   </div>
                 </div>
-              </div>
-
-              <!-- GARANTIA -->
-              <div class="vendas-garantia">
-                <div style="font-size:24px;margin-bottom:6px;">&#128274;</div>
-                <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;">Seus dados são seus</div>
-                <div style="font-size:12px;color:var(--ink3);line-height:1.5;">Tudo salvo no Firebase com segurança. Sem anúncios. Sem venda de dados. Cancele quando quiser.</div>
-              </div>
-
-              <!-- FAQ -->
-              <div class="vendas-faq">
-                <div style="font-family:var(--fs);font-size:16px;color:var(--navy);margin-bottom:10px;">Dúvidas frequentes</div>
-                <div class="faq-item">
-                  <div class="faq-p">&#9660; Como funciona o pagamento?</div>
-                  <div class="faq-r">Entre em contato pelo e-mail brunahorsthb@gmail.com para ativar o Premium. O acesso é liberado manualmente.</div>
-                </div>
-                <div class="faq-item">
-                  <div class="faq-p">&#9660; Posso cancelar quando quiser?</div>
-                  <div class="faq-r">Sim, sem multa ou fidelidade. Basta avisar por e-mail e o acesso Premium é encerrado no próximo ciclo.</div>
-                </div>
-                <div class="faq-item">
-                  <div class="faq-p">&#9660; Meus dados ficam salvos?</div>
-                  <div class="faq-r">Sim! Todos os dados ficam salvos no Firebase (banco de dados seguro do Google), vinculados ao seu e-mail. Mesmo que você mude de dispositivo, tudo estará lá.</div>
-                </div>
-                <div class="faq-item">
-                  <div class="faq-p">&#9660; A IA tem custo extra?</div>
-                  <div class="faq-r">Não! A IA Assistente ORST está incluída no Premium sem custo adicional. Ela funciona localmente, analisando seus próprios dados — sem depender de serviços externos.</div>
-                </div>
-                <div class="faq-item">
-                  <div class="faq-p">&#9660; Funciona no celular?</div>
-                  <div class="faq-r">Sim! O ORST Hub é totalmente responsivo e funciona em celular, tablet e computador pelo navegador.</div>
-                </div>
-              </div>
-
-              <!-- CTA FINAL -->
-              <div style="background:linear-gradient(135deg,var(--navy),#1a4a7a);border-radius:var(--r);padding:24px 20px;text-align:center;">
-                <div style="font-family:var(--fs);font-size:22px;font-weight:300;color:var(--cream);margin-bottom:6px;">Pronto para começar?</div>
-                <div style="font-size:12px;color:rgba(240,234,216,0.5);margin-bottom:16px;">Junte-se e tenha controle total da sua vida financeira e pessoal</div>
-                <button onclick="toast('Entre em contato: brunahorsthb@gmail.com')" style="background:linear-gradient(135deg,var(--warm),#c87941);border:none;color:var(--ink);padding:12px 32px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fn);">Assinar Premium por R$ 29,90/mês &#8594;</button>
-                <div style="font-size:10px;color:rgba(240,234,216,0.3);margin-top:10px;">Sem fidelidade &#183; Cancele quando quiser</div>
               </div>
             </div>
-            <!-- Categorias -->
+
             <div class="page" id="page-f-cats">
               <div class="panel">
                 <div class="ph"><div class="pt">Categorias de despesas</div><button class="btn btn-p btn-sm" onclick="openM('m-cat')">+ Categoria</button></div>
                 <div id="cats-list"></div>
-              
-
+              </div>
               <div class="panel">
                 <div class="ph"><div class="pt">Bancos e carteiras</div><button class="btn btn-p btn-sm" onclick="openM('m-banco')">+ Banco</button></div>
                 <div id="bancos-list"></div>
               </div>
             </div>
-            <!-- Admin -->
-              </div><div class="page" id="page-f-admin">
+
+            <div class="page" id="page-f-admin">
               <div class="panel">
                 <div class="ph">
                   <div class="pt">Painel Administrativo</div>
@@ -1192,326 +1058,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                 </table>
               </div>
             </div>
-          </div><!-- /pg-area -->
-        </div>
-      </div>
-    </div><!-- /financas -->
 
-    <!-- PLANNER -->
-    <div class="sistema" id="sis-planner">
-      <div class="sys-shell">
-        <div class="sidebar">
-          <div class="sb-g">
-            <div class="sb-l">Planner</div>
-            <div class="sb-i"        data-page="pl-dash"    onclick="goPP(this)"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
-            <div class="sb-i active" data-page="pl-agenda"  onclick="goPP(this)"><span class="sb-ic">C</span><span>Agenda</span></div>
-            <div class="sb-i"        data-page="pl-habitos" onclick="goPP(this)"><span class="sb-ic">V</span><span>Habitos</span></div>
-            <div class="sb-i"        data-page="pl-metas"   onclick="goPP(this)"><span class="sb-ic">O</span><span>Metas</span></div>
-          </div>
-          <div class="sb-g">
-            <div class="sb-l">Saude</div>
-            <div class="sb-i" data-page="pl-alim"    onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
-            <div class="sb-i" data-page="pl-sono"    onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
-            <div class="sb-i" data-page="pl-treino"  onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
-          </div>
-          <div class="sb-g">
-            <div class="sb-l">Evolucao</div>
-            <div class="sb-i" data-page="pl-evolucao" onclick="goPP(this)"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
-          </div>
-          <div class="sb-foot">
-            <div class="sb-ui">
-              <div class="sb-av" id="sb-av2"><span id="sb-av-l2">O</span></div>
-              <div><div class="sb-un" id="sb-un2"></div><div class="sb-em" id="sb-em2"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="main-cnt">
-          <div class="sys-tb">
-            <button class="mob-menu-btn" onclick="abrirMobSidebar('pl')" title="Menu">&#9776;</button>
-            <span class="sys-ttl" id="pl-ttl">Agenda semanal</span>
-            <button class="btn btn-p btn-sm" id="pl-add" onclick="openM('m-evento')">+ Evento</button>
-          </div>
-          <div class="pg-area">
-            <!-- Agenda/Dashboard -->
-            <div class="page active" id="page-pl-agenda">
-              <!-- Missao da Semana -->
-              <div class="missao-hero">
-                <div class="missao-titulo">Missao desta semana</div>
-                <div class="missao-nivel">
-                  <span class="missao-nivel-badge" id="missao-nivel-badge">Iniciante</span>
-                  <span class="missao-nivel-nome" id="missao-nivel-nome">Voce</span>
-                </div>
-                <div class="missao-xp" id="missao-xp-txt">0 XP</div>
-                <div class="missao-prog-wrap"><div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div></div>
-                <div class="missao-prog-txt"><span id="missao-prog-label">0%</span><span id="missao-meta-label">Meta: 10</span></div>
-                <div class="missao-vidas" id="missao-vidas"></div>
-                <div class="missao-stats">
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta sem.</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
-                </div>
-                <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
-              </div>
-<div class="page" id="page-pl-dash">
-              <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;">
-                <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Dashboard da Semana</div>
-                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                  <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
-                  <div style="display:flex;gap:6px;">
-                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8592;</button>
-                    <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
-                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8594;</button>
-                  </div>
-                </div>
-                <div style="margin-top:12px;">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;">
-                    <span>Consistencia geral</span><span id="pld-pct-txt">0%</span>
-                  </div>
-                  <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:10px;overflow:hidden;">
-                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Calendario da semana</div></div>
-                <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;"></div>
-                <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--ink3);">
-                  <span>&#9733; Perfeito &nbsp; &#9679; Treino+hab &nbsp; &#9680; Parcial &nbsp; &#9632; Perdido &nbsp; &#9675; Futuro</span>
-                </div>
-              </div>
-              <div class="g4" style="grid-template-columns:repeat(2,1fr);">
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#128197; Agenda</div>
-                  <div class="mc-v b" id="pld-ev-num" style="font-size:24px;">0/0</div>
-                  <div style="font-size:10px;color:var(--ink3);">eventos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#10003; Habitos</div>
-                  <div class="mc-v g" id="pld-hab-num" style="font-size:24px;">0%</div>
-                  <div style="font-size:10px;color:var(--ink3);">taxa conclusao</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#127947; Treinos</div>
-                  <div class="mc-v a" id="pld-tr-num" style="font-size:24px;">0/0</div>
-                  <div style="font-size:10px;color:var(--ink3);">treinos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#128564; Sono</div>
-                  <div class="mc-v b" id="pld-sono-num" style="font-size:24px;">0h</div>
-                  <div style="font-size:10px;color:var(--ink3);">media semanal</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-              </div>
-              <div class="panel"><div class="ph"><div class="pt">Eventos desta semana</div></div>
-                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div></div>
-              <div class="panel"><div class="ph"><div class="pt">Habitos desta semana</div></div>
-                <div id="pld-habitos-list"></div></div>
-            </div>
-<div class="page" id="page-pl-evolucao">
-              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;overflow:hidden;position:relative;">
-                <div style="position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
-                <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Frase do dia</div>
-                <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
-                <div style="font-size:11px;color:var(--warm);margin-top:10px;" id="ev-frase-autor"></div>
-              </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Nivel de evolucao</div></div>
-                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                  <div style="font-size:44px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
-                  <div style="flex:1;">
-                    <div style="font-family:var(--fs);font-size:20px;" id="ev-nivel-nome">Iniciante</div>
-                    <div style="font-size:11px;color:var(--ink3);margin-top:2px;" id="ev-nivel-xp">0 XP</div>
-                    <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-top:8px;">
-                      <div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="g4" style="grid-template-columns:repeat(4,1fr);">
-                  <div class="mc"><div class="mc-l">XP</div><div class="mc-v b" id="ev-xp">0</div></div>
-                  <div class="mc"><div class="mc-l">Semanas</div><div class="mc-v g" id="ev-streak-sem">0</div></div>
-                  <div class="mc"><div class="mc-l">Dias</div><div class="mc-v a" id="ev-streak-dias">0</div></div>
-                  <div class="mc"><div class="mc-l">Reagend.</div><div class="mc-v" id="ev-reag">3</div></div>
-                </div>
-              </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Esta semana</div></div>
-                <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
-                <div class="g4" style="grid-template-columns:repeat(2,1fr);">
-                  <div class="mc"><div class="mc-l">Treinos</div><div class="mc-v g" id="ev-rc-treinos">0/0</div></div>
-                  <div class="mc"><div class="mc-l">Habitos</div><div class="mc-v b" id="ev-rc-habitos">0%</div></div>
-                  <div class="mc"><div class="mc-l">Eventos</div><div class="mc-v a" id="ev-rc-eventos">0/0</div></div>
-                  <div class="mc"><div class="mc-l">Vidas</div><div class="mc-v r" id="ev-rc-vidas">3/3</div></div>
-                </div>
-                <div style="margin-top:12px;">
-                  <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;">
-                    <span>Meta treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
-                    <span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span>
-                  </div>
-                  <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;">
-                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;background:var(--green);transition:width .5s;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel ev-conquista-box">
-                <div class="ph"><div class="pt">Mensagem da semana</div></div>
-                <div style="display:flex;gap:12px;align-items:center;padding:4px 0;">
-                  <div class="hub-conquista-icon" style="font-size:32px;flex-shrink:0;"></div>
-                  <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.7;"></div>
-                </div>
-              </div>
-              <div class="panel" id="ev-trofeus-panel" style="display:none;">
-                <div class="ph"><div class="pt">&#127942; Trofeus</div></div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;" id="ev-trofeus-lista"></div>
-              </div>
-            </div>
-              <!-- Hero do dia -->
-              <div class="pl-hero">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;">
-                  <div>
-                    <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Meu dia</div>
-                    <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream)" id="pl-saudacao">Bom dia!</div>
-                    <div style="font-size:11px;color:rgba(240,234,216,0.35);margin-top:2px" id="pl-data-hoje"></div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:var(--warm);line-height:1" id="pl-hora">--:--</div>
-                  </div>
-                </div>
-                <div class="pl-stats-row">
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-hc">0/0</div><div class="pl-stat-lbl">Habitos hoje</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-mc">0</div><div class="pl-stat-lbl">Metas ativas</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-sc">--</div><div class="pl-stat-lbl">Sono ontem</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-tc">0</div><div class="pl-stat-lbl">Treinos hoje</div></div>
-                </div>
-              </div>
-
-              <!-- Planner Semanal Visual -->
-              <div class="panel" style="padding:0;overflow:hidden;">
-                <div style="background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="font-family:var(--fs);font-size:17px;color:var(--cream)">Planner Semanal</div>
-                  <div style="display:flex;gap:6px;">
-                    <button onclick="semanaOffset--;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8592;</button>
-                    <button onclick="semanaOffset=0;renderAgenda()" style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
-                    <button onclick="semanaOffset++;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8594;</button>
-                  </div>
-                </div>
-                <div style="padding:0 0 8px;font-size:11px;color:var(--ink3);text-align:center;padding-top:6px;" id="sem-lbl"></div>
-                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
-              </div>
-            </div>
-            <!-- DASHBOARD SEMANAL -->
-            
-
-            <!-- EVOLUCAO PESSOAL -->
-            
-
-            <!-- Habitos -->
-            <div class="page" id="page-pl-habitos">
-              <div class="g3">
-                <div class="mc"><div class="mc-l">Feitos hoje</div><div class="mc-v g" id="hb-feitos">0</div></div>
-                <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v r" id="hb-pend">0</div></div>
-                <div class="mc"><div class="mc-l">Melhor streak</div><div class="mc-v a" id="hb-streak">0</div></div>
-              </div>
-              <div class="panel" style="padding:16px 20px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                  <span style="font-size:13px;font-weight:500">Progresso de hoje</span>
-                  <span style="font-size:13px;color:var(--ink3)" id="hb-pct-txt">0%</span>
-                </div>
-                <div class="pbar" style="height:8px;"><div class="pfill" id="hb-pct-bar" style="width:0%;background:var(--green);"></div></div>
-              </div>
-              <div class="panel">
-                <div class="ph"><div class="pt">Habitos diarios</div><button class="btn btn-p btn-sm" onclick="openM('m-hab')">+ Habito</button></div>
-                <div id="hab-list"></div>
-              </div>
-            </div>
-            <!-- Metas vida -->
-            <div class="page" id="page-pl-metas">
-              <div class="panel">
-                <div class="ph"><div class="pt">Metas de vida</div><button class="btn btn-p btn-sm" onclick="openM('m-mvida')">+ Meta</button></div>
-                <div id="plmetas-list"></div>
-              </div>
-            </div>
-            <!-- Alimentacao -->
-            <div class="page" id="page-pl-alim">
-              <div class="panel">
-                <div class="ph"><div class="pt">Cardapio semanal</div><button class="btn btn-p btn-sm" onclick="openM('m-ref')">+ Refeicao</button></div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="alim-tabs"></div>
-                <div class="meal-grid" id="meal-grid"></div>
-                <div style="margin-top:14px;display:flex;gap:8px;" id="macros-bar"></div>
-              </div>
-            </div>
-            <!-- Sono -->
-            <div class="page" id="page-pl-sono">
-              <div class="two-col">
-                <div class="sono-hero">
-                  <div class="sono-lbl">Media semanal</div>
-                  <div class="sono-hrs" id="sono-avg">-</div>
-                  <div class="sono-lbl">horas de sono</div>
-                  <div class="sono-bars" id="sono-bars"></div>
-                </div>
-                <div class="panel">
-                  <div class="ph"><div class="pt">Registrar sono</div></div>
-                  <div class="fg2"><label class="fl2">Dormiu as</label><input type="time" class="fi2" id="s-ini" value="23:00"></div>
-                  <div class="fg2"><label class="fl2">Acordou as</label><input type="time" class="fi2" id="s-fim" value="06:30"></div>
-                  <div class="fg2"><label class="fl2">Qualidade</label><select class="fsel" id="s-qual"><option>Otima</option><option>Boa</option><option>Regular</option><option>Ruim</option></select></div>
-                  <button class="btn btn-p" style="width:100%;margin-top:6px" onclick="regSono()">Registrar</button>
-                </div>
-              </div>
-              <div class="panel"><div class="ph"><div class="pt">Historico</div></div><div class="txl" id="sono-hist"></div></div>
-            </div>
-            <!-- Treino -->
-            <div class="page" id="page-pl-treino">
-
-  <!-- Hero: Meta da Semana -->
-  <div class="semana-hero">
-    <div class="semana-titulo">Missão desta semana</div>
-    <div class="semana-meta-txt">
-      <strong id="tr-feitos-sem">0</strong> de <strong id="tr-meta-num">5</strong> treinos concluídos
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-bar" id="tr-progress-bar" style="width:0%"></div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div class="semana-stats">
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-streak-sem">0</div><div class="semana-stat-l">Semanas</div></div>
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-xp-total">0</div><div class="semana-stat-l">XP total</div></div>
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-nivel-txt">-</div><div class="semana-stat-l">Nível</div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-        <div class="streak-badge">🔥 <span id="tr-streak-dias">0</span> dias seguidos</div>
-        <button onclick="abrirConfigMeta()" style="background:rgba(255,255,255,0.1);border:none;color:rgba(240,234,216,0.6);font-size:11px;padding:4px 10px;border-radius:100px;cursor:pointer;">⚙ Meta semanal</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mini troféus / conquistas -->
-  <div class="panel" id="trofeus-panel" style="display:none;">
-    <div class="ph"><div class="pt">🏆 Conquistas desbloqueadas</div></div>
-    <div id="trofeus-lista" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div>
-  </div>
-
-  <!-- Semana visual -->
-  <div class="panel">
-    <div class="ph">
-      <div class="pt">Esta semana</div>
-      <div style="font-size:11px;color:var(--ink3)" id="sem-periodo-tr"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;" id="treino-week"></div>
-  </div>
-
-  <!-- Fichas de treino -->
-  <div class="panel">
-    <div class="ph">
-      <div class="pt">Fichas de treino</div>
-      <button class="btn btn-p btn-sm" onclick="openM('m-treino')">+ Treino</button>
-    </div>
-    <div class="treino-grid" id="treino-grid"></div>
-  </div>
-</div>
-          </div>
+          </div><!-- /pg-area --><!-- /pg-area -->
         </div>
       </div>
     </div><!-- /planner -->
