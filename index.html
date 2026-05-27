@@ -132,7 +132,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .main-cnt{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--nude);}
 .sys-tb{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
 .sys-ttl{font-family:var(--fs);font-size:17px;font-weight:400;color:var(--ink);flex:1;}
-.pg-area{flex:1;overflow-y:auto;padding:20px;overflow-x:hidden;}
+.pg-area{flex:1;overflow-y:auto;padding:20px;}
 .page{display:none;flex-direction:column;gap:16px;height:0;overflow:hidden;}
 .page.active{display:flex;height:auto;overflow:visible;}
 
@@ -446,61 +446,13 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .ia-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .ia-avatar.bot{background:linear-gradient(135deg,var(--warm),#c94040);font-family:var(--fs);font-size:14px;font-weight:700;color:var(--ink);}
 .ia-avatar.user{background:var(--warm);font-size:12px;font-weight:700;color:var(--ink);}
-.ia-typing{display:flex;gap:4px;align-items:center;padding:3px 0;}
+.ia-typing{display:flex;gap:4px;align-items:center;}
 .ia-dot{width:6px;height:6px;border-radius:50%;background:rgba(240,234,216,0.5);animation:iaDot 1.2s infinite;}
 .ia-dot:nth-child(2){animation-delay:.2s;}.ia-dot:nth-child(3){animation-delay:.4s;}
 @keyframes iaDot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 .ia-sug-btn{background:var(--nude2);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--ink2);cursor:pointer;white-space:nowrap;}
 .ia-sug-btn:hover{background:var(--warm);}
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-
-/* ===== PÁGINA DE VENDAS ===== */
-.vendas-hero{background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 60%,#0d2d4f 100%);border-radius:var(--r);padding:40px 28px 32px;margin-bottom:20px;position:relative;overflow:hidden;text-align:center;}
-.vendas-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(196,168,130,0.08);pointer-events:none;}
-.vendas-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;border-radius:50%;background:rgba(196,168,130,0.05);pointer-events:none;}
-.vendas-titulo{font-family:var(--fs);font-size:32px;font-weight:300;color:var(--cream);margin-bottom:6px;letter-spacing:-.5px;}
-.vendas-sub{font-size:13px;color:rgba(240,234,216,0.55);margin-bottom:20px;line-height:1.5;}
-.vendas-badge{display:inline-block;background:rgba(196,168,130,0.15);border:1px solid rgba(196,168,130,0.3);color:var(--warm);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px;}
-.vendas-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
-.vendas-stat{text-align:center;}
-.vendas-stat-n{font-family:var(--fs);font-size:26px;font-weight:300;color:var(--warm);}
-.vendas-stat-l{font-size:10px;color:rgba(240,234,216,0.4);text-transform:uppercase;letter-spacing:.06em;}
-.planos-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
-@media(max-width:500px){.planos-grid{grid-template-columns:1fr;}}
-.plano-card{border-radius:var(--r);padding:22px 18px;border:1px solid var(--border);background:var(--nude2);position:relative;transition:transform .2s,box-shadow .2s;}
-.plano-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(13,45,79,0.12);}
-.plano-card.destaque{background:var(--navy);border-color:var(--warm);box-shadow:0 4px 24px rgba(13,45,79,0.2);}
-.plano-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--warm),#c87941);color:var(--ink);font-size:10px;font-weight:700;padding:3px 14px;border-radius:100px;white-space:nowrap;letter-spacing:.04em;}
-.plano-nome{font-family:var(--fs);font-size:22px;font-weight:300;color:var(--ink);margin-bottom:4px;}
-.plano-card.destaque .plano-nome{color:var(--cream);}
-.plano-preco{font-family:var(--fs);font-size:36px;font-weight:300;color:var(--navy);line-height:1;margin-bottom:4px;}
-.plano-card.destaque .plano-preco{color:var(--warm);}
-.plano-preco span{font-size:14px;color:var(--ink3);font-family:var(--fn);}
-.plano-card.destaque .plano-preco span{color:rgba(240,234,216,0.5);}
-.plano-desc{font-size:11px;color:var(--ink3);margin-bottom:16px;}
-.plano-card.destaque .plano-desc{color:rgba(240,234,216,0.45);}
-.plano-sep{height:1px;background:var(--border);margin:14px 0;}
-.plano-card.destaque .plano-sep{background:rgba(240,234,216,0.1);}
-.plano-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:var(--ink2);}
-.plano-card.destaque .plano-item{color:rgba(240,234,216,0.75);}
-.plano-item.nao{color:var(--ink3);opacity:.5;}
-.plano-check{flex-shrink:0;font-size:12px;}
-.plano-cta{width:100%;padding:12px;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:var(--fn);font-size:13px;font-weight:600;margin-top:18px;transition:opacity .2s;}
-.plano-cta.free{background:var(--nude3);color:var(--ink2);cursor:default;}
-.plano-cta.premium{background:linear-gradient(135deg,var(--warm),#c87941);color:var(--ink);}
-.plano-cta.premium:hover{opacity:.9;}
-.vendas-funcoes{margin-bottom:20px;}
-.vendas-funcoes-titulo{font-family:var(--fs);font-size:18px;font-weight:300;color:var(--navy);margin-bottom:14px;text-align:center;}
-.funcoes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.funcao-card{background:var(--nude2);border-radius:var(--r-sm);padding:14px 12px;border:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
-.funcao-icon{font-size:20px;flex-shrink:0;width:32px;text-align:center;}
-.funcao-nome{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-.funcao-desc{font-size:11px;color:var(--ink3);line-height:1.4;}
-.vendas-garantia{background:linear-gradient(135deg,rgba(45,106,79,0.08),rgba(93,212,160,0.06));border:1px solid rgba(45,106,79,0.2);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:14px;}
-.vendas-faq{margin-bottom:8px;}
-.faq-item{border-bottom:1px solid var(--border);padding:12px 0;}
-.faq-p{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px;cursor:pointer;}
-.faq-r{font-size:12px;color:var(--ink3);line-height:1.5;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -653,15 +605,12 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
         <div style="background:var(--navy);padding:14px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
           <button onclick="goSis('hub')" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:100px;cursor:pointer;font-size:13px;">&#8592;</button>
           <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--warm),#c94040);display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:16px;font-weight:700;color:var(--ink);flex-shrink:0;">O</div>
-          <div style="flex:1;">
-            <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);">ORST Assistente</div>
-            <div style="font-size:10px;color:rgba(240,234,216,0.5);">Analisa seus dados em tempo real</div>
-          </div>
+          <div style="flex:1;"><div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);">ORST Assistente</div><div style="font-size:10px;color:rgba(240,234,216,0.5);">Analisa seus dados em tempo real</div></div>
         </div>
         <div id="ia-msgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--nude);"></div>
         <div id="ia-sugestoes" style="padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;background:var(--nude);border-top:1px solid var(--border);min-height:40px;"></div>
         <div style="padding:10px 14px;background:var(--nude2);border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0;">
-          <textarea id="ia-input" placeholder="Ex: Como foi meu mes? Quanto tenho a pagar?" style="flex:1;border:1px solid var(--border2);border-radius:12px;padding:9px 13px;font-size:13px;font-family:var(--fn);resize:none;min-height:42px;max-height:110px;outline:none;color:var(--ink);background:#fff;line-height:1.4;" rows="1" onkeydown="iaKeyDown(event)"></textarea>
+          <textarea id="ia-input" placeholder="Como foi meu mes? Quanto tenho a pagar?" style="flex:1;border:1px solid var(--border2);border-radius:12px;padding:9px 13px;font-size:13px;font-family:var(--fn);resize:none;min-height:42px;max-height:110px;outline:none;color:var(--ink);background:#fff;" rows="1" onkeydown="iaKeyDown(event)"></textarea>
           <button onclick="iaEnviar()" style="background:var(--navy);border:none;color:var(--cream);padding:11px 15px;border-radius:12px;cursor:pointer;font-size:15px;flex-shrink:0;">&#10148;</button>
         </div>
       </div>
@@ -672,7 +621,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
           <div class="sb-g">
             <div class="sb-l">Principal</div>
             <div class="sb-i active" data-page="f-dash"   onclick="goFP(this)"><span class="sb-ic">+</span><span>Dashboard</span></div>
-            <div class="sb-i"        data-page="f-patdash" onclick="goFP(this)"><span class="sb-ic">P</span><span>Patrimonio</span></div>
+            <div class="sb-i"        data-page="f-pat" onclick="goFP(this)"><span class="sb-ic">&#127968;</span><span>Patrimonio</span></div>
             <div class="sb-i"        data-page="f-lanc"   onclick="goFP(this)"><span class="sb-ic">$</span><span>Lancamentos</span></div>
             <div class="sb-i"        data-page="f-formas" onclick="goFP(this)"><span class="sb-ic">&#128179;</span><span>Por Forma</span></div>
             <div class="sb-i"        data-page="f-contas" onclick="goFP(this)"><span class="sb-ic">@</span><span>Contas</span></div>
@@ -717,7 +666,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             <select id="year-sel" onchange="loadFDash(); if(document.getElementById('page-f-lanc').classList.contains('active')) renderLanc();" style="border:1px solid var(--border2);border-radius:var(--r-sm);padding:4px 10px;font-size:12px;background:var(--nude);cursor:pointer;"></select>
             <button class="btn btn-p btn-sm" onclick="openM('m-lanc')">+ Lancamento</button>
           </div>
-                              <div class="pg-area">
+                    <div class="pg-area">
             <div class="page active" id="page-f-dash">
               <div class="g4">
                 <div class="mc"><div class="mc-l">Entradas</div><div class="mc-v g" id="fd-ent">R$ 0</div><div class="mc-s">Este mes</div></div>
@@ -814,18 +763,21 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             <div class="page" id="page-f-lanc">
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-tipo">
-                  <option value="">Todos tipos</option><option>Entrada</option><option>Saida</option>
+                  <option value="">Todos tipos</option>
+                  <option>Entrada</option><option>Saida</option>
                 </select>
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-cat">
                   <option value="">Todas categorias</option>
                 </select>
                 <select class="fsel" style="width:auto;font-size:12px;" id="fl-st">
-                  <option value="">Todos status</option><option>Pago</option><option>Pendente</option>
+                  <option value="">Todos status</option>
+                  <option>Pago</option><option>Pendente</option>
                 </select>
                 <button class="btn btn-sm" onclick="renderLanc()" style="font-size:12px;">Filtrar</button>
-                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar</button>
+                <button class="btn btn-sm" onclick="limparFiltrosLanc()" style="font-size:12px;">Limpar filtros</button>
                 <button class="btn btn-p btn-sm" onclick="openM('m-lanc')" style="font-size:12px;">+ Novo</button>
               </div>
+            
               <div class="panel">
                 <div class="ph"><div class="pt">Transacoes</div><span id="lanc-cnt" style="font-size:12px;color:var(--ink3)"></span></div>
                 <div class="txl" id="lanc-list"></div>
@@ -877,6 +829,11 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   </select>
                 </div>
                 <div id="ff-lista" style="max-height:400px;overflow-y:auto;"></div>
+              </div>
+            
+              <div class="panel">
+                <div class="ph"><div class="pt">Transacoes</div><span id="lanc-cnt" style="font-size:12px;color:var(--ink3)"></span></div>
+                <div class="txl" id="lanc-list"></div>
               </div>
             </div>
 
@@ -1059,7 +1016,325 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
             </div>
 
-          </div><!-- /pg-area --><!-- /pg-area -->
+          </div><!-- /pg-area -->
+        </div>
+      </div>
+    </div><!-- /financas -->
+    </div><!-- /financas -->
+
+    <!-- PLANNER -->
+    <div class="sistema" id="sis-planner">
+      <div class="sys-shell">
+        <div class="sidebar">
+          <div class="sb-g">
+            <div class="sb-l">Planner</div>
+            <div class="sb-i"        data-page="pl-dash"    onclick="goPP(this)"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
+            <div class="sb-i active" data-page="pl-agenda"  onclick="goPP(this)"><span class="sb-ic">C</span><span>Agenda</span></div>
+            <div class="sb-i"        data-page="pl-habitos" onclick="goPP(this)"><span class="sb-ic">V</span><span>Habitos</span></div>
+            <div class="sb-i"        data-page="pl-metas"   onclick="goPP(this)"><span class="sb-ic">O</span><span>Metas</span></div>
+          </div>
+          <div class="sb-g">
+            <div class="sb-l">Saude</div>
+            <div class="sb-i" data-page="pl-alim"    onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
+            <div class="sb-i" data-page="pl-sono"    onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
+            <div class="sb-i" data-page="pl-treino"  onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
+          </div>
+          <div class="sb-g">
+            <div class="sb-l">Evolucao</div>
+            <div class="sb-i" data-page="pl-evolucao" onclick="goPP(this)"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
+          </div>
+          <div class="sb-foot">
+            <div class="sb-ui">
+              <div class="sb-av" id="sb-av2"><span id="sb-av-l2">O</span></div>
+              <div><div class="sb-un" id="sb-un2"></div><div class="sb-em" id="sb-em2"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="main-cnt">
+          <div class="sys-tb">
+            <button class="mob-menu-btn" onclick="abrirMobSidebar('pl')" title="Menu">&#9776;</button>
+            <span class="sys-ttl" id="pl-ttl">Agenda semanal</span>
+            <button class="btn btn-p btn-sm" id="pl-add" onclick="openM('m-evento')">+ Evento</button>
+          </div>
+          <div class="pg-area">
+            <!-- Agenda/Dashboard -->
+            <div class="page active" id="page-pl-agenda">
+              <!-- Missao da Semana -->
+              <div class="missao-hero">
+                <div class="missao-titulo">Missao desta semana</div>
+                <div class="missao-nivel">
+                  <span class="missao-nivel-badge" id="missao-nivel-badge">Iniciante</span>
+                  <span class="missao-nivel-nome" id="missao-nivel-nome">Voce</span>
+                </div>
+                <div class="missao-xp" id="missao-xp-txt">0 XP</div>
+                <div class="missao-prog-wrap"><div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div></div>
+                <div class="missao-prog-txt"><span id="missao-prog-label">0%</span><span id="missao-meta-label">Meta: 10</span></div>
+                <div class="missao-vidas" id="missao-vidas"></div>
+                <div class="missao-stats">
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta sem.</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
+                </div>
+                <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
+              </div>
+              <!-- Hero do dia -->
+              <div class="pl-hero">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+                  <div>
+                    <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Meu dia</div>
+                    <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream)" id="pl-saudacao">Bom dia!</div>
+                    <div style="font-size:11px;color:rgba(240,234,216,0.35);margin-top:2px" id="pl-data-hoje"></div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:var(--warm);line-height:1" id="pl-hora">--:--</div>
+                  </div>
+                </div>
+                <div class="pl-stats-row">
+                  <div class="pl-stat"><div class="pl-stat-val" id="pl-hc">0/0</div><div class="pl-stat-lbl">Habitos hoje</div></div>
+                  <div class="pl-stat"><div class="pl-stat-val" id="pl-mc">0</div><div class="pl-stat-lbl">Metas ativas</div></div>
+                  <div class="pl-stat"><div class="pl-stat-val" id="pl-sc">--</div><div class="pl-stat-lbl">Sono ontem</div></div>
+                  <div class="pl-stat"><div class="pl-stat-val" id="pl-tc">0</div><div class="pl-stat-lbl">Treinos hoje</div></div>
+                </div>
+              </div>
+
+              <!-- Planner Semanal Visual -->
+              <div class="panel" style="padding:0;overflow:hidden;">
+                <div style="background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+                  <div style="font-family:var(--fs);font-size:17px;color:var(--cream)">Planner Semanal</div>
+                  <div style="display:flex;gap:6px;">
+                    <button onclick="semanaOffset--;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8592;</button>
+                    <button onclick="semanaOffset=0;renderAgenda()" style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
+                    <button onclick="semanaOffset++;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8594;</button>
+                  </div>
+                </div>
+                <div style="padding:0 0 8px;font-size:11px;color:var(--ink3);text-align:center;padding-top:6px;" id="sem-lbl"></div>
+                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
+              </div>
+            </div>
+            <!-- DASHBOARD SEMANAL -->
+            <div class="page" id="page-pl-dash">
+              <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;">
+                <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Dashboard da Semana</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                  <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
+                  <div style="display:flex;gap:6px;">
+                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8592;</button>
+                    <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
+                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8594;</button>
+                  </div>
+                </div>
+                <div style="margin-top:12px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;">
+                    <span>Consistencia geral</span><span id="pld-pct-txt">0%</span>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:10px;overflow:hidden;">
+                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Calendario da semana</div></div>
+                <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;"></div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--ink3);">
+                  <span>&#9733; Perfeito &nbsp; &#9679; Treino+hab &nbsp; &#9680; Parcial &nbsp; &#9632; Perdido &nbsp; &#9675; Futuro</span>
+                </div>
+              </div>
+              <div class="g4" style="grid-template-columns:repeat(2,1fr);">
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#128197; Agenda</div>
+                  <div class="mc-v b" id="pld-ev-num" style="font-size:24px;">0/0</div>
+                  <div style="font-size:10px;color:var(--ink3);">eventos feitos</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#10003; Habitos</div>
+                  <div class="mc-v g" id="pld-hab-num" style="font-size:24px;">0%</div>
+                  <div style="font-size:10px;color:var(--ink3);">taxa conclusao</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#127947; Treinos</div>
+                  <div class="mc-v a" id="pld-tr-num" style="font-size:24px;">0/0</div>
+                  <div style="font-size:10px;color:var(--ink3);">treinos feitos</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
+                </div>
+                <div class="mc" style="flex-direction:column;gap:5px;">
+                  <div class="mc-l">&#128564; Sono</div>
+                  <div class="mc-v b" id="pld-sono-num" style="font-size:24px;">0h</div>
+                  <div style="font-size:10px;color:var(--ink3);">media semanal</div>
+                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
+                </div>
+              </div>
+              <div class="panel"><div class="ph"><div class="pt">Eventos desta semana</div></div>
+                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div></div>
+              <div class="panel"><div class="ph"><div class="pt">Habitos desta semana</div></div>
+                <div id="pld-habitos-list"></div></div>
+            </div>
+
+            <!-- EVOLUCAO PESSOAL -->
+            <div class="page" id="page-pl-evolucao">
+              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;overflow:hidden;position:relative;">
+                <div style="position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
+                <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Frase do dia</div>
+                <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
+                <div style="font-size:11px;color:var(--warm);margin-top:10px;" id="ev-frase-autor"></div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Nivel de evolucao</div></div>
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                  <div style="font-size:44px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
+                  <div style="flex:1;">
+                    <div style="font-family:var(--fs);font-size:20px;" id="ev-nivel-nome">Iniciante</div>
+                    <div style="font-size:11px;color:var(--ink3);margin-top:2px;" id="ev-nivel-xp">0 XP</div>
+                    <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-top:8px;">
+                      <div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="g4" style="grid-template-columns:repeat(4,1fr);">
+                  <div class="mc"><div class="mc-l">XP</div><div class="mc-v b" id="ev-xp">0</div></div>
+                  <div class="mc"><div class="mc-l">Semanas</div><div class="mc-v g" id="ev-streak-sem">0</div></div>
+                  <div class="mc"><div class="mc-l">Dias</div><div class="mc-v a" id="ev-streak-dias">0</div></div>
+                  <div class="mc"><div class="mc-l">Reagend.</div><div class="mc-v" id="ev-reag">3</div></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Esta semana</div></div>
+                <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
+                <div class="g4" style="grid-template-columns:repeat(2,1fr);">
+                  <div class="mc"><div class="mc-l">Treinos</div><div class="mc-v g" id="ev-rc-treinos">0/0</div></div>
+                  <div class="mc"><div class="mc-l">Habitos</div><div class="mc-v b" id="ev-rc-habitos">0%</div></div>
+                  <div class="mc"><div class="mc-l">Eventos</div><div class="mc-v a" id="ev-rc-eventos">0/0</div></div>
+                  <div class="mc"><div class="mc-l">Vidas</div><div class="mc-v r" id="ev-rc-vidas">3/3</div></div>
+                </div>
+                <div style="margin-top:12px;">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;">
+                    <span>Meta treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
+                    <span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span>
+                  </div>
+                  <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;">
+                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;background:var(--green);transition:width .5s;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel ev-conquista-box">
+                <div class="ph"><div class="pt">Mensagem da semana</div></div>
+                <div style="display:flex;gap:12px;align-items:center;padding:4px 0;">
+                  <div class="hub-conquista-icon" style="font-size:32px;flex-shrink:0;"></div>
+                  <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.7;"></div>
+                </div>
+              </div>
+              <div class="panel" id="ev-trofeus-panel" style="display:none;">
+                <div class="ph"><div class="pt">&#127942; Trofeus</div></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;" id="ev-trofeus-lista"></div>
+              </div>
+            </div>
+
+            <!-- Habitos -->
+            <div class="page" id="page-pl-habitos">
+              <div class="g3">
+                <div class="mc"><div class="mc-l">Feitos hoje</div><div class="mc-v g" id="hb-feitos">0</div></div>
+                <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v r" id="hb-pend">0</div></div>
+                <div class="mc"><div class="mc-l">Melhor streak</div><div class="mc-v a" id="hb-streak">0</div></div>
+              </div>
+              <div class="panel" style="padding:16px 20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <span style="font-size:13px;font-weight:500">Progresso de hoje</span>
+                  <span style="font-size:13px;color:var(--ink3)" id="hb-pct-txt">0%</span>
+                </div>
+                <div class="pbar" style="height:8px;"><div class="pfill" id="hb-pct-bar" style="width:0%;background:var(--green);"></div></div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Habitos diarios</div><button class="btn btn-p btn-sm" onclick="openM('m-hab')">+ Habito</button></div>
+                <div id="hab-list"></div>
+              </div>
+            </div>
+            <!-- Metas vida -->
+            <div class="page" id="page-pl-metas">
+              <div class="panel">
+                <div class="ph"><div class="pt">Metas de vida</div><button class="btn btn-p btn-sm" onclick="openM('m-mvida')">+ Meta</button></div>
+                <div id="plmetas-list"></div>
+              </div>
+            </div>
+            <!-- Alimentacao -->
+            <div class="page" id="page-pl-alim">
+              <div class="panel">
+                <div class="ph"><div class="pt">Cardapio semanal</div><button class="btn btn-p btn-sm" onclick="openM('m-ref')">+ Refeicao</button></div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="alim-tabs"></div>
+                <div class="meal-grid" id="meal-grid"></div>
+                <div style="margin-top:14px;display:flex;gap:8px;" id="macros-bar"></div>
+              </div>
+            </div>
+            <!-- Sono -->
+            <div class="page" id="page-pl-sono">
+              <div class="two-col">
+                <div class="sono-hero">
+                  <div class="sono-lbl">Media semanal</div>
+                  <div class="sono-hrs" id="sono-avg">-</div>
+                  <div class="sono-lbl">horas de sono</div>
+                  <div class="sono-bars" id="sono-bars"></div>
+                </div>
+                <div class="panel">
+                  <div class="ph"><div class="pt">Registrar sono</div></div>
+                  <div class="fg2"><label class="fl2">Dormiu as</label><input type="time" class="fi2" id="s-ini" value="23:00"></div>
+                  <div class="fg2"><label class="fl2">Acordou as</label><input type="time" class="fi2" id="s-fim" value="06:30"></div>
+                  <div class="fg2"><label class="fl2">Qualidade</label><select class="fsel" id="s-qual"><option>Otima</option><option>Boa</option><option>Regular</option><option>Ruim</option></select></div>
+                  <button class="btn btn-p" style="width:100%;margin-top:6px" onclick="regSono()">Registrar</button>
+                </div>
+              </div>
+              <div class="panel"><div class="ph"><div class="pt">Historico</div></div><div class="txl" id="sono-hist"></div></div>
+            </div>
+            <!-- Treino -->
+            <div class="page" id="page-pl-treino">
+
+  <!-- Hero: Meta da Semana -->
+  <div class="semana-hero">
+    <div class="semana-titulo">Missão desta semana</div>
+    <div class="semana-meta-txt">
+      <strong id="tr-feitos-sem">0</strong> de <strong id="tr-meta-num">5</strong> treinos concluídos
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="tr-progress-bar" style="width:0%"></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div class="semana-stats">
+        <div class="semana-stat"><div class="semana-stat-v" id="tr-streak-sem">0</div><div class="semana-stat-l">Semanas</div></div>
+        <div class="semana-stat"><div class="semana-stat-v" id="tr-xp-total">0</div><div class="semana-stat-l">XP total</div></div>
+        <div class="semana-stat"><div class="semana-stat-v" id="tr-nivel-txt">-</div><div class="semana-stat-l">Nível</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div class="streak-badge">🔥 <span id="tr-streak-dias">0</span> dias seguidos</div>
+        <button onclick="abrirConfigMeta()" style="background:rgba(255,255,255,0.1);border:none;color:rgba(240,234,216,0.6);font-size:11px;padding:4px 10px;border-radius:100px;cursor:pointer;">⚙ Meta semanal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini troféus / conquistas -->
+  <div class="panel" id="trofeus-panel" style="display:none;">
+    <div class="ph"><div class="pt">🏆 Conquistas desbloqueadas</div></div>
+    <div id="trofeus-lista" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div>
+  </div>
+
+  <!-- Semana visual -->
+  <div class="panel">
+    <div class="ph">
+      <div class="pt">Esta semana</div>
+      <div style="font-size:11px;color:var(--ink3)" id="sem-periodo-tr"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;" id="treino-week"></div>
+  </div>
+
+  <!-- Fichas de treino -->
+  <div class="panel">
+    <div class="ph">
+      <div class="pt">Fichas de treino</div>
+      <button class="btn btn-p btn-sm" onclick="openM('m-treino')">+ Treino</button>
+    </div>
+    <div class="treino-grid" id="treino-grid"></div>
+  </div>
+</div>
+          </div>
         </div>
       </div>
     </div><!-- /planner -->
@@ -2144,8 +2419,8 @@ function goFP(el){
   document.querySelectorAll('#sis-financas .page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('#sis-financas .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
-  var pgArea=document.querySelector('#sis-financas .pg-area'); if(pgArea) pgArea.scrollTop=0;
-  var T = {'f-dash':'Dashboard','f-patdash':'Patrimonio','f-lanc':'Lancamentos','f-formas':'Por Forma de Pagamento','f-contas':'Contas','f-parc':'Parceladas',
+  var _pa=document.querySelector('#sis-financas .pg-area'); if(_pa) _pa.scrollTop=0;
+  var T = {'f-dash':'Dashboard','f-pat':'Patrim\u00F4nio','f-lanc':'Lancamentos','f-formas':'Por Forma de Pagamento','f-contas':'Contas','f-parc':'Parceladas',
     'f-metas':'Metas','f-apagar':'A pagar','f-receber':'A receber','f-invest':'Investimentos','f-anual':'Visao anual',
     'f-pat':'Patrimonio','f-planos':'Planos','f-cats':'Categorias','f-admin':'Painel Admin'};
   $('f-ttl').textContent = T[pid] || pid;
@@ -2158,9 +2433,11 @@ function goFP(el){
   if(pid==='f-apagar'){ if(!apagar.length) loadApagar(); else renderApagar(); }
   if(pid==='f-receber'){ if(!receber.length) loadReceber(); else renderReceber(); }
   if(pid==='f-invest'){ if(!investimentos.length) loadInvest(); else renderInvest(); }
-  if(pid==='f-pat')   { if(!ativos.length) loadPatrimonio(); else renderPatrimonio(); }
-  if(pid==='f-cats')    renderCategorias();
-  if(pid==='f-patdash') renderPatrimonioDash();
+  if(pid==='f-pat'){
+    if(!ativos.length) loadPatrimonio().then(function(){ renderPatrimonio(); renderPatrimonioDash(); });
+    else{ renderPatrimonio(); renderPatrimonioDash(); }
+  }
+  if(pid==='f-cats') renderCategorias();
   if(pid==='f-formas')  renderFormas();
 }
 function goFPid(pid){
@@ -2171,7 +2448,7 @@ function goFPid(pid){
 function goPP(el){
   var pid = el.dataset.page;
   document.querySelectorAll('#sis-planner .page').forEach(function(p){ p.classList.remove('active'); });
-  var pgPl=document.querySelector('#sis-planner .pg-area'); if(pgPl) pgPl.scrollTop=0;
+  var _pp=document.querySelector('#sis-planner .pg-area'); if(_pp) _pp.scrollTop=0;
   document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.remove('active'); });
   $('page-' + pid).classList.add('active'); el.classList.add('active');
   var T = {'pl-dash':'Dashboard Semanal','pl-evolucao':'Evolucao Pessoal',
@@ -4970,12 +5247,8 @@ function salvarEditInvest(){
 // =====================================================
 function populateFFAno(){
   var sel=$('ff-ano'); if(!sel||sel.options.length>1) return;
-  var anoAtual=hoje.getFullYear();
-  for(var a=anoAtual+1;a>=2020;a--){
-    var opt=document.createElement('option'); opt.value=a; opt.text=a;
-    if(a===anoAtual) opt.selected=true;
-    sel.appendChild(opt);
-  }
+  var ay=hoje.getFullYear();
+  for(var a=ay+1;a>=2020;a--){ var o2=document.createElement('option'); o2.value=a; o2.text=a; if(a===ay) o2.selected=true; sel.appendChild(o2); }
 }
 
 function renderFormas(){
@@ -5233,57 +5506,42 @@ function renderFormasLista(){
 }
 
 
+function abrirModalSono(){
+  var inp=$('sono-data'); if(inp) inp.value=hojeStr;
+  openM('m-sono');
+}
+
 // ===== IA LOCAL ORST =====
 var _iaIniciado=false;
-var IA_SUGESTOES=['Como foi meu mes?','Maiores gastos','Quanto tenho a pagar?',
-  'Resumo do patrimonio','Habitos e treinos','Qual meu nivel e XP?',
-  'Dicas para economizar','Saldo em contas'];
-
+var IA_SUG=['Como foi meu mes?','Maiores gastos','Quanto tenho a pagar?','Resumo do patrimonio','Habitos e treinos','Qual meu nivel e XP?','Dicas para economizar','Saldo em contas'];
 function initIA(){
-  if(_iaIniciado) return;
-  _iaIniciado=true;
+  if(_iaIniciado) return; _iaIniciado=true;
   var msgs=$('ia-msgs'); if(msgs) msgs.innerHTML='';
   var nome=G.name?G.name.split(' ')[0]:'';
-  iaAddMsg('bot','Ola'+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nSou sua assistente ORST. Analiso seus dados em tempo real!\n\nPosso responder:\n\u2022 Como foi meu mes?\n\u2022 Maiores gastos\n\u2022 Contas a pagar\n\u2022 Patrimonio e investimentos\n\u2022 Habitos, treinos e planner\n\nPergunte!');
+  iaAddMsg('bot','Ola'+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nSou sua assistente ORST. Analiso seus dados!\n\nPosso mostrar:\n\u2022 Resumo financeiro\n\u2022 Gastos e categorias\n\u2022 Contas a pagar\n\u2022 Patrimonio e investimentos\n\u2022 Planner, habitos e treinos\n\nPergunte!');
   renderIASugestoes();
 }
-
 function renderIASugestoes(){
   var el=$('ia-sugestoes'); if(!el) return; el.innerHTML='';
-  IA_SUGESTOES.forEach(function(s){
-    var btn=document.createElement('button'); btn.className='ia-sug-btn'; btn.textContent=s;
-    btn.addEventListener('click',function(){ iaPerguntar(s); });
-    el.appendChild(btn);
-  });
+  IA_SUG.forEach(function(s){ var b=document.createElement('button'); b.className='ia-sug-btn'; b.textContent=s; b.addEventListener('click',function(){ iaPerguntar(s); }); el.appendChild(b); });
 }
-
 function iaAddMsg(tipo,texto){
   var msgs=$('ia-msgs'); if(!msgs) return;
   var d=document.createElement('div'); d.className='ia-msg '+tipo;
-  var av=document.createElement('div'); av.className='ia-avatar '+tipo;
-  av.textContent=tipo==='bot'?'O':((G.name||'V').charAt(0).toUpperCase());
+  var av=document.createElement('div'); av.className='ia-avatar '+tipo; av.textContent=tipo==='bot'?'O':((G.name||'V').charAt(0).toUpperCase());
   var b=document.createElement('div'); b.className='ia-bubble '+tipo; b.textContent=texto;
   d.appendChild(av); d.appendChild(b); msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
 }
-
 function iaAddTyping(){
   var msgs=$('ia-msgs'); if(!msgs) return;
   var d=document.createElement('div'); d.className='ia-msg bot'; d.id='ia-typ';
   var av=document.createElement('div'); av.className='ia-avatar bot'; av.textContent='O';
-  var b=document.createElement('div'); b.className='ia-bubble bot ia-typing';
-  b.innerHTML='<div class="ia-dot"></div><div class="ia-dot"></div><div class="ia-dot"></div>';
+  var b=document.createElement('div'); b.className='ia-bubble bot ia-typing'; b.innerHTML='<div class="ia-dot"></div><div class="ia-dot"></div><div class="ia-dot"></div>';
   d.appendChild(av); d.appendChild(b); msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
 }
-
 function iaRemoveTyping(){ var t=document.getElementById('ia-typ'); if(t) t.remove(); }
-
-function iaKeyDown(e){
-  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); iaEnviar(); }
-  var ta=$('ia-input'); if(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,110)+'px'; }
-}
-
+function iaKeyDown(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); iaEnviar(); } var ta=$('ia-input'); if(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,110)+'px'; } }
 function iaPerguntar(txt){ var inp=$('ia-input'); if(inp){ inp.value=txt; iaEnviar(); } }
-
 function iaEnviar(){
   var inp=$('ia-input'); if(!inp) return;
   var txt=(inp.value||'').trim(); if(!txt) return;
@@ -5292,238 +5550,106 @@ function iaEnviar(){
   iaAddMsg('user',txt); iaAddTyping();
   setTimeout(function(){ iaRemoveTyping(); iaAddMsg('bot',iaResponderLocal(txt)); },400);
 }
-
 function iaResponderLocal(pergunta){
-  var p=pergunta.toLowerCase()
-    .replace(/[\u00E1\u00E0\u00E3\u00E2]/g,'a').replace(/[\u00E9\u00EA]/g,'e')
-    .replace(/[\u00ED]/g,'i').replace(/[\u00F3\u00F5\u00F4]/g,'o')
-    .replace(/[\u00FA]/g,'u').replace(/\u00E7/g,'c');
-  var mes=parseInt($('month-sel')?$('month-sel').value:hoje.getMonth());
-  var ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
+  var p=pergunta.toLowerCase().replace(/[\u00E1\u00E0\u00E3\u00E2]/g,'a').replace(/[\u00E9\u00EA]/g,'e').replace(/[\u00ED]/g,'i').replace(/[\u00F3\u00F5\u00F4]/g,'o').replace(/[\u00FA]/g,'u').replace(/\u00E7/g,'c');
+  var mes=parseInt($('month-sel')?$('month-sel').value:hoje.getMonth()), ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
   var MN=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   var nome=G.name?G.name.split(' ')[0]:'';
   var lM=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); return d.getMonth()===mes&&d.getFullYear()===ano; });
-  var lMAnt=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); var ma=mes===0?11:mes-1; var aa=mes===0?ano-1:ano; return d.getMonth()===ma&&d.getFullYear()===aa; });
+  var lAnt=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); var ma=mes===0?11:mes-1,aa=mes===0?ano-1:ano; return d.getMonth()===ma&&d.getFullYear()===aa; });
   var tE=lM.filter(function(l){ return l.tipo==='Entrada'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
   var tS=lM.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
-  var sdo=tE-tS;
-  var pctSaldo=tE>0?Math.round(sdo/tE*100):0;
-  var cM={};
-  lM.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cM[l.cat]=(cM[l.cat]||0)+(l.valor||0); });
+  var sdo=tE-tS, pct=tE>0?Math.round(sdo/tE*100):0;
+  var cM={}; lM.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cM[l.cat]=(cM[l.cat]||0)+(l.valor||0); });
   var cS=Object.keys(cM).sort(function(a,b){ return cM[b]-cM[a]; });
-  var tSAnt=lMAnt.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
-  var varMes=tSAnt>0?Math.round((tS-tSAnt)/tSAnt*100):0;
-  var tA=ativos.reduce(function(s,a){ return s+(a.valor||0); },0);
-  var tP=passivos.reduce(function(s,p2){ return s+(p2.valor||0); },0);
-  var tI=investimentos.reduce(function(s,i){ return s+(i.valor||0); },0);
-  var tC=contas.reduce(function(s,c){ return s+(c.saldo||0); },0);
-  var aPP=apagar.filter(function(a){ return a.status!=='Pago'; });
-  var aRP=receber.filter(function(r){ return r.status!=='Recebido'; });
-  var tPag=aPP.reduce(function(s,a){ return s+(a.valor||0); },0);
-  var tRec=aRP.reduce(function(s,r){ return s+(r.valor||0); },0);
-  var hoje3=new Date(hoje); hoje3.setDate(hoje.getDate()+3);
-  var urgentes=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d>=hoje&&d<=hoje3; });
-  var vencidas=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d<hoje; });
-  var niv=getNivel(G_META?G_META.xpTotal||0:0);
-  var xpAtual=G_META?G_META.xpTotal||0:0;
-  var streak=G_META?G_META.streakSemanas||0:0;
-  var hHj=habitos.filter(function(h){ return habitoDeveHoje(h); });
-  var hFHj=hHj.filter(function(h){ return h.doneDate===hojeStr; }).length;
-  var hPct=hHj.length>0?Math.round(hFHj/hHj.length*100):0;
-  var mIA=getMonday(0); var sI=mIA.toISOString().slice(0,10);
-  var sFD=new Date(mIA); sFD.setDate(mIA.getDate()+6); var sF=sFD.toISOString().slice(0,10);
+  var tSAnt=lAnt.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
+  var varM=tSAnt>0?Math.round((tS-tSAnt)/tSAnt*100):0;
+  var tA=ativos.reduce(function(s,a){ return s+(a.valor||0); },0), tP=passivos.reduce(function(s,p2){ return s+(p2.valor||0); },0);
+  var tI=investimentos.reduce(function(s,i){ return s+(i.valor||0); },0), tC=contas.reduce(function(s,c){ return s+(c.saldo||0); },0);
+  var aPP=apagar.filter(function(a){ return a.status!=='Pago'; }), aRP=receber.filter(function(r){ return r.status!=='Recebido'; });
+  var tPag=aPP.reduce(function(s,a){ return s+(a.valor||0); },0), tRec=aRP.reduce(function(s,r){ return s+(r.valor||0); },0);
+  var h3=new Date(hoje); h3.setDate(hoje.getDate()+3);
+  var urg=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d>=hoje&&d<=h3; });
+  var venc=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d<hoje; });
+  var niv=getNivel(G_META?G_META.xpTotal||0:0), xp=G_META?G_META.xpTotal||0:0, str=G_META?G_META.streakSemanas||0:0;
+  var hHj=habitos.filter(function(h){ return habitoDeveHoje(h); }), hF=hHj.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var hP=hHj.length>0?Math.round(hF/hHj.length*100):0;
+  var mIA=getMonday(0), sI=mIA.toISOString().slice(0,10), sFD=new Date(mIA); sFD.setDate(mIA.getDate()+6); var sF=sFD.toISOString().slice(0,10);
   var tSem=treinos.filter(function(t){ return (t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); }).length;
   var SEP='\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500';
-
-  if(p.match(/^(oi|ola|bom|boa|tudo|e ai|e a)/)){
-    var hora=hoje.getHours();
-    var saud=hora<12?'Bom dia':hora<18?'Boa tarde':'Boa noite';
-    return saud+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nEstou pronta pra analisar seus dados do ORST Hub!\n\nPosso te ajudar com:\n\uD83D\uDCB0 Como foi meu m\u00EAs?\n\uD83C\uDFE0 Resumo do patrim\u00F4nio\n\u23F0 Quanto tenho a pagar?\n\u2B50 Meu n\u00EDvel e XP\n\uD83D\uDCA1 Dicas personalizadas\n\nS\u00F3 perguntar!';
-  }
-
-  if(p.match(/resumo|visao|geral|como estou|tudo|panorama|situacao/)){
-    var r='\uD83D\uDCCB Resumo \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
-    r+='\uD83D\uDCB0 FINANCAS\n';
-    r+='Entradas:  '+fmt(tE)+'\n';
-    r+='Sa\u00EDdas:    '+fmt(tS);
-    if(varMes!==0) r+=' ('+(varMes>0?'+':'')+varMes+'% vs m\u00EAs anterior)';
-    r+='\nSaldo:     '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo);
-    if(tE>0) r+=' ('+pctSaldo+'% das entradas)';
-    r+='\n';
-    if(cS.length) r+='Maior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+')\n';
-    if(urgentes.length) r+='\u23F0 '+urgentes.length+' conta(s) vencem em 3 dias!\n';
-    if(vencidas.length) r+='\u274C '+vencidas.length+' conta(s) vencida(s)!\n';
-    r+='\n\uD83C\uDFE0 PATRIMONIO\n';
-    r+='L\u00EDquido:       '+(tA-tP>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(tA-tP)+'\n';
-    r+='Investimentos: '+fmt(tI)+'\n';
-    if(aPP.length) r+='A pagar:       '+fmt(tPag)+' ('+aPP.length+' contas)\n';
-    r+='\n\u2B50 PLANNER\n';
-    r+='N\u00EDvel: '+niv.icon+' '+niv.nome+' \u2014 '+xpAtual+' XP\n';
-    r+='H\u00E1bitos hoje: '+hFHj+'/'+hHj.length+' ('+hPct+'%)\n';
-    r+='Treinos semana: '+tSem+'/'+treinos.length+'\n';
-    if(streak>1) r+='\uD83D\uDD25 Streak: '+streak+' semanas seguidas!\n';
-    r+='\n';
-    if(sdo<0) r+='\u26A0\uFE0F Gastos superam entradas este m\u00EAs. Cuidado!';
-    else if(pctSaldo>=20) r+='\uD83D\uDC4F Parab\u00E9ns! Voc\u00EA economizou '+pctSaldo+'% das entradas!';
-    else r+='\uD83D\uDCA1 Voc\u00EA est\u00E1 no positivo. Continue assim!';
+  if(p.match(/^(oi|ola|bom|boa|tudo)/)) return (hoje.getHours()<12?'Bom dia':hoje.getHours()<18?'Boa tarde':'Boa noite')+(nome?', '+nome:'')+'! \uD83D\uDC4B\nEstou pronta. Pergunte sobre financas, patrimonio ou planner!';
+  if(p.match(/resumo|visao|geral|como estou|tudo|panorama/)){
+    var r='\uD83D\uDCCB Resumo \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n\uD83D\uDCB0 FINANCAS\nEntradas: '+fmt(tE)+'\nSa\u00EDdas:   '+fmt(tS)+(varM!==0?' ('+(varM>0?'+':'')+varM+'%)':'')+'\nSaldo:    '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo)+(tE>0?' ('+pct+'%)':'');
+    if(cS.length) r+='\nMaior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+')';
+    if(urg.length) r+='\n\u23F0 '+urg.length+' conta(s) vencem em 3 dias!';
+    if(venc.length) r+='\n\u274C '+venc.length+' conta(s) vencida(s)!';
+    r+='\n\n\uD83C\uDFE0 PATRIMONIO\nL\u00EDquido: '+(tA-tP>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(tA-tP)+'\nInvestimentos: '+fmt(tI);
+    if(aPP.length) r+='\nA pagar: '+fmt(tPag)+' ('+aPP.length+')';
+    r+='\n\n\u2B50 PLANNER: '+niv.icon+' '+niv.nome+' | '+xp+' XP | H\u00E1bitos: '+hF+'/'+hHj.length+' | Treinos: '+tSem+'/'+treinos.length;
+    if(str>1) r+='\n\uD83D\uDD25 Streak: '+str+' semanas!';
+    r+='\n\n'+(sdo<0?'\u26A0\uFE0F Gastos superam entradas!':pct>=20?'\uD83D\uDC4F Economizou '+pct+'%!':'\uD83D\uDCA1 Positivo. Continue!');
     return r;
   }
-
-  if(p.match(/gast|despesa|saida|quanto sai|gastei/)){
-    var r2='\uD83D\uDCC8 Gastos de '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
-    r2+='Sa\u00EDdas totais: '+fmt(tS)+'\n';
-    if(varMes!==0) r2+='Vs. m\u00EAs anterior: '+(varMes>0?'\uD83D\uDCC8 +':'\uD83D\uDCC9 ')+varMes+'%\n';
-    r2+='Entradas:      '+fmt(tE)+'\nSaldo:         '+(sdo>=0?'+':'')+fmt(sdo)+'\n';
-    if(!cS.length){ r2+='\nSem lan\u00E7amentos de sa\u00EDda neste m\u00EAs.'; return r2; }
-    r2+='\nPor categoria:\n';
-    cS.forEach(function(c,i){
-      var pct=tS>0?Math.round(cM[c]/tS*100):0;
-      var medal=i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':'   ';
-      r2+=medal+' '+c+': '+fmt(cM[c])+' ('+pct+'%)\n';
-    });
-    if(cS.length){
-      var pctM=tS>0?Math.round(cM[cS[0]]/tS*100):0;
-      r2+='\n\uD83D\uDCA1 '+cS[0]+' representa '+pctM+'% das sa\u00EDdas.';
-      if(pctM>40) r2+=' Considere reduzir!';
-    }
+  if(p.match(/gast|saida|despesa|gastei/)){
+    var r2='\uD83D\uDCC8 Gastos \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\nSa\u00EDdas: '+fmt(tS)+(varM!==0?'\nVs anterior: '+(varM>0?'+':'')+varM+'%':'')+'\nEntradas: '+fmt(tE)+'\nSaldo: '+(sdo>=0?'+':'')+fmt(sdo)+'\n';
+    if(!cS.length) return r2+'Sem sa\u00EDdas neste m\u00EAs.';
+    r2+='\nCateg.:\n'; cS.forEach(function(c,i){ var pc=tS>0?Math.round(cM[c]/tS*100):0; r2+=(i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':'  '+(i+1)+'.')+' '+c+': '+fmt(cM[c])+' ('+pc+'%)\n'; });
     return r2;
   }
-
-  if(p.match(/maior gasto|mais gast|categoria|onde gast|principal/)){
+  if(p.match(/maior gasto|categoria|onde gast/)){
     if(!cS.length) return 'Nenhum gasto em '+MN[mes]+'/'+ano+'.';
-    var r3='Top gastos \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
-    cS.forEach(function(c,i){
-      var pct=tS>0?Math.round(cM[c]/tS*100):0;
-      var medal=i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':' '+(i+1)+'.';
-      r3+=medal+' '+c+'\n    '+fmt(cM[c])+' \u2014 '+pct+'% do total\n\n';
-    });
-    return r3+'Total sa\u00EDdas: '+fmt(tS);
+    var r3='Top gastos\n'+SEP+'\n\n'; cS.forEach(function(c,i){ var pc=tS>0?Math.round(cM[c]/tS*100):0; r3+=(i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':' '+(i+1)+'.')+' '+c+': '+fmt(cM[c])+' ('+pc+'%)\n'; });
+    return r3+'Total: '+fmt(tS);
   }
-
-  if(p.match(/saldo|sobrou|resultado|lucro|quanto sobrou/)){
-    var r4='Resultado de '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
-    r4+='Entradas: +'+fmt(tE)+'\nSa\u00EDdas:   -'+fmt(tS)+'\n'+SEP+'\n';
-    r4+='Saldo:    '+(sdo>=0?'\u2705 +':'\u274C -')+fmt(Math.abs(sdo))+'\n\n';
-    if(sdo>=0){
-      if(pctSaldo>=30) r4+='\uD83C\uDF89 Excelente! '+pctSaldo+'% das entradas economizadas!';
-      else if(pctSaldo>=10) r4+='\uD83D\uDC4D Bom! M\u00EAs no positivo com '+pctSaldo+'% de sobra.';
-      else r4+='\uD83D\uDE42 Positivo, mas com margem pequena. Fique atento.';
-    } else {
-      r4+='\u26A0\uFE0F Gastos superaram entradas em '+fmt(Math.abs(sdo))+'.';
-      if(cS.length) r4+='\n\uD83D\uDCA1 Maior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+').';
-    }
-    if(varMes!==0) r4+='\n\uD83D\uDCC5 Sa\u00EDdas: '+(varMes>0?'+':'')+varMes+'% vs m\u00EAs passado.';
-    return r4;
+  if(p.match(/saldo|sobrou|resultado/)){
+    var r4='Resultado '+MN[mes]+'/'+ano+'\n'+SEP+'\n\nEntradas: +'+fmt(tE)+'\nSa\u00EDdas:   -'+fmt(tS)+'\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nSaldo:    '+(sdo>=0?'\u2705 +':'\u274C -')+fmt(Math.abs(sdo))+'\n\n';
+    return r4+(sdo>=0?(pct>=30?'\uD83C\uDF89 '+pct+'% economizados!':pct>=10?'\uD83D\uDC4D '+pct+'% de sobra.':'\uD83D\uDE42 Positivo, margem pequena.'):'\u26A0\uFE0F Gastos superaram entradas em '+fmt(Math.abs(sdo))+'.');
   }
-
   if(p.match(/pagar|conta.*pend|venc|divida|boleto|pendente/)){
-    if(!aPP.length) return '\uD83C\uDF89 Nenhuma conta pendente!\n\nVoc\u00EA est\u00E1 em dia com todos os pagamentos. \uD83D\uDC4F';
-    var r5='Contas a pagar\n'+SEP+'\n\nTotal: '+fmt(tPag)+' ('+aPP.length+' conta(s))\n';
-    if(vencidas.length) r5+='\n\u274C Vencidas: '+vencidas.length+' conta(s)!\n';
-    if(urgentes.length) r5+='\u23F0 Vencem em 3 dias: '+urgentes.length+'\n';
-    r5+='\nPor vencimento:\n';
-    aPP.slice().sort(function(a,b){ return (a.venc||'').localeCompare(b.venc||''); }).slice(0,8).forEach(function(a){
-      var d=new Date((a.venc||'2099-12-31')+'T12:00');
-      var icon=d<hoje?'\u274C':d<=hoje3?'\u23F0':'\uD83D\uDD35';
-      r5+='\n'+icon+' '+esc(a.desc)+'\n   '+fmt(a.valor)+(a.venc?' \u2014 '+isoToDisplay(a.venc):'')+'\n';
-    });
-    if(aPP.length>8) r5+='\n...e mais '+(aPP.length-8)+' contas.';
+    if(!aPP.length) return '\uD83C\uDF89 Nenhuma conta pendente! Em dia. \uD83D\uDC4F';
+    var r5='A pagar\n'+SEP+'\n\nTotal: '+fmt(tPag)+' ('+aPP.length+')\n';
+    if(venc.length) r5+='\u274C Vencidas: '+venc.length+'\n';
+    if(urg.length) r5+='\u23F0 Vencem 3 dias: '+urg.length+'\n';
+    r5+='\n'; aPP.slice().sort(function(a,b){ return (a.venc||'').localeCompare(b.venc||''); }).slice(0,7).forEach(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); var ic=d<hoje?'\u274C':d<=h3?'\u23F0':'\uD83D\uDD35'; r5+=ic+' '+esc(a.desc)+': '+fmt(a.valor)+(a.venc?' ('+isoToDisplay(a.venc)+')':'')+'\n'; });
+    if(aPP.length>7) r5+='...e mais '+(aPP.length-7);
     return r5;
   }
-
   if(p.match(/receber/)){
-    if(!aRP.length) return 'Nenhum valor a receber cadastrado.';
-    var r6='A receber\n'+SEP+'\n\nTotal: '+fmt(tRec)+' ('+aRP.length+' item(s))\n\n';
-    aRP.forEach(function(rc){ r6+='\u2022 '+esc(rc.desc)+': '+fmt(rc.valor)+(rc.venc?' \u2014 '+isoToDisplay(rc.venc):'')+'\n'; });
+    if(!aRP.length) return 'Nenhum valor a receber.';
+    var r6='A receber\n'+SEP+'\n\nTotal: '+fmt(tRec)+'\n\n'; aRP.slice(0,6).forEach(function(r){ r6+='\u2022 '+esc(r.desc)+': '+fmt(r.valor)+(r.venc?' ('+isoToDisplay(r.venc)+')':'')+'\n'; });
     return r6;
   }
-
-  if(p.match(/patrimonio|ativo|passivo|bens|riqueza|liquido|quanto tenho/)){
-    var patLiq=tA-tP;
-    var r7='Patrim\u00F4nio\n'+SEP+'\n\nAtivos:    +'+fmt(tA)+' ('+ativos.length+' item(s))\nPassivos:  -'+fmt(tP)+'\n'+SEP+'\nL\u00EDquido:   '+(patLiq>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(patLiq)+'\n\nInvestimentos: '+fmt(tI)+'\nContas:        '+fmt(tC)+'\n';
-    if(ativos.length){ r7+='\nPrincipais ativos:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,4).forEach(function(a){ r7+='\u2022 '+esc(a.desc)+' ('+a.cat+'): '+fmt(a.valor)+(a.deprecAnual>0?'\n  Deprec.: -'+fmt(a.deprecAnual)+'/ano':'')+'\n'; }); }
-    if(passivos.length){ r7+='\nPassivos:\n'; passivos.slice(0,4).forEach(function(p3){ r7+='\u2022 '+esc(p3.desc)+': '+fmt(p3.valor)+(p3.parcela?' \u2014 '+fmt(p3.parcela)+'/m\u00EAs':'')+'\n'; }); }
-    r7+='\n'+(patLiq>0?'\uD83D\uDC4F Patrim\u00F4nio positivo! Continue construindo.':'\u26A0\uFE0F Passivos superam ativos. Foque em quitar d\u00EDvidas.');
-    return r7;
+  if(p.match(/patrimonio|ativo|passivo|bens|liquido|quanto tenho/)){
+    var r7='Patrim\u00F4nio\n'+SEP+'\n\nAtivos:   +'+fmt(tA)+' ('+ativos.length+')\nPassivos:  -'+fmt(tP)+'\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nL\u00EDquido:  '+(tA-tP>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(tA-tP)+'\n\nInvestimentos: '+fmt(tI)+'\nContas: '+fmt(tC)+'\n';
+    if(ativos.length){ r7+='\nPrincipais:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,3).forEach(function(a){ r7+='\u2022 '+esc(a.desc)+': '+fmt(a.valor)+'\n'; }); }
+    return r7+'\n'+(tA-tP>0?'\uD83D\uDC4F Positivo! Continue.':'\u26A0\uFE0F Passivos superam ativos.');
   }
-
-  if(p.match(/invest|rendimento|aplicacao|carteira/)){
-    if(!investimentos.length) return '\uD83D\uDCA1 Nenhum investimento cadastrado ainda.\n\nV\u00E1 em Finan\u00E7as \u2192 Investimentos e adicione suas aplica\u00E7\u00F5es.';
+  if(p.match(/invest|rendimento|aplicacao/)){
+    if(!investimentos.length) return 'Nenhum investimento. V\u00E1 em Finan\u00E7as \u2192 Investimentos.';
     var tR=investimentos.reduce(function(s,i){ return s+(i.rend||0); },0);
-    var r8='Investimentos\n'+SEP+'\n\nTotal:      '+fmt(tI)+'\nRendimento: '+(tR>=0?'\uD83D\uDFE2 +':'\uD83D\uDD34 ')+fmt(tR)+'\n\n';
-    investimentos.forEach(function(iv){ r8+='\u2022 '+esc(iv.nome)+' ('+iv.tipo+')\n  Valor: '+fmt(iv.valor)+(iv.rend?'\n  Rend.: '+(iv.rend>=0?'+':'')+fmt(iv.rend):'')+'\n\n'; });
-    return r8;
+    var r8='Investimentos\n'+SEP+'\n\nTotal: '+fmt(tI)+'\nRend.: '+(tR>=0?'\uD83D\uDFE2 +':'\uD83D\uDD34 ')+fmt(tR)+'\n\n'; investimentos.forEach(function(iv){ r8+='\u2022 '+esc(iv.nome)+': '+fmt(iv.valor)+'\n'; }); return r8;
   }
-
-  if(p.match(/habito|rotina|consistencia/)){
-    var r9='H\u00E1bitos\n'+SEP+'\n\nCadastrados: '+habitos.length+'\nPara hoje:   '+hHj.length+'\nFeitos hoje: '+hFHj+' de '+hHj.length+' ('+hPct+'%)\n';
-    if(hHj.length){ r9+='\nStatus de hoje:\n'; hHj.forEach(function(h){ r9+=(h.doneDate===hojeStr?'\u2705':'\u25CB')+' '+esc(h.nome)+'\n'; }); }
-    r9+='\n'+(hPct===100?'\uD83C\uDF89 Perfeito! Todos feitos hoje!':hPct>=70?'\uD83D\uDC4D Quase! Faltam '+(hHj.length-hFHj)+' h\u00E1bito(s).':hPct>0?'\uD83D\uDE42 Come\u00E7ou bem! Faltam '+(hHj.length-hFHj)+'.':'\uD83D\uDCA1 Nenhum feito ainda. Bora come\u00E7ar?');
-    return r9;
+  if(p.match(/habito|rotina/)){
+    var r9='H\u00E1bitos\n'+SEP+'\n\nCadastrados: '+habitos.length+'\nHoje: '+hF+'/'+hHj.length+' ('+hP+'%)\n'; if(hHj.length){ r9+='\n'; hHj.forEach(function(h){ r9+=(h.doneDate===hojeStr?'\u2705':'\u25CB')+' '+esc(h.nome)+'\n'; }); }
+    return r9+'\n'+(hP===100?'\uD83C\uDF89 Todos feitos!':hP>=70?'\uD83D\uDC4D Quase l\u00E1!':hP>0?'\uD83D\uDE42 Faltam '+(hHj.length-hF)+'.':'\uD83D\uDCA1 Bora come\u00E7ar!');
   }
-
-  if(p.match(/treino|academia|exercicio|malhar/)){
-    var pctTr=treinos.length>0?Math.round(tSem/treinos.length*100):0;
-    var r10='Treinos\n'+SEP+'\n\nFichas: '+treinos.length+'\nFeitos esta semana: '+tSem+' de '+treinos.length+' ('+pctTr+'%)\n';
-    if(treinos.length){ r10+='\n'; treinos.forEach(function(t){ var f=(t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); r10+=(f?'\u2705':'\u25CB')+' '+(t.dia||'Livre')+': '+esc(t.nome||t.tipo||'Treino')+'\n'; }); }
-    r10+='\n'+(pctTr===100?'\uD83C\uDF89 Semana perfeita de treinos!':pctTr>=50?'\uD83D\uDCAA Boa semana! Continue.':'\uD83D\uDCA1 Ainda d\u00E1 tempo de treinar mais esta semana!');
-    return r10;
+  if(p.match(/treino|academia|exercicio/)){
+    var pTr=treinos.length>0?Math.round(tSem/treinos.length*100):0;
+    var r10='Treinos\n'+SEP+'\n\nSemana: '+tSem+'/'+treinos.length+' ('+pTr+'%)\n'; if(treinos.length){ r10+='\n'; treinos.forEach(function(t){ var f=(t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); r10+=(f?'\u2705':'\u25CB')+' '+(t.dia||'Livre')+': '+esc(t.nome||t.tipo||'Treino')+'\n'; }); }
+    return r10+'\n'+(pTr===100?'\uD83C\uDF89 Semana perfeita!':pTr>=50?'\uD83D\uDCAA Boa semana!':'\uD83D\uDCA1 Ainda d\u00E1 tempo!');
   }
-
-  if(p.match(/planner|nivel|xp|pontos|evolucao|streak|missao/)){
-    var NIVEIS=[{nome:'Guerreiro',xp:50},{nome:'Consistente',xp:150},{nome:'Elite',xp:400},{nome:'Lendario',xp:1000}];
-    var proxNiv=null; for(var ni=0;ni<NIVEIS.length;ni++){ if(xpAtual<NIVEIS[ni].xp){ proxNiv=NIVEIS[ni]; break; } }
-    var r11='Planner \u2014 Evolu\u00E7\u00E3o\n'+SEP+'\n\nN\u00EDvel:  '+niv.icon+' '+niv.nome+'\nXP:     '+xpAtual+' XP\n';
-    if(proxNiv) r11+='Pr\u00F3ximo: '+proxNiv.nome+' (faltam '+(proxNiv.xp-xpAtual)+' XP)\n';
-    r11+='Streak: '+streak+' semana(s)\n\nEsta semana:\n\u2022 H\u00E1bitos hoje: '+hFHj+'/'+hHj.length+' ('+hPct+'%)\n\u2022 Treinos: '+tSem+'/'+treinos.length+'\n\u2022 Reagendamentos: '+(G_META?G_META.reagendamentos||3:3)+'\n';
-    r11+='\n'+(streak>=5?'\uD83D\uDD25 '+streak+' semanas seguidas! Incr\u00EDvel!':streak>0?'\uD83D\uDCAA Streak de '+streak+' semana(s)! Continue!':'\uD83D\uDCA1 Comece sua streak esta semana!');
-    return r11;
+  if(p.match(/planner|nivel|xp|evolucao|streak|missao/)){
+    var NIVEIS=[{n:'Guerreiro',x:50},{n:'Consistente',x:150},{n:'Elite',x:400},{n:'Lendario',x:1000}];
+    var proxN=null; for(var ni=0;ni<NIVEIS.length;ni++){ if(xp<NIVEIS[ni].x){ proxN=NIVEIS[ni]; break; } }
+    return 'Planner\n'+SEP+'\n\nN\u00EDvel: '+niv.icon+' '+niv.nome+'\nXP: '+xp+(proxN?'\nPr\u00F3ximo: '+proxN.n+' (faltam '+(proxN.x-xp)+')'  :'\n\u2B50 N\u00EDvel m\u00E1ximo!')+'\nStreak: '+str+' semana(s)\n\nEsta semana:\n\u2022 H\u00E1bitos: '+hF+'/'+hHj.length+' ('+hP+'%)\n\u2022 Treinos: '+tSem+'/'+treinos.length+'\n\u2022 Reagend.: '+(G_META?G_META.reagendamentos||3:3)+'\n\n'+(str>=5?'\uD83D\uDD25 '+str+' semanas!':str>0?'\uD83D\uDCAA Streak de '+str+'!':'\uD83D\uDCA1 Comece sua streak!');
   }
-
-  if(p.match(/dica|conselho|economiz|poupar|melhorar|sugestao/)){
-    var dicas2=[]; var avisos2=[];
-    if(sdo<0) dicas2.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'. Reduza gastos em '+(cS[0]||'suas principais categorias')+'.');
-    if(vencidas.length) avisos2.push('\u274C '+vencidas.length+' conta(s) vencida(s). Regularize j\u00E1 para evitar juros.');
-    if(urgentes.length) avisos2.push('\u23F0 '+urgentes.length+' conta(s) vencem em 3 dias!');
-    if(cS.length>0&&tS>0){ var pctM2=Math.round(cM[cS[0]]/tS*100); if(pctM2>40) dicas2.push(cS[0]+' = '+pctM2+'% das sa\u00EDdas. Revisar pode fazer diferen\u00E7a.'); }
-    if(!investimentos.length&&tC>1000) dicas2.push('Voc\u00EA tem '+fmt(tC)+' em contas. Considere investir parte.');
-    if(aPP.length>5) dicas2.push(aPP.length+' contas pendentes ('+fmt(tPag)+'). Quite as menores primeiro.');
-    if(hPct<50&&hHj.length>0) dicas2.push('H\u00E1bitos em '+hPct+'% hoje. Consistencia di\u00E1ria \u00E9 a chave.');
-    if(!dicas2.length&&!avisos2.length){ dicas2.push(sdo>0?'Parab\u00E9ns! M\u00EAs positivo (+'+fmt(sdo)+').':'Continue acompanhando suas finan\u00E7as.'); dicas2.push('Defina uma Meta de Economia no dashboard para ter um objetivo claro.'); }
-    var r12='Dicas personalizadas\n'+SEP+'\n\n';
-    if(avisos2.length){ r12+='Alertas:\n'; avisos2.forEach(function(a){ r12+=a+'\n'; }); r12+='\n'; }
-    r12+='Recomenda\u00E7\u00F5es:\n'; dicas2.forEach(function(d){ r12+='\u2022 '+d+'\n'; });
-    return r12;
+  if(p.match(/dica|conselho|economiz|poupar/)){
+    var dicas=[]; if(sdo<0) dicas.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'.'); if(venc.length) dicas.push(venc.length+' conta(s) vencida(s)!'); if(urg.length) dicas.push(urg.length+' vencem em 3 dias!'); if(cS.length&&tS>0){ var pm=Math.round(cM[cS[0]]/tS*100); if(pm>40) dicas.push(cS[0]+' = '+pm+'% das sa\u00EDdas.'); } if(!investimentos.length&&tC>1000) dicas.push('Considere investir parte do saldo ('+fmt(tC)+').'); if(!dicas.length) dicas.push(sdo>0?'M\u00EAs positivo (+'+fmt(sdo)+')!':'Continue acompanhando.'); var r12='Dicas\n'+SEP+'\n\n'; dicas.forEach(function(d){ r12+='\u2022 '+d+'\n'; }); return r12;
   }
-
-  if(p.match(/conta bancaria|banco|saldo conta/)){
-    if(!contas.length) return 'Nenhuma conta banc\u00E1ria cadastrada.\nV\u00E1 em Finan\u00E7as \u2192 Contas para adicionar.';
-    var r13='Contas banc\u00E1rias\n'+SEP+'\n\nSaldo total: '+fmt(tC)+'\n\n';
-    contas.forEach(function(c){ r13+=(c.saldo>=0?'\uD83D\uDFE2':'\uD83D\uDD34')+' '+esc(c.nome)+': '+fmt(c.saldo)+'\n'; });
-    return r13;
-  }
-
-  if(p.match(/sono|dormi|horas de sono/)){
-    if(!sonoLog||!sonoLog.length) return 'Nenhum registro de sono.\nV\u00E1 em Planner \u2192 Sono para registrar.';
-    var ult=sonoLog[sonoLog.length-1]; var med=sonoLog.slice(-7).reduce(function(s,sl){ return s+(sl.horas||0); },0)/Math.min(7,sonoLog.length);
-    var r14='Sono\n'+SEP+'\n\nUltima noite: '+(ult.horas||0)+'h'+(ult.qualidade?' \u2014 '+ult.qualidade:'')+'\nM\u00E9dia 7 dias: '+med.toFixed(1)+'h\n\n';
-    r14+=med>=8?'\uD83D\uDC4F Excelente! Dormindo muito bem.':med>=7?'\uD83D\uDE42 Boa m\u00E9dia. Continue assim.':med>=6?'\u26A0\uFE0F Um pouco abaixo do ideal (7-9h).':'\uD83D\uDEA8 '+med.toFixed(1)+'h est\u00E1 muito abaixo! O sono impacta tudo.';
-    return r14;
-  }
-
-  if(p.match(/meta de vida|metas de vida|objetivo|sonho/)){
-    if(!metasVida||!metasVida.length) return 'Nenhuma meta de vida cadastrada.\nV\u00E1 em Planner \u2192 Metas!';
-    var conclMV=metasVida.filter(function(m){ return (m.prog||0)>=100; }).length;
-    var r15='Metas de vida\n'+SEP+'\n\nTotal: '+metasVida.length+(conclMV?' | Conclu\u00EDdas: '+conclMV+' \uD83C\uDFC6':'')+'\n\n';
-    metasVida.forEach(function(m){ var prog=m.prog||0; r15+=(prog>=100?'\uD83C\uDFC6':prog>=50?'\uD83D\uDCC5':'\uD83C\uDFAF')+' '+esc(m.nome)+'\n   '+prog+'% \u2014 '+m.cat+(m.prazo?' \u2014 '+isoToDisplay(m.prazo):'')+'\n\n'; });
-    return r15;
-  }
-
-  if(p.match(/ajuda|help|o que|como usar/)){
-    return 'O que posso fazer:\n\n\uD83D\uDCB0 FINANCAS\n"Como foi meu m\u00EAs?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Meu saldo"\n"Dicas para economizar"\n\n\uD83C\uDFE0 PATRIMONIO\n"Patrim\u00F4nio"\n"Investimentos"\n"Contas banc\u00E1rias"\n\n\uD83D\uDCC5 PLANNER\n"H\u00E1bitos hoje"\n"Treinos da semana"\n"Meu n\u00EDvel e XP"\n"Como foi meu sono?"\n"Metas de vida"';
-  }
-
-  return 'N\u00E3o entendi. \uD83E\uDD14\n\nTente:\n"Como foi meu m\u00EAs?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Resumo do patrim\u00F4nio"\n"Dicas para economizar"';
+  if(p.match(/conta bancaria|banco|saldo conta/)){ if(!contas.length) return 'Nenhuma conta banc\u00E1ria.'; var r13='Contas\n'+SEP+'\n\nTotal: '+fmt(tC)+'\n\n'; contas.forEach(function(c){ r13+=(c.saldo>=0?'\uD83D\uDFE2':'\uD83D\uDD34')+' '+esc(c.nome)+': '+fmt(c.saldo)+'\n'; }); return r13; }
+  if(p.match(/sono|dormi/)){ if(!sonoLog||!sonoLog.length) return 'Sem registros de sono.'; var ult=sonoLog[sonoLog.length-1]; var med=sonoLog.slice(-7).reduce(function(s,sl){ return s+(sl.horas||0); },0)/Math.min(7,sonoLog.length); return 'Sono\n'+SEP+'\n\nOntem: '+(ult.horas||0)+'h'+(ult.qualidade?' ('+ult.qualidade+')':'')+'\nM\u00E9dia 7d: '+med.toFixed(1)+'h\n\n'+(med>=7?'\uD83D\uDC4F Bom sono!':med>=6?'\u26A0\uFE0F Abaixo do ideal.':'\uD83D\uDEA8 Durma mais!'); }
+  if(p.match(/meta de vida|objetivo/)){ if(!metasVida||!metasVida.length) return 'Nenhuma meta de vida.'; var r15='Metas de vida\n'+SEP+'\n\n'; metasVida.forEach(function(m){ var pg=m.prog||0; r15+=((pg>=100?'\uD83C\uDFC6':pg>=50?'\uD83D\uDCC5':'\uD83C\uDFAF')+' '+esc(m.nome)+' \u2014 '+pg+'%\n'); }); return r15; }
+  return 'N\u00E3o entendi. Tente:\n"Como foi meu m\u00EAs?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Resumo do patrim\u00F4nio"';
 }
 </script>
 
