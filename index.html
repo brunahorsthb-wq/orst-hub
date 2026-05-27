@@ -922,27 +922,30 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               <div class="panel">
                 <div class="ph"><div class="pt">Metas financeiras</div><button class="btn btn-p btn-sm" onclick="openM('m-mfin')">+ Meta</button></div>
                 <div id="fmetas-list"></div>
-              </div>
+              
+
             </div>
             <!-- A Pagar -->
-            <div class="page" id="page-f-apagar">
+              </div><div class="page" id="page-f-apagar">
               <div class="g3">
                 <div class="mc"><div class="mc-l">Total a pagar</div><div class="mc-v r" id="ap-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Vencidas</div><div class="mc-v r" id="ap-venc">0</div></div>
                 <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v a" id="ap-pend">0</div></div>
-              </div>
+              
+
               <div class="panel">
                 <div class="ph"><div class="pt">Contas a pagar</div><button class="btn btn-p btn-sm" onclick="openM('m-apagar')">+ Conta</button></div>
                 <div class="txl" id="apagar-list"></div>
               </div>
             </div>
             <!-- Contas a Receber -->
-            <div class="page" id="page-f-receber">
+              </div><div class="page" id="page-f-receber">
               <div class="g3">
                 <div class="mc"><div class="mc-l">Total a receber</div><div class="mc-v g" id="rc-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Vencidas</div><div class="mc-v r" id="rc-venc">0</div></div>
                 <div class="mc"><div class="mc-l">A vencer</div><div class="mc-v a" id="rc-pend">0</div></div>
-              </div>
+              
+
               <div class="panel">
                 <div class="ph">
                   <div class="pt">Contas a receber</div>
@@ -962,30 +965,32 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
             </div>
             <!-- Investimentos -->
-            <div class="page" id="page-f-invest">
+              </div><div class="page" id="page-f-invest">
               <div class="g4">
                 <div class="mc"><div class="mc-l">Total investido</div><div class="mc-v b" id="inv-total">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Rendimento</div><div class="mc-v g" id="inv-rend">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Rentabilidade</div><div class="mc-v g" id="inv-rent">0%</div></div>
                 <div class="mc"><div class="mc-l">Ativos</div><div class="mc-v a" id="inv-qtd">0</div></div>
-              </div>
+              
+
               <div class="panel">
                 <div class="ph"><div class="pt">Carteira de investimentos</div><button class="btn btn-p btn-sm" onclick="openM('m-invest')">+ Investimento</button></div>
                 <div class="txl" id="invest-list"></div>
               </div>
             </div>
             <!-- Anual -->
-            <div class="page" id="page-f-anual">
+              </div><div class="page" id="page-f-anual">
               <div class="g4" id="anual-cards">
                 <div class="mc"><div class="mc-l">Melhor mes</div><div class="mc-v g" style="font-size:16px" id="an-best">-</div></div>
                 <div class="mc"><div class="mc-l">Total entradas</div><div class="mc-v g" id="an-ent">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Total saidas</div><div class="mc-v r" id="an-sai">R$ 0</div></div>
                 <div class="mc"><div class="mc-l">Saldo do ano</div><div class="mc-v b" id="an-sal">R$ 0</div></div>
-              </div>
+              
+
               <div class="panel"><div class="ph"><div class="pt">Entradas vs Saidas</div></div><div style="height:240px"><canvas id="anualChart"></canvas></div></div>
             </div>
             <!-- Patrimonio -->
-            <div class="page" id="page-f-pat">
+              </div><div class="page" id="page-f-pat">
               <div class="two-col">
                 <div class="panel">
                   <div class="ph"><div class="pt" style="color:var(--green)">Ativos</div><button class="btn btn-p btn-sm" onclick="openM('m-ativo')">+ Ativo</button></div>
@@ -997,14 +1002,15 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   <div class="txl" id="passivos-list"></div>
                   <div class="txi" style="border-top:2px solid var(--red);margin-top:8px"><span style="font-weight:500">Total passivos</span><span class="tv-n" style="font-size:17px" id="total-passivos">R$ 0</span></div>
                 </div>
-              </div>
+              
+
               <div style="background:var(--navy);border-radius:var(--r);padding:22px;text-align:center;">
                 <div style="font-size:12px;color:rgba(240,234,216,0.5);margin-bottom:6px">Patrimonio liquido</div>
                 <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:#5dd4a0" id="pat-liq">R$ 0</div>
               </div>
             </div>
             <!-- Planos -->
-            <div class="page" id="page-f-planos">
+              </div><div class="page" id="page-f-planos">
               <!-- HERO -->
               <div class="vendas-hero">
                 <div class="vendas-badge">&#10024; Novo — Versão 2.0</div>
@@ -1160,14 +1166,15 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               <div class="panel">
                 <div class="ph"><div class="pt">Categorias de despesas</div><button class="btn btn-p btn-sm" onclick="openM('m-cat')">+ Categoria</button></div>
                 <div id="cats-list"></div>
-              </div>
+              
+
               <div class="panel">
                 <div class="ph"><div class="pt">Bancos e carteiras</div><button class="btn btn-p btn-sm" onclick="openM('m-banco')">+ Banco</button></div>
                 <div id="bancos-list"></div>
               </div>
             </div>
             <!-- Admin -->
-            <div class="page" id="page-f-admin">
+              </div><div class="page" id="page-f-admin">
               <div class="panel">
                 <div class="ph">
                   <div class="pt">Painel Administrativo</div>
