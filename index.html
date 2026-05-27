@@ -453,6 +453,54 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .ia-sug-btn{background:var(--nude2);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--ink2);cursor:pointer;white-space:nowrap;}
 .ia-sug-btn:hover{background:var(--warm);}
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== PÁGINA DE VENDAS ===== */
+.vendas-hero{background:linear-gradient(135deg,var(--navy) 0%,#1a4a7a 60%,#0d2d4f 100%);border-radius:var(--r);padding:40px 28px 32px;margin-bottom:20px;position:relative;overflow:hidden;text-align:center;}
+.vendas-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(196,168,130,0.08);pointer-events:none;}
+.vendas-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;border-radius:50%;background:rgba(196,168,130,0.05);pointer-events:none;}
+.vendas-titulo{font-family:var(--fs);font-size:32px;font-weight:300;color:var(--cream);margin-bottom:6px;letter-spacing:-.5px;}
+.vendas-sub{font-size:13px;color:rgba(240,234,216,0.55);margin-bottom:20px;line-height:1.5;}
+.vendas-badge{display:inline-block;background:rgba(196,168,130,0.15);border:1px solid rgba(196,168,130,0.3);color:var(--warm);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px;}
+.vendas-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
+.vendas-stat{text-align:center;}
+.vendas-stat-n{font-family:var(--fs);font-size:26px;font-weight:300;color:var(--warm);}
+.vendas-stat-l{font-size:10px;color:rgba(240,234,216,0.4);text-transform:uppercase;letter-spacing:.06em;}
+.planos-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+@media(max-width:500px){.planos-grid{grid-template-columns:1fr;}}
+.plano-card{border-radius:var(--r);padding:22px 18px;border:1px solid var(--border);background:var(--nude2);position:relative;transition:transform .2s,box-shadow .2s;}
+.plano-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(13,45,79,0.12);}
+.plano-card.destaque{background:var(--navy);border-color:var(--warm);box-shadow:0 4px 24px rgba(13,45,79,0.2);}
+.plano-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--warm),#c87941);color:var(--ink);font-size:10px;font-weight:700;padding:3px 14px;border-radius:100px;white-space:nowrap;letter-spacing:.04em;}
+.plano-nome{font-family:var(--fs);font-size:22px;font-weight:300;color:var(--ink);margin-bottom:4px;}
+.plano-card.destaque .plano-nome{color:var(--cream);}
+.plano-preco{font-family:var(--fs);font-size:36px;font-weight:300;color:var(--navy);line-height:1;margin-bottom:4px;}
+.plano-card.destaque .plano-preco{color:var(--warm);}
+.plano-preco span{font-size:14px;color:var(--ink3);font-family:var(--fn);}
+.plano-card.destaque .plano-preco span{color:rgba(240,234,216,0.5);}
+.plano-desc{font-size:11px;color:var(--ink3);margin-bottom:16px;}
+.plano-card.destaque .plano-desc{color:rgba(240,234,216,0.45);}
+.plano-sep{height:1px;background:var(--border);margin:14px 0;}
+.plano-card.destaque .plano-sep{background:rgba(240,234,216,0.1);}
+.plano-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:var(--ink2);}
+.plano-card.destaque .plano-item{color:rgba(240,234,216,0.75);}
+.plano-item.nao{color:var(--ink3);opacity:.5;}
+.plano-check{flex-shrink:0;font-size:12px;}
+.plano-cta{width:100%;padding:12px;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:var(--fn);font-size:13px;font-weight:600;margin-top:18px;transition:opacity .2s;}
+.plano-cta.free{background:var(--nude3);color:var(--ink2);cursor:default;}
+.plano-cta.premium{background:linear-gradient(135deg,var(--warm),#c87941);color:var(--ink);}
+.plano-cta.premium:hover{opacity:.9;}
+.vendas-funcoes{margin-bottom:20px;}
+.vendas-funcoes-titulo{font-family:var(--fs);font-size:18px;font-weight:300;color:var(--navy);margin-bottom:14px;text-align:center;}
+.funcoes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.funcao-card{background:var(--nude2);border-radius:var(--r-sm);padding:14px 12px;border:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
+.funcao-icon{font-size:20px;flex-shrink:0;width:32px;text-align:center;}
+.funcao-nome{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.funcao-desc{font-size:11px;color:var(--ink3);line-height:1.4;}
+.vendas-garantia{background:linear-gradient(135deg,rgba(45,106,79,0.08),rgba(93,212,160,0.06));border:1px solid rgba(45,106,79,0.2);border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:14px;}
+.vendas-faq{margin-bottom:8px;}
+.faq-item{border-bottom:1px solid var(--border);padding:12px 0;}
+.faq-p{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px;cursor:pointer;}
+.faq-r{font-size:12px;color:var(--ink3);line-height:1.5;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -957,34 +1005,155 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             </div>
             <!-- Planos -->
             <div class="page" id="page-f-planos">
-              <div class="panel"><div class="ph"><div class="pt">Planos ORST</div></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-                  <div class="plan-card">
-                    <div class="plan-name">Free</div>
-                    <div class="plan-price">R$ 0<span>/mes</span></div>
-                    <div class="plan-feat ok">Dashboard mensal</div>
-                    <div class="plan-feat ok">Lancamentos ilimitados</div>
-                    <div class="plan-feat ok">Contas e Parceladas</div>
-                    <div class="plan-feat ok">A pagar basico</div>
-                    <div class="plan-feat no">Metas e Investimentos</div>
-                    <div class="plan-feat no">Visao anual e Patrimonio</div>
-                    <div class="plan-feat no">Planner e Rotina</div>
-                    <button class="btn" style="width:100%;margin-top:14px" disabled>Plano atual</button>
+              <!-- HERO -->
+              <div class="vendas-hero">
+                <div class="vendas-badge">&#10024; Novo — Versão 2.0</div>
+                <div class="vendas-titulo">ORST Hub</div>
+                <div style="font-family:var(--fs);font-size:14px;color:var(--warm);margin-bottom:10px;">Gestão Pessoal Completa</div>
+                <div class="vendas-sub">Finanças, Planner, IA Assistente e Gamificação<br>tudo em um só lugar — do seu jeito.</div>
+                <div class="vendas-stats">
+                  <div class="vendas-stat"><div class="vendas-stat-n">15</div><div class="vendas-stat-l">Módulos</div></div>
+                  <div class="vendas-stat"><div class="vendas-stat-n">179</div><div class="vendas-stat-l">Funções</div></div>
+                  <div class="vendas-stat"><div class="vendas-stat-n">IA</div><div class="vendas-stat-l">Assistente</div></div>
+                  <div class="vendas-stat"><div class="vendas-stat-n">100%</div><div class="vendas-stat-l">Seu dado</div></div>
+                </div>
+              </div>
+
+              <!-- PLANOS -->
+              <div class="planos-grid">
+                <!-- Free -->
+                <div class="plano-card">
+                  <div class="plano-nome">Free</div>
+                  <div class="plano-preco">R$ 0<span>/mês</span></div>
+                  <div class="plano-desc">Para começar a organizar</div>
+                  <div class="plano-sep"></div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Dashboard financeiro</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Lançamentos ilimitados</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Por Forma de pagamento</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Contas bancárias</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>A pagar e a receber</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Alertas automáticos</div>
+                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Investimentos</div>
+                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Patrimônio completo</div>
+                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>Planner e rotina</div>
+                  <div class="plano-item nao"><span class="plano-check">&#8722;</span>IA Assistente</div>
+                  <button class="plano-cta free" disabled>Plano atual</button>
+                </div>
+                <!-- Premium -->
+                <div class="plano-card destaque">
+                  <div class="plano-badge">&#11088; RECOMENDADO</div>
+                  <div class="plano-nome">Premium</div>
+                  <div class="plano-preco">R$ 29<span style="font-size:18px;color:var(--warm);font-family:var(--fs)">,90</span><span>/mês</span></div>
+                  <div class="plano-desc">Controle total da sua vida</div>
+                  <div class="plano-sep"></div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Tudo do plano Free</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Investimentos + histórico</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Patrimônio com depreciação</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Visão anual</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Planner completo</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Hábitos, Treinos, Sono</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Gamificação + XP + Níveis</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>IA Assistente ORST</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Meta de economia mensal</div>
+                  <div class="plano-item"><span class="plano-check">&#10003;</span>Metas de vida</div>
+                  <button class="plano-cta premium" onclick="toast('Entre em contato: brunahorsthb@gmail.com')">Assinar Premium &#8594;</button>
+                </div>
+              </div>
+
+              <!-- FUNCIONALIDADES -->
+              <div class="vendas-funcoes">
+                <div class="vendas-funcoes-titulo">O que está incluído no Premium</div>
+                <div class="funcoes-grid">
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#128200;</div>
+                    <div><div class="funcao-nome">Dashboard Financeiro</div><div class="funcao-desc">Gráfico pizza, alertas automáticos, meta de economia com barra de progresso</div></div>
                   </div>
-                  <div class="plan-card featured">
-                    <div class="plan-name">Premium</div>
-                    <div class="plan-price">R$ 29,90<span>/mes</span></div>
-                    <div class="plan-feat ok">Tudo do Free</div>
-                    <div class="plan-feat ok">Metas financeiras</div>
-                    <div class="plan-feat ok">Investimentos</div>
-                    <div class="plan-feat ok">Visao anual e Patrimonio</div>
-                    <div class="plan-feat ok">Planner completo</div>
-                    <div class="plan-feat ok">Habitos, Sono e Treino</div>
-                    <div class="plan-feat ok">Alimentacao e Metas de vida</div>
-                    <a href="vendas.html" target="_blank" class="btn btn-p" style="width:100%;margin-top:14px;display:block;text-align:center;text-decoration:none;">Ver planos e assinar</a>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#128179;</div>
+                    <div><div class="funcao-nome">Por Forma de Pagamento</div><div class="funcao-desc">Análise por Pix, Débito, Crédito + Banco. Cards com % pago e pendente</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#127968;</div>
+                    <div><div class="funcao-nome">Patrimônio Completo</div><div class="funcao-desc">Ativos com depreciação anual, caixa de manutenção, passivos com parcelas</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#128185;</div>
+                    <div><div class="funcao-nome">Investimentos</div><div class="funcao-desc">Carteira com rendimento, histórico de aportes, resgates e ajustes</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#128197;</div>
+                    <div><div class="funcao-nome">Agenda Semanal</div><div class="funcao-desc">Eventos com recorrência, grade visual, missão da semana integrada</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#9989;</div>
+                    <div><div class="funcao-nome">Hábitos Diários</div><div class="funcao-desc">Recorrência personalizada, histórico, streaks e integração com XP</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#127947;</div>
+                    <div><div class="funcao-nome">Fichas de Treino</div><div class="funcao-desc">Por dia da semana, toggle de realização, histórico de datas</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#128164;</div>
+                    <div><div class="funcao-nome">Qualidade do Sono</div><div class="funcao-desc">Registro diário de horas e qualidade, média semanal</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#11088;</div>
+                    <div><div class="funcao-nome">Gamificação</div><div class="funcao-desc">5 níveis (Iniciante → Lendário), XP, troféus, streak de semanas, confetti</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#127775;</div>
+                    <div><div class="funcao-nome">IA Assistente ORST</div><div class="funcao-desc">Analisa seus dados em tempo real. Pergunte sobre gastos, patrimônio, planner e muito mais</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#127919;</div>
+                    <div><div class="funcao-nome">Metas de Vida</div><div class="funcao-desc">Objetivos pessoais com prazo, categoria e slider de progresso 0-100%</div></div>
+                  </div>
+                  <div class="funcao-card">
+                    <div class="funcao-icon">&#127829;</div>
+                    <div><div class="funcao-nome">Alimentação</div><div class="funcao-desc">Cardápio semanal com macros automáticos, base de 50+ alimentos</div></div>
                   </div>
                 </div>
               </div>
+
+              <!-- GARANTIA -->
+              <div class="vendas-garantia">
+                <div style="font-size:24px;margin-bottom:6px;">&#128274;</div>
+                <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;">Seus dados são seus</div>
+                <div style="font-size:12px;color:var(--ink3);line-height:1.5;">Tudo salvo no Firebase com segurança. Sem anúncios. Sem venda de dados. Cancele quando quiser.</div>
+              </div>
+
+              <!-- FAQ -->
+              <div class="vendas-faq">
+                <div style="font-family:var(--fs);font-size:16px;color:var(--navy);margin-bottom:10px;">Dúvidas frequentes</div>
+                <div class="faq-item">
+                  <div class="faq-p">&#9660; Como funciona o pagamento?</div>
+                  <div class="faq-r">Entre em contato pelo e-mail brunahorsthb@gmail.com para ativar o Premium. O acesso é liberado manualmente.</div>
+                </div>
+                <div class="faq-item">
+                  <div class="faq-p">&#9660; Posso cancelar quando quiser?</div>
+                  <div class="faq-r">Sim, sem multa ou fidelidade. Basta avisar por e-mail e o acesso Premium é encerrado no próximo ciclo.</div>
+                </div>
+                <div class="faq-item">
+                  <div class="faq-p">&#9660; Meus dados ficam salvos?</div>
+                  <div class="faq-r">Sim! Todos os dados ficam salvos no Firebase (banco de dados seguro do Google), vinculados ao seu e-mail. Mesmo que você mude de dispositivo, tudo estará lá.</div>
+                </div>
+                <div class="faq-item">
+                  <div class="faq-p">&#9660; A IA tem custo extra?</div>
+                  <div class="faq-r">Não! A IA Assistente ORST está incluída no Premium sem custo adicional. Ela funciona localmente, analisando seus próprios dados — sem depender de serviços externos.</div>
+                </div>
+                <div class="faq-item">
+                  <div class="faq-p">&#9660; Funciona no celular?</div>
+                  <div class="faq-r">Sim! O ORST Hub é totalmente responsivo e funciona em celular, tablet e computador pelo navegador.</div>
+                </div>
+              </div>
+
+              <!-- CTA FINAL -->
+              <div style="background:linear-gradient(135deg,var(--navy),#1a4a7a);border-radius:var(--r);padding:24px 20px;text-align:center;">
+                <div style="font-family:var(--fs);font-size:22px;font-weight:300;color:var(--cream);margin-bottom:6px;">Pronto para começar?</div>
+                <div style="font-size:12px;color:rgba(240,234,216,0.5);margin-bottom:16px;">Junte-se e tenha controle total da sua vida financeira e pessoal</div>
+                <button onclick="toast('Entre em contato: brunahorsthb@gmail.com')" style="background:linear-gradient(135deg,var(--warm),#c87941);border:none;color:var(--ink);padding:12px 32px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fn);">Assinar Premium por R$ 29,90/mês &#8594;</button>
+                <div style="font-size:10px;color:rgba(240,234,216,0.3);margin-top:10px;">Sem fidelidade &#183; Cancele quando quiser</div>
+              </div></div>
             </div>
             <!-- Categorias -->
             <div class="page" id="page-f-cats">
@@ -5569,22 +5738,24 @@ function iaEnviar(){
 
 function iaResponderLocal(pergunta){
   var p=pergunta.toLowerCase()
-    .replace(/[\u00E1\u00E0\u00E3\u00E2]/g,'a').replace(/[\u00E9\u00EA]/g,'e').replace(/[\u00EDi]/g,'i')
-    .replace(/[\u00F3\u00F5\u00F4]/g,'o').replace(/[\u00FA]/g,'u').replace(/[\u00E7]/g,'c');
+    .replace(/[\u00E1\u00E0\u00E3\u00E2]/g,'a').replace(/[\u00E9\u00EA]/g,'e')
+    .replace(/[\u00ED]/g,'i').replace(/[\u00F3\u00F5\u00F4]/g,'o')
+    .replace(/[\u00FA]/g,'u').replace(/\u00E7/g,'c');
   var mes=parseInt($('month-sel')?$('month-sel').value:hoje.getMonth());
   var ano=parseInt($('year-sel')?$('year-sel').value:hoje.getFullYear());
-  var MN=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto',
-          'Setembro','Outubro','Novembro','Dezembro'];
-  var lM=lancamentos.filter(function(l){
-    var d=new Date((l.data||'2000-01-01')+'T12:00');
-    return d.getMonth()===mes&&d.getFullYear()===ano;
-  });
+  var MN=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var nome=G.name?G.name.split(' ')[0]:'';
+  var lM=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); return d.getMonth()===mes&&d.getFullYear()===ano; });
+  var lMAnt=lancamentos.filter(function(l){ var d=new Date((l.data||'2000-01-01')+'T12:00'); var ma=mes===0?11:mes-1; var aa=mes===0?ano-1:ano; return d.getMonth()===ma&&d.getFullYear()===aa; });
   var tE=lM.filter(function(l){ return l.tipo==='Entrada'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
   var tS=lM.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
   var sdo=tE-tS;
+  var pctSaldo=tE>0?Math.round(sdo/tE*100):0;
   var cM={};
   lM.filter(function(l){ return l.tipo==='Saida'; }).forEach(function(l){ cM[l.cat]=(cM[l.cat]||0)+(l.valor||0); });
   var cS=Object.keys(cM).sort(function(a,b){ return cM[b]-cM[a]; });
+  var tSAnt=lMAnt.filter(function(l){ return l.tipo==='Saida'; }).reduce(function(s,l){ return s+(l.valor||0); },0);
+  var varMes=tSAnt>0?Math.round((tS-tSAnt)/tSAnt*100):0;
   var tA=ativos.reduce(function(s,a){ return s+(a.valor||0); },0);
   var tP=passivos.reduce(function(s,p2){ return s+(p2.valor||0); },0);
   var tI=investimentos.reduce(function(s,i){ return s+(i.valor||0); },0);
@@ -5593,96 +5764,209 @@ function iaResponderLocal(pergunta){
   var aRP=receber.filter(function(r){ return r.status!=='Recebido'; });
   var tPag=aPP.reduce(function(s,a){ return s+(a.valor||0); },0);
   var tRec=aRP.reduce(function(s,r){ return s+(r.valor||0); },0);
+  var hoje3=new Date(hoje); hoje3.setDate(hoje.getDate()+3);
+  var urgentes=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d>=hoje&&d<=hoje3; });
+  var vencidas=aPP.filter(function(a){ var d=new Date((a.venc||'2099-12-31')+'T12:00'); return d<hoje; });
   var niv=getNivel(G_META?G_META.xpTotal||0:0);
+  var xpAtual=G_META?G_META.xpTotal||0:0;
+  var streak=G_META?G_META.streakSemanas||0:0;
   var hHj=habitos.filter(function(h){ return habitoDeveHoje(h); });
   var hFHj=hHj.filter(function(h){ return h.doneDate===hojeStr; }).length;
+  var hPct=hHj.length>0?Math.round(hFHj/hHj.length*100):0;
   var mIA=getMonday(0); var sI=mIA.toISOString().slice(0,10);
   var sFD=new Date(mIA); sFD.setDate(mIA.getDate()+6); var sF=sFD.toISOString().slice(0,10);
   var tSem=treinos.filter(function(t){ return (t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); }).length;
+  var SEP='\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500';
 
-  if(p.match(/^(oi|ola|bom|boa|tudo)/))
-    return 'Ola! Pronta para analisar seus dados.\nPergunte sobre financas, patrimonio ou planner!';
+  if(p.match(/^(oi|ola|bom|boa|tudo|e ai|e a)/)){
+    var hora=hoje.getHours();
+    var saud=hora<12?'Bom dia':hora<18?'Boa tarde':'Boa noite';
+    return saud+(nome?', '+nome:'')+'! \uD83D\uDC4B\n\nEstou pronta pra analisar seus dados do ORST Hub!\n\nPosso te ajudar com:\n\uD83D\uDCB0 Como foi meu m\u00EAs?\n\uD83C\uDFE0 Resumo do patrim\u00F4nio\n\u23F0 Quanto tenho a pagar?\n\u2B50 Meu n\u00EDvel e XP\n\uD83D\uDCA1 Dicas personalizadas\n\nS\u00F3 perguntar!';
+  }
 
-  if(p.match(/resumo|visao|geral|como estou|tudo|panorama/)){
-    var r='\uD83D\uDCCB Resumo \u2014 '+MN[mes]+'/'+ano+'\n\n\uD83D\uDCB0 FINANCAS\nEntradas: '+fmt(tE)+'\nSaidas: '+fmt(tS)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo);
-    if(cS.length) r+='\nMaior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+')';
-    r+='\n\n\uD83C\uDFE0 PATRIMONIO\nLiquido: '+fmt(tA-tP)+'\nInvestimentos: '+fmt(tI);
-    if(aPP.length) r+='\nA pagar: '+fmt(tPag)+' ('+aPP.length+' contas)';
-    r+='\n\n\u2B50 PLANNER\nNivel: '+niv.icon+' '+niv.nome+'\nHabitos hoje: '+hFHj+'/'+hHj.length+'\nTreinos semana: '+tSem+'/'+treinos.length;
+  if(p.match(/resumo|visao|geral|como estou|tudo|panorama|situacao/)){
+    var r='\uD83D\uDCCB Resumo \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
+    r+='\uD83D\uDCB0 FINANCAS\n';
+    r+='Entradas:  '+fmt(tE)+'\n';
+    r+='Sa\u00EDdas:    '+fmt(tS);
+    if(varMes!==0) r+=' ('+(varMes>0?'+':'')+varMes+'% vs m\u00EAs anterior)';
+    r+='\nSaldo:     '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo);
+    if(tE>0) r+=' ('+pctSaldo+'% das entradas)';
+    r+='\n';
+    if(cS.length) r+='Maior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+')\n';
+    if(urgentes.length) r+='\u23F0 '+urgentes.length+' conta(s) vencem em 3 dias!\n';
+    if(vencidas.length) r+='\u274C '+vencidas.length+' conta(s) vencida(s)!\n';
+    r+='\n\uD83C\uDFE0 PATRIMONIO\n';
+    r+='L\u00EDquido:       '+(tA-tP>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(tA-tP)+'\n';
+    r+='Investimentos: '+fmt(tI)+'\n';
+    if(aPP.length) r+='A pagar:       '+fmt(tPag)+' ('+aPP.length+' contas)\n';
+    r+='\n\u2B50 PLANNER\n';
+    r+='N\u00EDvel: '+niv.icon+' '+niv.nome+' \u2014 '+xpAtual+' XP\n';
+    r+='H\u00E1bitos hoje: '+hFHj+'/'+hHj.length+' ('+hPct+'%)\n';
+    r+='Treinos semana: '+tSem+'/'+treinos.length+'\n';
+    if(streak>1) r+='\uD83D\uDD25 Streak: '+streak+' semanas seguidas!\n';
+    r+='\n';
+    if(sdo<0) r+='\u26A0\uFE0F Gastos superam entradas este m\u00EAs. Cuidado!';
+    else if(pctSaldo>=20) r+='\uD83D\uDC4F Parab\u00E9ns! Voc\u00EA economizou '+pctSaldo+'% das entradas!';
+    else r+='\uD83D\uDCA1 Voc\u00EA est\u00E1 no positivo. Continue assim!';
     return r;
   }
-  if(p.match(/gast|despesa|saida|quanto sai/)){
-    var r2='\uD83D\uDCC8 Gastos \u2014 '+MN[mes]+'/'+ano+'\n\nTotal: '+fmt(tS)+'\nEntradas: '+fmt(tE)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F ')+fmt(sdo)+'\n';
-    if(cS.length){ r2+='\nCategorias:\n'; cS.slice(0,6).forEach(function(c){ var pct=tS>0?Math.round(cM[c]/tS*100):0; r2+='\u2022 '+c+': '+fmt(cM[c])+' ('+pct+'%)\n'; }); }
-    else r2+='Nenhum lancamento de saida neste mes.';
+
+  if(p.match(/gast|despesa|saida|quanto sai|gastei/)){
+    var r2='\uD83D\uDCC8 Gastos de '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
+    r2+='Sa\u00EDdas totais: '+fmt(tS)+'\n';
+    if(varMes!==0) r2+='Vs. m\u00EAs anterior: '+(varMes>0?'\uD83D\uDCC8 +':'\uD83D\uDCC9 ')+varMes+'%\n';
+    r2+='Entradas:      '+fmt(tE)+'\nSaldo:         '+(sdo>=0?'+':'')+fmt(sdo)+'\n';
+    if(!cS.length){ r2+='\nSem lan\u00E7amentos de sa\u00EDda neste m\u00EAs.'; return r2; }
+    r2+='\nPor categoria:\n';
+    cS.forEach(function(c,i){
+      var pct=tS>0?Math.round(cM[c]/tS*100):0;
+      var medal=i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':'   ';
+      r2+=medal+' '+c+': '+fmt(cM[c])+' ('+pct+'%)\n';
+    });
+    if(cS.length){
+      var pctM=tS>0?Math.round(cM[cS[0]]/tS*100):0;
+      r2+='\n\uD83D\uDCA1 '+cS[0]+' representa '+pctM+'% das sa\u00EDdas.';
+      if(pctM>40) r2+=' Considere reduzir!';
+    }
     return r2;
   }
-  if(p.match(/maior gasto|mais gast|categoria|onde gast/)){
-    if(!cS.length) return 'Nenhum gasto em '+MN[mes]+'/'+ano+'.';
-    var r3='\uD83D\uDD0D Maiores gastos \u2014 '+MN[mes]+'/'+ano+':\n\n';
-    cS.slice(0,6).forEach(function(c,i){ r3+=(i+1)+'. '+c+': '+fmt(cM[c])+'\n'; });
-    return r3;
-  }
-  if(p.match(/saldo|sobrou|resultado/))
-    return 'Resultado '+MN[mes]+'/'+ano+':\n\nEntradas: +'+fmt(tE)+'\nSaidas: -'+fmt(tS)+'\nSaldo: '+(sdo>=0?'\u2705 +':'\u26A0\uFE0F -')+fmt(Math.abs(sdo))+'\n\n'+(sdo<0?'Gastos superam entradas!':'Mes no positivo!');
 
-  if(p.match(/pagar|conta|venc|divida|boleto|pendente/)){
-    if(!aPP.length) return '\u2705 Nenhuma conta pendente!';
-    var r4='A pagar:\n\nTotal: '+fmt(tPag)+'\n'+aPP.length+' conta(s)\n\n';
-    aPP.slice().sort(function(a,b){ return (a.venc||'').localeCompare(b.venc||''); }).slice(0,6).forEach(function(a){ r4+='\u2022 '+esc(a.desc)+': '+fmt(a.valor)+(a.venc?' ('+isoToDisplay(a.venc)+')':'')+'\n'; });
+  if(p.match(/maior gasto|mais gast|categoria|onde gast|principal/)){
+    if(!cS.length) return 'Nenhum gasto em '+MN[mes]+'/'+ano+'.';
+    var r3='Top gastos \u2014 '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
+    cS.forEach(function(c,i){
+      var pct=tS>0?Math.round(cM[c]/tS*100):0;
+      var medal=i===0?'\uD83E\uDD47':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':' '+(i+1)+'.';
+      r3+=medal+' '+c+'\n    '+fmt(cM[c])+' \u2014 '+pct+'% do total\n\n';
+    });
+    return r3+'Total sa\u00EDdas: '+fmt(tS);
+  }
+
+  if(p.match(/saldo|sobrou|resultado|lucro|quanto sobrou/)){
+    var r4='Resultado de '+MN[mes]+'/'+ano+'\n'+SEP+'\n\n';
+    r4+='Entradas: +'+fmt(tE)+'\nSa\u00EDdas:   -'+fmt(tS)+'\n'+SEP+'\n';
+    r4+='Saldo:    '+(sdo>=0?'\u2705 +':'\u274C -')+fmt(Math.abs(sdo))+'\n\n';
+    if(sdo>=0){
+      if(pctSaldo>=30) r4+='\uD83C\uDF89 Excelente! '+pctSaldo+'% das entradas economizadas!';
+      else if(pctSaldo>=10) r4+='\uD83D\uDC4D Bom! M\u00EAs no positivo com '+pctSaldo+'% de sobra.';
+      else r4+='\uD83D\uDE42 Positivo, mas com margem pequena. Fique atento.';
+    } else {
+      r4+='\u26A0\uFE0F Gastos superaram entradas em '+fmt(Math.abs(sdo))+'.';
+      if(cS.length) r4+='\n\uD83D\uDCA1 Maior gasto: '+cS[0]+' ('+fmt(cM[cS[0]]||0)+').';
+    }
+    if(varMes!==0) r4+='\n\uD83D\uDCC5 Sa\u00EDdas: '+(varMes>0?'+':'')+varMes+'% vs m\u00EAs passado.';
     return r4;
   }
-  if(p.match(/receber/)){
-    if(!aRP.length) return 'Nenhum valor a receber.';
-    var r5='A receber:\n\nTotal: '+fmt(tRec)+'\n\n';
-    aRP.slice(0,5).forEach(function(r){ r5+='\u2022 '+esc(r.desc)+': '+fmt(r.valor)+'\n'; });
+
+  if(p.match(/pagar|conta.*pend|venc|divida|boleto|pendente/)){
+    if(!aPP.length) return '\uD83C\uDF89 Nenhuma conta pendente!\n\nVoc\u00EA est\u00E1 em dia com todos os pagamentos. \uD83D\uDC4F';
+    var r5='Contas a pagar\n'+SEP+'\n\nTotal: '+fmt(tPag)+' ('+aPP.length+' conta(s))\n';
+    if(vencidas.length) r5+='\n\u274C Vencidas: '+vencidas.length+' conta(s)!\n';
+    if(urgentes.length) r5+='\u23F0 Vencem em 3 dias: '+urgentes.length+'\n';
+    r5+='\nPor vencimento:\n';
+    aPP.slice().sort(function(a,b){ return (a.venc||'').localeCompare(b.venc||''); }).slice(0,8).forEach(function(a){
+      var d=new Date((a.venc||'2099-12-31')+'T12:00');
+      var icon=d<hoje?'\u274C':d<=hoje3?'\u23F0':'\uD83D\uDD35';
+      r5+='\n'+icon+' '+esc(a.desc)+'\n   '+fmt(a.valor)+(a.venc?' \u2014 '+isoToDisplay(a.venc):'')+'\n';
+    });
+    if(aPP.length>8) r5+='\n...e mais '+(aPP.length-8)+' contas.';
     return r5;
   }
-  if(p.match(/patrimonio|ativo|passivo|bens|riqueza|liquido|quanto tenho/)){
-    var r6='Patrim\u00F4nio:\n\nAtivos: '+fmt(tA)+' ('+ativos.length+')\nPassivos: '+fmt(tP)+'\nLiquido: '+fmt(tA-tP)+'\nInvestimentos: '+fmt(tI)+'\nContas: '+fmt(tC)+'\n';
-    if(ativos.length){ r6+='\nPrincipais:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,3).forEach(function(a){ r6+='\u2022 '+esc(a.desc)+': '+fmt(a.valor)+'\n'; }); }
+
+  if(p.match(/receber/)){
+    if(!aRP.length) return 'Nenhum valor a receber cadastrado.';
+    var r6='A receber\n'+SEP+'\n\nTotal: '+fmt(tRec)+' ('+aRP.length+' item(s))\n\n';
+    aRP.forEach(function(rc){ r6+='\u2022 '+esc(rc.desc)+': '+fmt(rc.valor)+(rc.venc?' \u2014 '+isoToDisplay(rc.venc):'')+'\n'; });
     return r6;
   }
-  if(p.match(/invest|rendimento|aplicacao/)){
-    if(!investimentos.length) return 'Nenhum investimento cadastrado.';
-    var tR=investimentos.reduce(function(s,i){ return s+(i.rend||0); },0);
-    var r7='Investimentos:\n\nTotal: '+fmt(tI)+'\nRendimento: '+(tR>=0?'+':'')+fmt(tR)+'\n\n';
-    investimentos.forEach(function(iv){ r7+='\u2022 '+esc(iv.nome)+' ('+iv.tipo+'): '+fmt(iv.valor)+'\n'; });
+
+  if(p.match(/patrimonio|ativo|passivo|bens|riqueza|liquido|quanto tenho/)){
+    var patLiq=tA-tP;
+    var r7='Patrim\u00F4nio\n'+SEP+'\n\nAtivos:    +'+fmt(tA)+' ('+ativos.length+' item(s))\nPassivos:  -'+fmt(tP)+'\n'+SEP+'\nL\u00EDquido:   '+(patLiq>=0?'\uD83D\uDCC8 ':'\uD83D\uDCC9 ')+fmt(patLiq)+'\n\nInvestimentos: '+fmt(tI)+'\nContas:        '+fmt(tC)+'\n';
+    if(ativos.length){ r7+='\nPrincipais ativos:\n'; ativos.slice().sort(function(a,b){ return (b.valor||0)-(a.valor||0); }).slice(0,4).forEach(function(a){ r7+='\u2022 '+esc(a.desc)+' ('+a.cat+'): '+fmt(a.valor)+(a.deprecAnual>0?'\n  Deprec.: -'+fmt(a.deprecAnual)+'/ano':'')+'\n'; }); }
+    if(passivos.length){ r7+='\nPassivos:\n'; passivos.slice(0,4).forEach(function(p3){ r7+='\u2022 '+esc(p3.desc)+': '+fmt(p3.valor)+(p3.parcela?' \u2014 '+fmt(p3.parcela)+'/m\u00EAs':'')+'\n'; }); }
+    r7+='\n'+(patLiq>0?'\uD83D\uDC4F Patrim\u00F4nio positivo! Continue construindo.':'\u26A0\uFE0F Passivos superam ativos. Foque em quitar d\u00EDvidas.');
     return r7;
   }
-  if(p.match(/habito|rotina/)){
-    var r8='Habitos:\n\nCadastrados: '+habitos.length+'\nFeitos hoje: '+hFHj+'/'+hHj.length+'\n';
-    if(hHj.length){ r8+='\nHoje:\n'; hHj.forEach(function(h){ r8+=(h.doneDate===hojeStr?'\u2705 ':'\u25CB ')+esc(h.nome)+'\n'; }); }
+
+  if(p.match(/invest|rendimento|aplicacao|carteira/)){
+    if(!investimentos.length) return '\uD83D\uDCA1 Nenhum investimento cadastrado ainda.\n\nV\u00E1 em Finan\u00E7as \u2192 Investimentos e adicione suas aplica\u00E7\u00F5es.';
+    var tR=investimentos.reduce(function(s,i){ return s+(i.rend||0); },0);
+    var r8='Investimentos\n'+SEP+'\n\nTotal:      '+fmt(tI)+'\nRendimento: '+(tR>=0?'\uD83D\uDFE2 +':'\uD83D\uDD34 ')+fmt(tR)+'\n\n';
+    investimentos.forEach(function(iv){ r8+='\u2022 '+esc(iv.nome)+' ('+iv.tipo+')\n  Valor: '+fmt(iv.valor)+(iv.rend?'\n  Rend.: '+(iv.rend>=0?'+':'')+fmt(iv.rend):'')+'\n\n'; });
     return r8;
   }
-  if(p.match(/treino|academia|exercicio/)){
-    var r9='Treinos:\n\nCadastrados: '+treinos.length+'\nFeitos esta semana: '+tSem+'/'+treinos.length+'\n\n';
-    treinos.forEach(function(t){ var f=(t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); r9+=(f?'\u2705 ':'\u25CB ')+(t.dia||'Livre')+': '+esc(t.nome||t.tipo||'Treino')+'\n'; });
+
+  if(p.match(/habito|rotina|consistencia/)){
+    var r9='H\u00E1bitos\n'+SEP+'\n\nCadastrados: '+habitos.length+'\nPara hoje:   '+hHj.length+'\nFeitos hoje: '+hFHj+' de '+hHj.length+' ('+hPct+'%)\n';
+    if(hHj.length){ r9+='\nStatus de hoje:\n'; hHj.forEach(function(h){ r9+=(h.doneDate===hojeStr?'\u2705':'\u25CB')+' '+esc(h.nome)+'\n'; }); }
+    r9+='\n'+(hPct===100?'\uD83C\uDF89 Perfeito! Todos feitos hoje!':hPct>=70?'\uD83D\uDC4D Quase! Faltam '+(hHj.length-hFHj)+' h\u00E1bito(s).':hPct>0?'\uD83D\uDE42 Come\u00E7ou bem! Faltam '+(hHj.length-hFHj)+'.':'\uD83D\uDCA1 Nenhum feito ainda. Bora come\u00E7ar?');
     return r9;
   }
-  if(p.match(/planner|nivel|xp|evolucao|streak/))
-    return 'Planner:\n\nNivel: '+niv.icon+' '+niv.nome+'\nXP: '+(G_META?G_META.xpTotal||0:0)+'\nSemanas: '+(G_META?G_META.streakSemanas||0:0)+'\nHabitos hoje: '+hFHj+'/'+hHj.length+'\nTreinos semana: '+tSem+'/'+treinos.length;
 
-  if(p.match(/dica|conselho|economiz|poupar/)){
-    var dicas=[];
-    if(sdo<0) dicas.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'. Reduza gastos em '+(cS[0]||'outras categorias')+'.');
-    if(aPP.length>3) dicas.push(aPP.length+' contas pendentes. Priorize as com vencimento proximo.');
-    if(!investimentos.length&&tC>500) dicas.push('Considere investir parte do saldo ('+fmt(tC)+').');
-    if(!dicas.length) dicas.push(sdo>0?'Mes positivo! Continue assim.':'Continue acompanhando suas financas.');
-    return 'Dicas:\n\n'+dicas.map(function(d){ return '\u2022 '+d; }).join('\n');
+  if(p.match(/treino|academia|exercicio|malhar/)){
+    var pctTr=treinos.length>0?Math.round(tSem/treinos.length*100):0;
+    var r10='Treinos\n'+SEP+'\n\nFichas: '+treinos.length+'\nFeitos esta semana: '+tSem+' de '+treinos.length+' ('+pctTr+'%)\n';
+    if(treinos.length){ r10+='\n'; treinos.forEach(function(t){ var f=(t.feitoDatas||[]).some(function(d){ return d>=sI&&d<=sF; }); r10+=(f?'\u2705':'\u25CB')+' '+(t.dia||'Livre')+': '+esc(t.nome||t.tipo||'Treino')+'\n'; }); }
+    r10+='\n'+(pctTr===100?'\uD83C\uDF89 Semana perfeita de treinos!':pctTr>=50?'\uD83D\uDCAA Boa semana! Continue.':'\uD83D\uDCA1 Ainda d\u00E1 tempo de treinar mais esta semana!');
+    return r10;
   }
-  if(p.match(/conta bancaria|banco|saldo conta/)){
-    if(!contas.length) return 'Nenhuma conta bancaria cadastrada.';
-    var r12='Contas:\n\nTotal: '+fmt(tC)+'\n\n';
-    contas.forEach(function(c){ r12+='\u2022 '+esc(c.nome)+': '+fmt(c.saldo)+'\n'; });
+
+  if(p.match(/planner|nivel|xp|pontos|evolucao|streak|missao/)){
+    var NIVEIS=[{nome:'Guerreiro',xp:50},{nome:'Consistente',xp:150},{nome:'Elite',xp:400},{nome:'Lendario',xp:1000}];
+    var proxNiv=null; for(var ni=0;ni<NIVEIS.length;ni++){ if(xpAtual<NIVEIS[ni].xp){ proxNiv=NIVEIS[ni]; break; } }
+    var r11='Planner \u2014 Evolu\u00E7\u00E3o\n'+SEP+'\n\nN\u00EDvel:  '+niv.icon+' '+niv.nome+'\nXP:     '+xpAtual+' XP\n';
+    if(proxNiv) r11+='Pr\u00F3ximo: '+proxNiv.nome+' (faltam '+(proxNiv.xp-xpAtual)+' XP)\n';
+    r11+='Streak: '+streak+' semana(s)\n\nEsta semana:\n\u2022 H\u00E1bitos hoje: '+hFHj+'/'+hHj.length+' ('+hPct+'%)\n\u2022 Treinos: '+tSem+'/'+treinos.length+'\n\u2022 Reagendamentos: '+(G_META?G_META.reagendamentos||3:3)+'\n';
+    r11+='\n'+(streak>=5?'\uD83D\uDD25 '+streak+' semanas seguidas! Incr\u00EDvel!':streak>0?'\uD83D\uDCAA Streak de '+streak+' semana(s)! Continue!':'\uD83D\uDCA1 Comece sua streak esta semana!');
+    return r11;
+  }
+
+  if(p.match(/dica|conselho|economiz|poupar|melhorar|sugestao/)){
+    var dicas2=[]; var avisos2=[];
+    if(sdo<0) dicas2.push('Gastos superam entradas em '+fmt(Math.abs(sdo))+'. Reduza gastos em '+(cS[0]||'suas principais categorias')+'.');
+    if(vencidas.length) avisos2.push('\u274C '+vencidas.length+' conta(s) vencida(s). Regularize j\u00E1 para evitar juros.');
+    if(urgentes.length) avisos2.push('\u23F0 '+urgentes.length+' conta(s) vencem em 3 dias!');
+    if(cS.length>0&&tS>0){ var pctM2=Math.round(cM[cS[0]]/tS*100); if(pctM2>40) dicas2.push(cS[0]+' = '+pctM2+'% das sa\u00EDdas. Revisar pode fazer diferen\u00E7a.'); }
+    if(!investimentos.length&&tC>1000) dicas2.push('Voc\u00EA tem '+fmt(tC)+' em contas. Considere investir parte.');
+    if(aPP.length>5) dicas2.push(aPP.length+' contas pendentes ('+fmt(tPag)+'). Quite as menores primeiro.');
+    if(hPct<50&&hHj.length>0) dicas2.push('H\u00E1bitos em '+hPct+'% hoje. Consistencia di\u00E1ria \u00E9 a chave.');
+    if(!dicas2.length&&!avisos2.length){ dicas2.push(sdo>0?'Parab\u00E9ns! M\u00EAs positivo (+'+fmt(sdo)+').':'Continue acompanhando suas finan\u00E7as.'); dicas2.push('Defina uma Meta de Economia no dashboard para ter um objetivo claro.'); }
+    var r12='Dicas personalizadas\n'+SEP+'\n\n';
+    if(avisos2.length){ r12+='Alertas:\n'; avisos2.forEach(function(a){ r12+=a+'\n'; }); r12+='\n'; }
+    r12+='Recomenda\u00E7\u00F5es:\n'; dicas2.forEach(function(d){ r12+='\u2022 '+d+'\n'; });
     return r12;
   }
-  if(p.match(/sono|dormi/)){
-    if(!sonoLog||!sonoLog.length) return 'Nenhum registro de sono. Va em Planner > Sono.';
-    var ult=sonoLog[sonoLog.length-1]; var med=sonoLog.slice(-7).reduce(function(s,sl){ return s+(sl.horas||0); },0)/Math.min(7,sonoLog.length);
-    return 'Sono:\n\nUltima noite: '+(ult.horas||0)+'h\nMedia 7 dias: '+med.toFixed(1)+'h\n'+(med<6?'\u26A0\uFE0F Abaixo do ideal (7-9h)':'\u2705 Boa media!');
+
+  if(p.match(/conta bancaria|banco|saldo conta/)){
+    if(!contas.length) return 'Nenhuma conta banc\u00E1ria cadastrada.\nV\u00E1 em Finan\u00E7as \u2192 Contas para adicionar.';
+    var r13='Contas banc\u00E1rias\n'+SEP+'\n\nSaldo total: '+fmt(tC)+'\n\n';
+    contas.forEach(function(c){ r13+=(c.saldo>=0?'\uD83D\uDFE2':'\uD83D\uDD34')+' '+esc(c.nome)+': '+fmt(c.saldo)+'\n'; });
+    return r13;
   }
-  return 'Nao entendi. Tente:\n"Como foi meu mes?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Resumo do patrimonio"';
+
+  if(p.match(/sono|dormi|horas de sono/)){
+    if(!sonoLog||!sonoLog.length) return 'Nenhum registro de sono.\nV\u00E1 em Planner \u2192 Sono para registrar.';
+    var ult=sonoLog[sonoLog.length-1]; var med=sonoLog.slice(-7).reduce(function(s,sl){ return s+(sl.horas||0); },0)/Math.min(7,sonoLog.length);
+    var r14='Sono\n'+SEP+'\n\nUltima noite: '+(ult.horas||0)+'h'+(ult.qualidade?' \u2014 '+ult.qualidade:'')+'\nM\u00E9dia 7 dias: '+med.toFixed(1)+'h\n\n';
+    r14+=med>=8?'\uD83D\uDC4F Excelente! Dormindo muito bem.':med>=7?'\uD83D\uDE42 Boa m\u00E9dia. Continue assim.':med>=6?'\u26A0\uFE0F Um pouco abaixo do ideal (7-9h).':'\uD83D\uDEA8 '+med.toFixed(1)+'h est\u00E1 muito abaixo! O sono impacta tudo.';
+    return r14;
+  }
+
+  if(p.match(/meta de vida|metas de vida|objetivo|sonho/)){
+    if(!metasVida||!metasVida.length) return 'Nenhuma meta de vida cadastrada.\nV\u00E1 em Planner \u2192 Metas!';
+    var conclMV=metasVida.filter(function(m){ return (m.prog||0)>=100; }).length;
+    var r15='Metas de vida\n'+SEP+'\n\nTotal: '+metasVida.length+(conclMV?' | Conclu\u00EDdas: '+conclMV+' \uD83C\uDFC6':'')+'\n\n';
+    metasVida.forEach(function(m){ var prog=m.prog||0; r15+=(prog>=100?'\uD83C\uDFC6':prog>=50?'\uD83D\uDCC5':'\uD83C\uDFAF')+' '+esc(m.nome)+'\n   '+prog+'% \u2014 '+m.cat+(m.prazo?' \u2014 '+isoToDisplay(m.prazo):'')+'\n\n'; });
+    return r15;
+  }
+
+  if(p.match(/ajuda|help|o que|como usar/)){
+    return 'O que posso fazer:\n\n\uD83D\uDCB0 FINANCAS\n"Como foi meu m\u00EAs?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Meu saldo"\n"Dicas para economizar"\n\n\uD83C\uDFE0 PATRIMONIO\n"Patrim\u00F4nio"\n"Investimentos"\n"Contas banc\u00E1rias"\n\n\uD83D\uDCC5 PLANNER\n"H\u00E1bitos hoje"\n"Treinos da semana"\n"Meu n\u00EDvel e XP"\n"Como foi meu sono?"\n"Metas de vida"';
+  }
+
+  return 'N\u00E3o entendi. \uD83E\uDD14\n\nTente:\n"Como foi meu m\u00EAs?"\n"Maiores gastos"\n"Quanto tenho a pagar?"\n"Resumo do patrim\u00F4nio"\n"Dicas para economizar"';
 }
 </script>
 
