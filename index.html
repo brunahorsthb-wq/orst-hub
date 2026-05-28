@@ -264,7 +264,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   /* Layout geral */
   .g4,.g3{grid-template-columns:repeat(2,1fr);}
   .g4.one-col-mob{grid-template-columns:1fr;}
-  
+  .pg-area{padding:10px;}
   .fgrid{grid-template-columns:1fr;}
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(2,1fr);}
@@ -401,6 +401,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   #app{padding-bottom:64px;}
   /* Ajustes de layout */
   .app-body{flex-direction:column;}
+  .sys-shell{flex-direction:column;}
   
   /* Filtros dos lancamentos em coluna */
   #sis-financas .sys-tb{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px;}
@@ -453,6 +454,10 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .ia-sug-btn{background:var(--nude2);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--ink2);cursor:pointer;white-space:nowrap;}
 .ia-sug-btn:hover{background:var(--warm);}
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+/* === Planner background fix === */
+#sis-planner .pg-area { background: var(--nude); }
+#sis-planner .main-cnt { background: var(--nude); }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -2415,6 +2420,7 @@ function goSis(s){
       if(p.id==='page-pl-agenda') p.classList.add('active');
       else p.classList.remove('active');
     });
+    var _pgPl=document.querySelector('#sis-planner .pg-area'); if(_pgPl) _pgPl.scrollTop=0;
     document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.toggle('active', i.dataset.page==='pl-agenda'); });
     $('pl-ttl').textContent = 'Agenda semanal';
     if($('pl-add')){ $('pl-add').style.display=''; $('pl-add').onclick=function(){ openM('m-evento'); }; }
