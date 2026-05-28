@@ -247,8 +247,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .toast.show{display:block;}
 @media(max-width:900px){
   .sidebar{display:none;}
-  .sys-shell{display:block;}
-  .main-cnt{width:100%;height:100%;display:flex;flex-direction:column;}
   .g4{grid-template-columns:repeat(2,1fr);}
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(4,1fr);}
@@ -266,7 +264,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   /* Layout geral */
   .g4,.g3{grid-template-columns:repeat(2,1fr);}
   .g4.one-col-mob{grid-template-columns:1fr;}
-  .pg-area{padding:10px;}
   .fgrid{grid-template-columns:1fr;}
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(2,1fr);}
@@ -284,7 +281,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   .tb-brand em,.tb-uname{display:none;}
   .tb-brand{font-size:14px;}
   /* Sys topbar */
-  .sys-tb{padding:0 12px;gap:8px;height:44px;overflow-x:auto;flex-wrap:nowrap;}
+  .sys-tb{padding:0 12px;gap:8px;height:44px;overflow-x:auto;flex-wrap:nowrap;order:0;flex-shrink:0;}
+  .pg-area{order:1;min-height:0;}
   .sys-ttl{font-size:14px;white-space:nowrap;}
   /* Tabela admin */
   .admin-tbl th:nth-child(3),.admin-tbl td:nth-child(3){display:none;}
@@ -300,8 +298,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   .pl-stats-row{grid-template-columns:repeat(2,1fr);}
   .pl-hero{padding:16px;}
   .pl-hora{font-size:32px!important;}
-  .pg-area{display:block;width:100%;box-sizing:border-box;}
-  .pg-area > .page[style*="display:flex"]{display:flex!important;width:100%;box-sizing:border-box;}
   /* Meal grid mobile */
   .meal-grid{grid-template-columns:1fr 1fr;}
   /* Treino */
@@ -405,7 +401,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   #app{padding-bottom:64px;}
   /* Ajustes de layout */
   .app-body{flex-direction:column;}
-  .sys-shell{flex-direction:column;}
   
   /* Filtros dos lancamentos em coluna */
   #sis-financas .sys-tb{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px;}
@@ -460,8 +455,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 
 /* === Planner background fix === */
-#sis-planner .pg-area { background: var(--nude); }
-#sis-planner .main-cnt { background: var(--nude); }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -2394,7 +2387,13 @@ function goSis(s){
     goFPid('f-planos'); goSis('financas'); return;
   }
   document.querySelectorAll('.sistema').forEach(function(x){ x.classList.remove('active'); });
-  $('sis-' + s).classList.add('active');
+  var sEl = $('sis-' + s);
+  sEl.classList.add('active');
+  // Reset scroll de todos os pg-area do sistema ativado
+  setTimeout(function(){
+    var pgs = sEl.querySelectorAll('.pg-area');
+    pgs.forEach(function(pg){ pg.scrollTop = 0; });
+  }, 10);
   if(s==='perfil')   renderPerfil();
   if(s==='financas'){ loadFDash(); renderContas(); }
   if(s==='planner'){
