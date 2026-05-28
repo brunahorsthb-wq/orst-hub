@@ -264,7 +264,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   /* Layout geral */
   .g4,.g3{grid-template-columns:repeat(2,1fr);}
   .g4.one-col-mob{grid-template-columns:1fr;}
-  .pg-area{padding:10px;}
+  
   .fgrid{grid-template-columns:1fr;}
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(2,1fr);}
@@ -401,7 +401,7 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   #app{padding-bottom:64px;}
   /* Ajustes de layout */
   .app-body{flex-direction:column;}
-  .sys-shell{flex-direction:column;}
+  
   /* Filtros dos lancamentos em coluna */
   #sis-financas .sys-tb{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px;}
   /* Cards no hub em coluna no mobile */
@@ -453,19 +453,6 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .ia-sug-btn{background:var(--nude2);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--ink2);cursor:pointer;white-space:nowrap;}
 .ia-sug-btn:hover{background:var(--warm);}
 @keyframes iaFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-
-/* Fix área branca planner e financeiro */
-.pg-area > .page:not(.active) {
-  display: none !important;
-  position: absolute !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-.pg-area > .page.active {
-  display: flex !important;
-  position: relative !important;
-  visibility: visible !important;
-}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -2421,7 +2408,18 @@ function goSis(s){
   $('sis-' + s).classList.add('active');
   if(s==='perfil')   renderPerfil();
   if(s==='financas'){ loadFDash(); renderContas(); }
-  if(s==='planner')  loadAllData().then(function(){ renderAgenda(); renderHabitos(); renderMetasVida(); renderAlimentacao(); renderSono(); renderTreino(); });
+  if(s==='planner'){
+    // Garante que s\u00F3 a agenda fica vis\u00EDvel
+    document.querySelectorAll('#sis-planner .page').forEach(function(p){
+      p.style.display = (p.id==='page-pl-agenda') ? 'flex' : 'none';
+      if(p.id==='page-pl-agenda') p.classList.add('active');
+      else p.classList.remove('active');
+    });
+    document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.toggle('active', i.dataset.page==='pl-agenda'); });
+    $('pl-ttl').textContent = 'Agenda semanal';
+    if($('pl-add')){ $('pl-add').style.display=''; $('pl-add').onclick=function(){ openM('m-evento'); }; }
+    loadAllData().then(function(){ renderAgenda(); renderHabitos(); renderMetasVida(); renderAlimentacao(); renderSono(); renderTreino(); });
+  }
   if(s==='ia')       initIA();
 }
 
@@ -2460,10 +2458,16 @@ function goFPid(pid){
 
 function goPP(el){
   var pid = el.dataset.page;
-  document.querySelectorAll('#sis-planner .page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('#sis-planner .page').forEach(function(p){
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
   var _pp=document.querySelector('#sis-planner .pg-area'); if(_pp) _pp.scrollTop=0;
   document.querySelectorAll('#sis-planner .sb-i').forEach(function(i){ i.classList.remove('active'); });
-  $('page-' + pid).classList.add('active'); el.classList.add('active');
+  var activePage = $('page-' + pid);
+  activePage.classList.add('active');
+  activePage.style.display = 'flex';
+  el.classList.add('active');
   var T = {'pl-dash':'Dashboard Semanal','pl-evolucao':'Evolucao Pessoal',
     'pl-agenda':'Agenda semanal','pl-habitos':'Habitos diarios','pl-metas':'Metas de vida',
     'pl-alim':'Alimentacao','pl-sono':'Qualidade do sono','pl-treino':'Fichas de treino'};
