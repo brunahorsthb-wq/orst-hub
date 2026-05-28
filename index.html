@@ -247,7 +247,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
 .toast.show{display:block;}
 @media(max-width:900px){
   .sidebar{display:none;}
-  .main-cnt{width:100%;flex:1;}
+  .sys-shell{display:block;}
+  .main-cnt{width:100%;height:100%;display:flex;flex-direction:column;}
   .g4{grid-template-columns:repeat(2,1fr);}
   .two-col,.treino-grid,.meal-grid{grid-template-columns:1fr;}
   .week-grid{grid-template-columns:repeat(4,1fr);}
@@ -299,6 +300,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
   .pl-stats-row{grid-template-columns:repeat(2,1fr);}
   .pl-hero{padding:16px;}
   .pl-hora{font-size:32px!important;}
+  .pg-area{display:block;width:100%;box-sizing:border-box;}
+  .pg-area > .page[style*="display:flex"]{display:flex!important;width:100%;box-sizing:border-box;}
   /* Meal grid mobile */
   .meal-grid{grid-template-columns:1fr 1fr;}
   /* Treino */
