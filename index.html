@@ -1037,23 +1037,22 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
     <!-- PLANNER -->
     <div class="sistema" id="sis-planner">
       <div class="sys-shell">
+
+        <!-- SIDEBAR DESKTOP -->
         <div class="sidebar">
           <div class="sb-g">
             <div class="sb-l">Planner</div>
-            <div class="sb-i"        data-page="pl-dash"    onclick="goPP(this)"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
-            <div class="sb-i active" data-page="pl-agenda"  onclick="goPP(this)"><span class="sb-ic">C</span><span>Agenda</span></div>
-            <div class="sb-i"        data-page="pl-habitos" onclick="goPP(this)"><span class="sb-ic">V</span><span>Habitos</span></div>
-            <div class="sb-i"        data-page="pl-metas"   onclick="goPP(this)"><span class="sb-ic">O</span><span>Metas</span></div>
+            <div class="sb-i active" data-page="pl-agenda"   onclick="goPP(this)"><span class="sb-ic">C</span><span>Agenda</span></div>
+            <div class="sb-i"        data-page="pl-dash"     onclick="goPP(this)"><span class="sb-ic">&#128200;</span><span>Dashboard</span></div>
+            <div class="sb-i"        data-page="pl-evolucao" onclick="goPP(this)"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
+            <div class="sb-i"        data-page="pl-habitos"  onclick="goPP(this)"><span class="sb-ic">V</span><span>Habitos</span></div>
+            <div class="sb-i"        data-page="pl-metas"    onclick="goPP(this)"><span class="sb-ic">O</span><span>Metas</span></div>
           </div>
           <div class="sb-g">
             <div class="sb-l">Saude</div>
-            <div class="sb-i" data-page="pl-alim"    onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
-            <div class="sb-i" data-page="pl-sono"    onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
-            <div class="sb-i" data-page="pl-treino"  onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
-          </div>
-          <div class="sb-g">
-            <div class="sb-l">Evolucao</div>
-            <div class="sb-i" data-page="pl-evolucao" onclick="goPP(this)"><span class="sb-ic">&#11088;</span><span>Evolucao</span></div>
+            <div class="sb-i" data-page="pl-alim"   onclick="goPP(this)"><span class="sb-ic">F</span><span>Alimentacao</span></div>
+            <div class="sb-i" data-page="pl-sono"   onclick="goPP(this)"><span class="sb-ic">Z</span><span>Sono</span></div>
+            <div class="sb-i" data-page="pl-treino" onclick="goPP(this)"><span class="sb-ic">T</span><span>Treino</span></div>
           </div>
           <div class="sb-foot">
             <div class="sb-ui">
@@ -1062,6 +1061,8 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             </div>
           </div>
         </div>
+
+        <!-- MAIN -->
         <div class="main-cnt">
           <div class="sys-tb">
             <button class="mob-menu-btn" onclick="abrirMobSidebar('pl')" title="Menu">&#9776;</button>
@@ -1069,9 +1070,9 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             <button class="btn btn-p btn-sm" id="pl-add" onclick="openM('m-evento')">+ Evento</button>
           </div>
           <div class="pg-area">
-            <!-- Agenda/Dashboard -->
+
+            <!-- AGENDA -->
             <div class="page active" id="page-pl-agenda">
-              <!-- Missao da Semana -->
               <div class="missao-hero">
                 <div class="missao-titulo">Missao desta semana</div>
                 <div class="missao-nivel">
@@ -1079,129 +1080,100 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
                   <span class="missao-nivel-nome" id="missao-nivel-nome">Voce</span>
                 </div>
                 <div class="missao-xp" id="missao-xp-txt">0 XP</div>
-                <div class="missao-prog-wrap"><div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div></div>
-                <div class="missao-prog-txt"><span id="missao-prog-label">0%</span><span id="missao-meta-label">Meta: 10</span></div>
-                <div class="missao-vidas" id="missao-vidas"></div>
+                <div class="missao-prog-wrap">
+                  <div class="missao-prog-bar" id="missao-prog-bar" style="width:0%"></div>
+                </div>
+                <div class="missao-prog-txt">
+                  <span id="missao-prog-label">0 feitos</span>
+                  <span id="missao-meta-label">Meta: 5</span>
+                </div>
                 <div class="missao-stats">
                   <div class="missao-stat"><div class="missao-stat-v" id="missao-streak">0</div><div class="missao-stat-l">Semanas</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0/0</div><div class="missao-stat-l">Esta sem.</div></div>
-                  <div class="missao-stat"><div class="missao-stat-v" id="missao-reag">3</div><div class="missao-stat-l">Reagend.</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-xp">0</div><div class="missao-stat-l">XP total</div></div>
+                  <div class="missao-stat"><div class="missao-stat-v" id="missao-feitos">0</div><div class="missao-stat-l">Esta sem.</div></div>
+                </div>
+                <div class="missao-vidas">
+                  <span style="font-size:11px;color:rgba(240,234,216,0.4);">Reagendamentos:</span>
+                  <span id="missao-reag" style="font-size:13px;color:var(--warm);font-weight:600;margin-left:4px;">3</span>
+                  <div id="missao-vidas" style="display:flex;gap:4px;margin-top:6px;"></div>
                 </div>
                 <button class="missao-btn-meta" onclick="openM('m-meta-semana')">&#9881; Meta da semana</button>
               </div>
-              <!-- Hero do dia -->
               <div class="pl-hero">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;">
                   <div>
-                    <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Meu dia</div>
-                    <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream)" id="pl-saudacao">Bom dia!</div>
-                    <div style="font-size:11px;color:rgba(240,234,216,0.35);margin-top:2px" id="pl-data-hoje"></div>
+                    <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;">Meu dia</div>
+                    <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pl-saudacao">Bom dia</div>
+                    <div style="font-size:12px;color:rgba(240,234,216,0.5);margin-top:2px;" id="pl-data-hoje"></div>
                   </div>
-                  <div style="text-align:right;">
-                    <div style="font-family:var(--fs);font-size:38px;font-weight:300;color:var(--warm);line-height:1" id="pl-hora">--:--</div>
-                  </div>
+                  <div style="font-family:var(--fs);font-size:32px;font-weight:300;color:var(--warm);line-height:1;" id="pl-hora">--:--</div>
                 </div>
-                <div class="pl-stats-row">
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-hc">0/0</div><div class="pl-stat-lbl">Habitos hoje</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-mc">0</div><div class="pl-stat-lbl">Metas ativas</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-sc">--</div><div class="pl-stat-lbl">Sono ontem</div></div>
-                  <div class="pl-stat"><div class="pl-stat-val" id="pl-tc">0</div><div class="pl-stat-lbl">Treinos hoje</div></div>
+                <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+                  <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 12px;font-size:11px;color:rgba(240,234,216,0.7);">&#10003; <span id="pl-hc">0</span>/<span id="pl-mc">0</span> habitos</div>
+                  <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 12px;font-size:11px;color:rgba(240,234,216,0.7);">&#127947; <span id="pl-tc">0</span> treinos</div>
+                  <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:7px 12px;font-size:11px;color:rgba(240,234,216,0.7);">&#128164; <span id="pl-sc">--</span>h sono</div>
                 </div>
               </div>
-
-              <!-- Planner Semanal Visual -->
-              <div class="panel" style="padding:0;overflow:hidden;">
-                <div style="background:var(--navy);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
-                  <div style="font-family:var(--fs);font-size:17px;color:var(--cream)">Planner Semanal</div>
-                  <div style="display:flex;gap:6px;">
-                    <button onclick="semanaOffset--;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8592;</button>
-                    <button onclick="semanaOffset=0;renderAgenda()" style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
-                    <button onclick="semanaOffset++;renderAgenda()" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">&#8594;</button>
-                  </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:11px;color:var(--ink3);" id="sem-lbl">Esta semana</span>
+                <div style="display:flex;gap:6px;">
+                  <button onclick="mudaSemana(-1)" class="btn btn-sm" style="font-size:11px;">&#8592;</button>
+                  <button onclick="mudaSemana(0)"  class="btn btn-sm" style="font-size:11px;">Hoje</button>
+                  <button onclick="mudaSemana(1)"  class="btn btn-sm" style="font-size:11px;">&#8594;</button>
                 </div>
-                <div style="padding:0 0 8px;font-size:11px;color:var(--ink3);text-align:center;padding-top:6px;" id="sem-lbl"></div>
-                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;"><div id="planner-board"></div></div>
+              </div>
+              <div class="panel" style="padding:0;overflow:hidden;">
+                <div id="planner-board"></div>
               </div>
             </div>
-            <!-- DASHBOARD SEMANAL -->
+
+            <!-- DASHBOARD -->
             <div class="page" id="page-pl-dash">
-              <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:14px;">
-                <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Dashboard da Semana</div>
+              <div style="background:var(--navy);border-radius:var(--r);padding:18px 20px;margin-bottom:4px;">
+                <div style="font-size:10px;color:rgba(240,234,216,0.4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Dashboard da Semana</div>
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                  <div style="font-family:var(--fs);font-size:20px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
+                  <div style="font-family:var(--fs);font-size:18px;font-weight:300;color:var(--cream);" id="pld-semana-label">Esta semana</div>
                   <div style="display:flex;gap:6px;">
-                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8592;</button>
+                    <button onclick="pldSemana(-1)" style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;">&#8592;</button>
                     <button onclick="pldSemana(0)"  style="background:rgba(196,168,130,0.2);border:none;color:var(--warm);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:12px;">Hoje</button>
-                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;">&#8594;</button>
+                    <button onclick="pldSemana(1)"  style="background:rgba(255,255,255,0.1);border:none;color:var(--cream);padding:4px 12px;border-radius:4px;cursor:pointer;">&#8594;</button>
                   </div>
                 </div>
-                <div style="margin-top:12px;">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;">
-                    <span>Consistencia geral</span><span id="pld-pct-txt">0%</span>
-                  </div>
-                  <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:10px;overflow:hidden;">
-                    <div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
-                  </div>
+                <div style="margin-top:10px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(240,234,216,0.4);margin-bottom:4px;"><span>Consistencia geral</span><span id="pld-pct-txt">0%</span></div>
+                  <div style="background:rgba(255,255,255,0.1);border-radius:100px;height:8px;overflow:hidden;"><div id="pld-pct-bar" style="height:100%;border-radius:100px;width:0%;background:var(--warm);transition:width .5s;"></div></div>
                 </div>
               </div>
               <div class="panel">
-                <div class="ph"><div class="pt">Calendario da semana</div></div>
-                <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;"></div>
-                <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--ink3);">
-                  <span>&#9733; Perfeito &nbsp; &#9679; Treino+hab &nbsp; &#9680; Parcial &nbsp; &#9632; Perdido &nbsp; &#9675; Futuro</span>
-                </div>
+                <div class="ph"><div class="pt">Calendario</div></div>
+                <div id="pld-cal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;"></div>
+                <div style="font-size:10px;color:var(--ink3);">&#9733; Perfeito &nbsp;&#9679; Treino+hab &nbsp;&#9680; Parcial &nbsp;&#9632; Perdido &nbsp;&#9675; Futuro</div>
               </div>
               <div class="g4" style="grid-template-columns:repeat(2,1fr);">
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#128197; Agenda</div>
-                  <div class="mc-v b" id="pld-ev-num" style="font-size:24px;">0/0</div>
-                  <div style="font-size:10px;color:var(--ink3);">eventos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#10003; Habitos</div>
-                  <div class="mc-v g" id="pld-hab-num" style="font-size:24px;">0%</div>
-                  <div style="font-size:10px;color:var(--ink3);">taxa conclusao</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#127947; Treinos</div>
-                  <div class="mc-v a" id="pld-tr-num" style="font-size:24px;">0/0</div>
-                  <div style="font-size:10px;color:var(--ink3);">treinos feitos</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
-                <div class="mc" style="flex-direction:column;gap:5px;">
-                  <div class="mc-l">&#128564; Sono</div>
-                  <div class="mc-v b" id="pld-sono-num" style="font-size:24px;">0h</div>
-                  <div style="font-size:10px;color:var(--ink3);">media semanal</div>
-                  <div style="background:var(--nude2);border-radius:100px;height:5px;overflow:hidden;"><div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;transition:width .4s;"></div></div>
-                </div>
+                <div class="mc" style="flex-direction:column;gap:4px;"><div class="mc-l">Agenda</div><div class="mc-v b" id="pld-ev-num" style="font-size:22px;">0/0</div><div style="background:var(--nude2);border-radius:100px;height:4px;"><div id="pld-ev-bar" style="background:var(--navy);height:100%;border-radius:100px;width:0%;"></div></div></div>
+                <div class="mc" style="flex-direction:column;gap:4px;"><div class="mc-l">Habitos</div><div class="mc-v g" id="pld-hab-num" style="font-size:22px;">0%</div><div style="background:var(--nude2);border-radius:100px;height:4px;"><div id="pld-hab-bar" style="background:var(--green);height:100%;border-radius:100px;width:0%;"></div></div></div>
+                <div class="mc" style="flex-direction:column;gap:4px;"><div class="mc-l">Treinos</div><div class="mc-v a" id="pld-tr-num" style="font-size:22px;">0/0</div><div style="background:var(--nude2);border-radius:100px;height:4px;"><div id="pld-tr-bar" style="background:var(--warm2);height:100%;border-radius:100px;width:0%;"></div></div></div>
+                <div class="mc" style="flex-direction:column;gap:4px;"><div class="mc-l">Sono</div><div class="mc-v b" id="pld-sono-num" style="font-size:22px;">0h</div><div style="background:var(--nude2);border-radius:100px;height:4px;"><div id="pld-sono-bar" style="background:#4682b4;height:100%;border-radius:100px;width:0%;"></div></div></div>
               </div>
-              <div class="panel"><div class="ph"><div class="pt">Eventos desta semana</div></div>
-                <div id="pld-eventos-list" style="max-height:360px;overflow-y:auto;"></div></div>
-              <div class="panel"><div class="ph"><div class="pt">Habitos desta semana</div></div>
-                <div id="pld-habitos-list"></div></div>
+              <div class="panel"><div class="ph"><div class="pt">Eventos desta semana</div></div><div id="pld-eventos-list" style="max-height:280px;overflow-y:auto;"></div></div>
+              <div class="panel"><div class="ph"><div class="pt">Habitos desta semana</div></div><div id="pld-habitos-list"></div></div>
             </div>
 
-            <!-- EVOLUCAO PESSOAL -->
+            <!-- EVOLUCAO -->
             <div class="page" id="page-pl-evolucao">
-              <div style="background:var(--navy);border-radius:var(--r);padding:22px;margin-bottom:14px;text-align:center;overflow:hidden;position:relative;">
-                <div style="position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
-                <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Frase do dia</div>
-                <div style="font-family:var(--fs);font-size:17px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
-                <div style="font-size:11px;color:var(--warm);margin-top:10px;" id="ev-frase-autor"></div>
+              <div style="background:var(--navy);border-radius:var(--r);padding:20px;margin-bottom:4px;text-align:center;position:relative;overflow:hidden;">
+                <div style="font-size:10px;color:rgba(240,234,216,0.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">Frase do dia</div>
+                <div style="font-family:var(--fs);font-size:16px;font-weight:300;color:var(--cream);line-height:1.6;font-style:italic;" id="ev-frase-txt"></div>
+                <div style="font-size:11px;color:var(--warm);margin-top:8px;" id="ev-frase-autor"></div>
               </div>
               <div class="panel">
                 <div class="ph"><div class="pt">Nivel de evolucao</div></div>
-                <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
-                  <div style="font-size:44px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
+                <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+                  <div style="font-size:40px;line-height:1;" id="ev-nivel-icon">&#127807;</div>
                   <div style="flex:1;">
-                    <div style="font-family:var(--fs);font-size:20px;" id="ev-nivel-nome">Iniciante</div>
+                    <div style="font-family:var(--fs);font-size:18px;" id="ev-nivel-nome">Iniciante</div>
                     <div style="font-size:11px;color:var(--ink3);margin-top:2px;" id="ev-nivel-xp">0 XP</div>
-                    <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;margin-top:8px;">
-                      <div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div>
-                    </div>
+                    <div style="background:var(--nude2);border-radius:100px;height:6px;overflow:hidden;margin-top:6px;"><div id="ev-nivel-prog" style="background:linear-gradient(90deg,var(--warm),var(--green));height:100%;border-radius:100px;width:0%;transition:width .5s;"></div></div>
                   </div>
                 </div>
                 <div class="g4" style="grid-template-columns:repeat(4,1fr);">
@@ -1213,28 +1185,23 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
               <div class="panel">
                 <div class="ph"><div class="pt">Esta semana</div></div>
-                <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
+                <div id="ev-semana-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px;"></div>
                 <div class="g4" style="grid-template-columns:repeat(2,1fr);">
                   <div class="mc"><div class="mc-l">Treinos</div><div class="mc-v g" id="ev-rc-treinos">0/0</div></div>
                   <div class="mc"><div class="mc-l">Habitos</div><div class="mc-v b" id="ev-rc-habitos">0%</div></div>
                   <div class="mc"><div class="mc-l">Eventos</div><div class="mc-v a" id="ev-rc-eventos">0/0</div></div>
                   <div class="mc"><div class="mc-l">Vidas</div><div class="mc-v r" id="ev-rc-vidas">3/3</div></div>
                 </div>
-                <div style="margin-top:12px;">
-                  <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;">
-                    <span>Meta treinos: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong></span>
-                    <span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span>
-                  </div>
-                  <div style="background:var(--nude2);border-radius:100px;height:8px;overflow:hidden;">
-                    <div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;background:var(--green);transition:width .5s;"></div>
-                  </div>
+                <div style="margin-top:10px;">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:4px;"><span>Meta: <strong id="ev-tr-feitos">0</strong>/<strong id="ev-tr-meta">5</strong> treinos</span><span id="ev-meta-pct" style="color:var(--warm2);font-weight:500;">0%</span></div>
+                  <div style="background:var(--nude2);border-radius:100px;height:6px;overflow:hidden;"><div id="ev-meta-bar" style="height:100%;border-radius:100px;width:0%;background:var(--green);transition:width .5s;"></div></div>
                 </div>
               </div>
-              <div class="panel ev-conquista-box">
+              <div class="panel" id="ev-conquista-box">
                 <div class="ph"><div class="pt">Mensagem da semana</div></div>
                 <div style="display:flex;gap:12px;align-items:center;padding:4px 0;">
-                  <div class="hub-conquista-icon" style="font-size:32px;flex-shrink:0;"></div>
-                  <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.7;"></div>
+                  <div class="hub-conquista-icon" style="font-size:28px;flex-shrink:0;"></div>
+                  <div class="hub-conquista-txt" style="font-size:13px;color:var(--ink2);line-height:1.6;"></div>
                 </div>
               </div>
               <div class="panel" id="ev-trofeus-panel" style="display:none;">
@@ -1243,113 +1210,96 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
               </div>
             </div>
 
-            <!-- Habitos -->
+            <!-- HABITOS -->
             <div class="page" id="page-pl-habitos">
-              <div class="g3">
+              <div class="g4">
                 <div class="mc"><div class="mc-l">Feitos hoje</div><div class="mc-v g" id="hb-feitos">0</div></div>
                 <div class="mc"><div class="mc-l">Pendentes</div><div class="mc-v r" id="hb-pend">0</div></div>
-                <div class="mc"><div class="mc-l">Melhor streak</div><div class="mc-v a" id="hb-streak">0</div></div>
+                <div class="mc"><div class="mc-l">Streak dias</div><div class="mc-v a" id="hb-streak">0</div></div>
+                <div class="mc"><div class="mc-l">Taxa hoje</div><div class="mc-v b" id="hb-pct-txt">0%</div></div>
               </div>
-              <div class="panel" style="padding:16px 20px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                  <span style="font-size:13px;font-weight:500">Progresso de hoje</span>
-                  <span style="font-size:13px;color:var(--ink3)" id="hb-pct-txt">0%</span>
-                </div>
-                <div class="pbar" style="height:8px;"><div class="pfill" id="hb-pct-bar" style="width:0%;background:var(--green);"></div></div>
-              </div>
+              <div style="background:var(--nude2);border-radius:100px;height:6px;overflow:hidden;margin-bottom:12px;"><div id="hb-pct-bar" style="height:100%;border-radius:100px;width:0%;background:linear-gradient(90deg,var(--warm),var(--green));transition:width .4s;"></div></div>
               <div class="panel">
-                <div class="ph"><div class="pt">Habitos diarios</div><button class="btn btn-p btn-sm" onclick="openM('m-hab')">+ Habito</button></div>
+                <div class="ph"><div class="pt">Meus habitos</div><button class="btn btn-p btn-sm" onclick="openM('m-hab')">+ Habito</button></div>
                 <div id="hab-list"></div>
               </div>
             </div>
-            <!-- Metas vida -->
+
+            <!-- METAS DE VIDA -->
             <div class="page" id="page-pl-metas">
               <div class="panel">
                 <div class="ph"><div class="pt">Metas de vida</div><button class="btn btn-p btn-sm" onclick="openM('m-mvida')">+ Meta</button></div>
-                <div id="plmetas-list"></div>
+                <div id="metas-vida-list"></div>
               </div>
             </div>
-            <!-- Alimentacao -->
+
+            <!-- ALIMENTACAO -->
             <div class="page" id="page-pl-alim">
               <div class="panel">
                 <div class="ph"><div class="pt">Cardapio semanal</div><button class="btn btn-p btn-sm" onclick="openM('m-ref')">+ Refeicao</button></div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="alim-tabs"></div>
+                <div id="macros-bar" style="margin-bottom:10px;"></div>
                 <div class="meal-grid" id="meal-grid"></div>
-                <div style="margin-top:14px;display:flex;gap:8px;" id="macros-bar"></div>
               </div>
             </div>
-            <!-- Sono -->
+
+            <!-- SONO -->
             <div class="page" id="page-pl-sono">
-              <div class="two-col">
-                <div class="sono-hero">
-                  <div class="sono-lbl">Media semanal</div>
-                  <div class="sono-hrs" id="sono-avg">-</div>
-                  <div class="sono-lbl">horas de sono</div>
-                  <div class="sono-bars" id="sono-bars"></div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Qualidade do sono</div><button class="btn btn-p btn-sm" onclick="abrirModalSono()">+ Registrar</button></div>
+                <div style="display:flex;gap:10px;margin-bottom:12px;">
+                  <div class="mc" style="flex:1;"><div class="mc-l">Media 7 dias</div><div class="mc-v b" id="sono-avg">0h</div></div>
                 </div>
-                <div class="panel">
-                  <div class="ph"><div class="pt">Registrar sono</div></div>
-                  <div class="fg2"><label class="fl2">Dormiu as</label><input type="time" class="fi2" id="s-ini" value="23:00"></div>
-                  <div class="fg2"><label class="fl2">Acordou as</label><input type="time" class="fi2" id="s-fim" value="06:30"></div>
-                  <div class="fg2"><label class="fl2">Qualidade</label><select class="fsel" id="s-qual"><option>Otima</option><option>Boa</option><option>Regular</option><option>Ruim</option></select></div>
-                  <button class="btn btn-p" style="width:100%;margin-top:6px" onclick="regSono()">Registrar</button>
+                <div id="sono-bars" style="display:flex;gap:3px;align-items:flex-end;height:70px;margin-bottom:8px;"></div>
+                <div id="sono-hist"></div>
+              </div>
+            </div>
+
+            <!-- TREINO -->
+            <div class="page" id="page-pl-treino">
+              <div class="semana-hero">
+                <div class="semana-titulo">Missao desta semana</div>
+                <div class="semana-meta-txt"><strong id="tr-feitos-sem">0</strong> de <strong id="tr-meta-num">5</strong> treinos</div>
+                <div class="progress-wrap"><div class="progress-bar" id="tr-progress-bar" style="width:0%"></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                  <div class="semana-stats">
+                    <div class="semana-stat"><div class="semana-stat-v" id="tr-streak-sem">0</div><div class="semana-stat-l">Semanas</div></div>
+                    <div class="semana-stat"><div class="semana-stat-v" id="tr-xp-total">0</div><div class="semana-stat-l">XP</div></div>
+                    <div class="semana-stat"><div class="semana-stat-v" id="tr-nivel-txt">-</div><div class="semana-stat-l">Nivel</div></div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="streak-badge">&#128293; <span id="tr-streak-dias">0</span> dias</div>
+                    <button onclick="abrirConfigMeta()" style="background:rgba(255,255,255,0.1);border:none;color:rgba(240,234,216,0.6);font-size:11px;padding:4px 10px;border-radius:100px;cursor:pointer;">&#9881;</button>
+                  </div>
                 </div>
               </div>
-              <div class="panel"><div class="ph"><div class="pt">Historico</div></div><div class="txl" id="sono-hist"></div></div>
+              <div class="panel" id="trofeus-panel" style="display:none;">
+                <div class="ph"><div class="pt">&#127942; Conquistas</div></div>
+                <div id="trofeus-lista" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Esta semana</div><span style="font-size:11px;color:var(--ink3);" id="sem-periodo-tr"></span></div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;" id="treino-week"></div>
+              </div>
+              <div class="panel">
+                <div class="ph">
+                  <div class="pt">Fichas de treino</div>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <span class="mc-v g" style="font-size:12px;" id="tr-total">0</span><span style="font-size:11px;color:var(--ink3);">total</span>
+                    <span class="mc-v a" style="font-size:12px;" id="tr-semana">0</span><span style="font-size:11px;color:var(--ink3);">semana</span>
+                    <button class="btn btn-p btn-sm" onclick="openM('m-treino')">+ Treino</button>
+                  </div>
+                </div>
+                <div class="treino-grid" id="treino-grid"></div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="pt">Hoje</div><span class="mc-v g" style="font-size:12px;" id="tr-hoje-cnt">0</span></div>
+              </div>
             </div>
-            <!-- Treino -->
-            <div class="page" id="page-pl-treino">
 
-  <!-- Hero: Meta da Semana -->
-  <div class="semana-hero">
-    <div class="semana-titulo">Missão desta semana</div>
-    <div class="semana-meta-txt">
-      <strong id="tr-feitos-sem">0</strong> de <strong id="tr-meta-num">5</strong> treinos concluídos
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-bar" id="tr-progress-bar" style="width:0%"></div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div class="semana-stats">
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-streak-sem">0</div><div class="semana-stat-l">Semanas</div></div>
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-xp-total">0</div><div class="semana-stat-l">XP total</div></div>
-        <div class="semana-stat"><div class="semana-stat-v" id="tr-nivel-txt">-</div><div class="semana-stat-l">Nível</div></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-        <div class="streak-badge">🔥 <span id="tr-streak-dias">0</span> dias seguidos</div>
-        <button onclick="abrirConfigMeta()" style="background:rgba(255,255,255,0.1);border:none;color:rgba(240,234,216,0.6);font-size:11px;padding:4px 10px;border-radius:100px;cursor:pointer;">⚙ Meta semanal</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mini troféus / conquistas -->
-  <div class="panel" id="trofeus-panel" style="display:none;">
-    <div class="ph"><div class="pt">🏆 Conquistas desbloqueadas</div></div>
-    <div id="trofeus-lista" style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px;"></div>
-  </div>
-
-  <!-- Semana visual -->
-  <div class="panel">
-    <div class="ph">
-      <div class="pt">Esta semana</div>
-      <div style="font-size:11px;color:var(--ink3)" id="sem-periodo-tr"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px;" id="treino-week"></div>
-  </div>
-
-  <!-- Fichas de treino -->
-  <div class="panel">
-    <div class="ph">
-      <div class="pt">Fichas de treino</div>
-      <button class="btn btn-p btn-sm" onclick="openM('m-treino')">+ Treino</button>
-    </div>
-    <div class="treino-grid" id="treino-grid"></div>
-  </div>
-</div>
-          </div>
-        </div>
-      </div>
-    </div><!-- /planner -->
+          </div><!-- /pg-area -->
+        </div><!-- /main-cnt -->
+      </div><!-- /sys-shell -->
+    </div><!-- /sis-planner --><!-- /planner -->
 
     <!-- PERFIL -->
     <div class="sistema" id="sis-perfil">
