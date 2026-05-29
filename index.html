@@ -944,35 +944,210 @@ html,body{height:100%;font-family:var(--fn);color:var(--ink);background:var(--nu
             </div>
 
             <div class="page" id="page-f-planos">
-              <div class="panel"><div class="ph"><div class="pt">Planos ORST</div></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-                  <div class="plan-card">
-                    <div class="plan-name">Free</div>
-                    <div class="plan-price">R$ 0<span>/mes</span></div>
-                    <div class="plan-feat ok">Dashboard mensal</div>
-                    <div class="plan-feat ok">Lancamentos ilimitados</div>
-                    <div class="plan-feat ok">Contas e Parceladas</div>
-                    <div class="plan-feat ok">A pagar basico</div>
-                    <div class="plan-feat no">Metas e Investimentos</div>
-                    <div class="plan-feat no">Visao anual e Patrimonio</div>
-                    <div class="plan-feat no">Planner e Rotina</div>
-                    <button class="btn" style="width:100%;margin-top:14px" disabled>Plano atual</button>
-                  </div>
-                  <div class="plan-card featured">
-                    <div class="plan-name">Premium</div>
-                    <div class="plan-price">R$ 29,90<span>/mes</span></div>
-                    <div class="plan-feat ok">Tudo do Free</div>
-                    <div class="plan-feat ok">Metas financeiras</div>
-                    <div class="plan-feat ok">Investimentos</div>
-                    <div class="plan-feat ok">Visao anual e Patrimonio</div>
-                    <div class="plan-feat ok">Planner completo</div>
-                    <div class="plan-feat ok">Habitos, Sono e Treino</div>
-                    <div class="plan-feat ok">Alimentacao e Metas de vida</div>
-                    <a href="vendas.html" target="_blank" class="btn btn-p" style="width:100%;margin-top:14px;display:block;text-align:center;text-decoration:none;">Ver planos e assinar</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+  <!-- HERO -->
+  <div style="background:linear-gradient(135deg,var(--navy) 0%,#1a3a5c 60%,#0d2d4f 100%);border-radius:var(--r);padding:32px 24px;text-align:center;position:relative;overflow:hidden;margin-bottom:4px;">
+    <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(196,168,130,0.07);"></div>
+    <div style="position:absolute;bottom:-60px;left:-30px;width:160px;height:160px;border-radius:50%;background:rgba(196,168,130,0.05);"></div>
+    <div style="font-family:var(--fs);font-size:13px;font-weight:400;color:var(--warm);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;position:relative;">Organizacao que gera resultado</div>
+    <div style="font-family:var(--fs);font-size:clamp(26px,5vw,38px);font-weight:300;color:var(--cream);line-height:1.2;margin-bottom:10px;position:relative;">Gerencie sua vida com o <em style="font-style:italic;color:var(--warm);">ORST Hub Premium</em></div>
+    <div style="font-size:13px;color:rgba(240,234,216,0.55);line-height:1.7;margin-bottom:20px;position:relative;max-width:460px;margin-left:auto;margin-right:auto;">Financas, rotina, habitos, metas, alimentacao, sono, treinos e IA assistente — tudo num so hub inteligente.</div>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border-radius:100px;padding:6px 18px;font-size:12px;color:rgba(240,234,216,0.5);position:relative;">Seguro &nbsp;·&nbsp; Sem contrato &nbsp;·&nbsp; Cancele quando quiser</div>
+  </div>
+
+  <!-- SISTEMAS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;">
+      <div style="font-size:22px;margin-bottom:8px;">$</div>
+      <div style="font-family:var(--fs);font-size:16px;font-weight:500;color:var(--ink);margin-bottom:4px;">ORST Financas</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:10px;">Controle completo com nuvem, relatorios automaticos e visao patrimonial.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Dashboard</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Lancamentos</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Parceladas</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Metas</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Investimentos</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Patrimonio</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Visao Anual</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">A pagar/receber</span>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;">
+      <div style="font-size:22px;margin-bottom:8px;">C</div>
+      <div style="font-family:var(--fs);font-size:16px;font-weight:500;color:var(--ink);margin-bottom:4px;">ORST Planner</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:10px;">Organize rotina com agenda inteligente, habitos, saude e gamificacao.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Agenda semanal</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Habitos + streak</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Metas de vida</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Alimentacao</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Sono</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Treinos XP</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Gamificacao</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:var(--nude2);color:var(--ink2);">Dashboard semanal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA ASSISTENTE -->
+  <div style="background:linear-gradient(135deg,#1a1612,#2a1f18);border-radius:var(--r);padding:16px 18px;margin-bottom:4px;display:flex;align-items:center;gap:14px;">
+    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--warm),#c94040);display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:18px;font-weight:700;color:var(--ink);flex-shrink:0;">O</div>
+    <div style="flex:1;">
+      <div style="font-family:var(--fs);font-size:16px;font-weight:400;color:var(--cream);margin-bottom:2px;">ORST IA Assistente</div>
+      <div style="font-size:12px;color:rgba(240,234,216,0.5);line-height:1.6;">Analisa seus dados em tempo real: gastos, patrimonio, habitos, treinos e muito mais. Responde perguntas sobre sua vida financeira e sua rotina.</div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--warm),#c94040);color:var(--ink);font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;flex-shrink:0;">NOVO</div>
+  </div>
+
+  <!-- DIFERENCIAIS -->
+  <div style="background:var(--navy);border-radius:var(--r);padding:16px;margin-bottom:4px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">N</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Dados na nuvem</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Firebase. Acesse de qualquer dispositivo.</div>
+      </div>
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">G</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Gamificacao XP</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Niveis, trofeus, streak e missao semanal.</div>
+      </div>
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">S</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Login seguro</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Autenticacao por email. Dados privados.</div>
+      </div>
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">H</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Habitos inteligentes</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Reset diario, streak e progresso visual.</div>
+      </div>
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">P</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Patrimonio detalhado</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Ativos, passivos e depreciacao automatica.</div>
+      </div>
+      <div style="background:var(--navy);padding:14px 12px;">
+        <div style="font-size:20px;margin-bottom:6px;">M</div>
+        <div style="font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px;">Funciona em tudo</div>
+        <div style="font-size:11px;color:rgba(240,234,216,0.45);line-height:1.5;">Celular, tablet e desktop. Instale como app.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARATIVO -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 14px;">
+      <div style="font-family:var(--fs);font-size:18px;font-weight:400;margin-bottom:4px;">Free</div>
+      <div style="font-family:var(--fs);font-size:30px;font-weight:300;color:var(--navy);line-height:1;margin:10px 0 14px;">R$ 0<span style="font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;">/mes</span></div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Dashboard financeiro</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Lancamentos ilimitados</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Contas e Parceladas</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;opacity:.4;color:var(--ink2);"><span style="color:#c94040;font-weight:700;">-</span>Metas e Investimentos</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;opacity:.4;color:var(--ink2);"><span style="color:#c94040;font-weight:700;">-</span>Patrimonio completo</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;opacity:.4;color:var(--ink2);"><span style="color:#c94040;font-weight:700;">-</span>Planner + Habitos</div>
+      <div style="font-size:12px;padding:6px 0;display:flex;align-items:center;gap:6px;opacity:.4;color:var(--ink2);"><span style="color:#c94040;font-weight:700;">-</span>IA Assistente</div>
+      <div style="background:var(--nude2);color:var(--ink);border:none;padding:12px;border-radius:100px;font-size:13px;font-weight:500;margin-top:16px;text-align:center;">Plano atual</div>
+    </div>
+    <div style="background:var(--surface);border:2px solid var(--warm);border-radius:var(--r);padding:18px 14px;">
+      <div style="background:var(--warm);color:var(--ink);font-size:10px;font-weight:500;padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:8px;">Mais popular</div>
+      <div style="font-family:var(--fs);font-size:18px;font-weight:400;margin-bottom:4px;">Premium</div>
+      <div style="font-family:var(--fs);font-size:30px;font-weight:300;color:var(--navy);line-height:1;margin:10px 0 14px;">R$ 29,90<span style="font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;">/mes</span></div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Tudo do Free</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Metas e Investimentos</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Patrimonio + depreciacao</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Planner completo</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Habitos + Sono + Treino XP</div>
+      <div style="font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>Gamificacao completa</div>
+      <div style="font-size:12px;padding:6px 0;display:flex;align-items:center;gap:6px;color:var(--ink2);"><span style="color:var(--green);font-weight:700;">+</span>IA Assistente exclusiva</div>
+      <button onclick="document.querySelector('[data-page=f-planos]').nextElementSibling&&document.getElementById('planos-pag').scrollIntoView({behavior:'smooth'})" style="width:100%;background:var(--navy);color:var(--cream);border:none;padding:12px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;margin-top:16px;" onclick="document.getElementById('planos-pag').scrollIntoView({behavior:'smooth'})">Assinar agora</button>
+    </div>
+  </div>
+
+  <!-- PAGAMENTO -->
+  <div id="planos-pag" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;">
+      <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;">Como assinar</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--cream);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
+          <div style="font-size:12px;color:var(--ink2);line-height:1.6;"><strong style="color:var(--ink);">Escolha a forma</strong> ao lado e conclua o pagamento.</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--cream);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
+          <div style="font-size:12px;color:var(--ink2);line-height:1.6;"><strong style="color:var(--ink);">Envie o comprovante</strong> com seu email para ativar.</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--cream);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
+          <div style="font-size:12px;color:var(--ink2);line-height:1.6;"><strong style="color:var(--ink);">Acesso ativado</strong> em ate 2h uteis. Faca login!</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:var(--nude);border-radius:8px;">
+        <div style="font-size:12px;font-weight:500;margin-bottom:4px;">Contato</div>
+        <div style="font-size:11px;color:var(--ink3);">Email: financeiro@orst.com.br</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:2px;">WhatsApp: (XX) XXXXX-XXXX</div>
+      </div>
+    </div>
+    <div style="background:var(--nude);border:1px solid var(--border2);border-radius:var(--r);padding:18px 16px;">
+      <div style="font-family:var(--fs);font-size:16px;font-weight:400;margin-bottom:2px;">ORST Hub Premium</div>
+      <div style="font-family:var(--fs);font-size:36px;font-weight:300;color:var(--navy);line-height:1;margin:8px 0 4px;">R$ 29,90</div>
+      <div style="font-size:11px;color:var(--ink3);margin-bottom:14px;">por mes — acesso completo</div>
+      <div style="font-size:11px;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;">Forma de pagamento</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+        <div onclick="planosSel('pix',this)" style="background:var(--surface);border:2px solid var(--navy);border-radius:8px;padding:10px 12px;cursor:pointer;">
+          <div style="font-size:13px;font-weight:500;color:var(--ink);">Pix</div>
+          <div style="font-size:11px;color:var(--ink3);">Instantaneo - Ativacao mais rapida</div>
+        </div>
+        <div onclick="planosSel('hotmart',this)" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;">
+          <div style="font-size:13px;font-weight:500;color:var(--ink);">Cartao (Hotmart)</div>
+          <div style="font-size:11px;color:var(--ink3);">Parcelado em ate 12x</div>
+        </div>
+        <div onclick="planosSel('kiwify',this)" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;">
+          <div style="font-size:13px;font-weight:500;color:var(--ink);">Kiwify</div>
+          <div style="font-size:11px;color:var(--ink3);">Cartao, Pix ou Boleto</div>
+        </div>
+      </div>
+      <div id="planos-pix" style="background:var(--nude2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Chave Pix</div>
+        <div style="font-size:14px;font-weight:500;color:var(--navy);" id="planos-pix-key">financeiro@orst.com.br</div>
+        <div style="font-size:12px;color:var(--ink2);margin:4px 0;">Valor: <strong>R$ 29,90</strong></div>
+        <div style="font-size:11px;color:var(--ink3);line-height:1.5;">Apos o Pix, envie o comprovante com seu email.</div>
+        <button onclick="planosCopiarPix()" style="background:var(--navy);color:var(--cream);border:none;padding:6px 16px;border-radius:100px;font-size:11px;cursor:pointer;margin-top:8px;" id="planos-copy-btn">Copiar chave Pix</button>
+      </div>
+      <div id="planos-hotmart" style="display:none;background:var(--nude2);border-radius:8px;padding:12px;">
+        <div style="font-size:12px;color:var(--ink2);margin-bottom:8px;">Checkout seguro via Hotmart.</div>
+        <a href="https://hotmart.com" target="_blank" style="display:block;text-align:center;background:var(--navy);color:var(--cream);border-radius:100px;padding:10px;font-size:13px;font-weight:500;text-decoration:none;">Ir para Hotmart</a>
+      </div>
+      <div id="planos-kiwify" style="display:none;background:var(--nude2);border-radius:8px;padding:12px;">
+        <div style="font-size:12px;color:var(--ink2);margin-bottom:8px;">Checkout seguro via Kiwify.</div>
+        <a href="https://kiwify.com.br" target="_blank" style="display:block;text-align:center;background:var(--navy);color:var(--cream);border-radius:100px;padding:10px;font-size:13px;font-weight:500;text-decoration:none;">Ir para Kiwify</a>
+      </div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:10px;text-align:center;">Pagamento seguro · Suporte em 2h · Sem contrato</div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="background:var(--nude2);border-radius:var(--r);padding:16px;">
+    <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;">Perguntas frequentes</div>
+    <div style="border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;" onclick="planosFaq(this)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;color:var(--ink);">Vou perder meus dados do Free?<span style="font-size:18px;color:var(--ink3);transition:transform .2s;">+</span></div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s;">Nao! Todos os dados ficam no Firebase e sao mantidos no upgrade.</div>
+    </div>
+    <div style="border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;" onclick="planosFaq(this)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;color:var(--ink);">Quando meu acesso e ativado?<span style="font-size:18px;color:var(--ink3);transition:transform .2s;">+</span></div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s;">Ativamos em ate 2h uteis (seg-sex, 9h as 18h) apos receber o comprovante.</div>
+    </div>
+    <div style="border-bottom:1px solid var(--border);padding:10px 0;cursor:pointer;" onclick="planosFaq(this)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;color:var(--ink);">Posso cancelar quando quiser?<span style="font-size:18px;color:var(--ink3);transition:transform .2s;">+</span></div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s;">Sim, sem fidelidade. Seus dados ficam no Free apos cancelar.</div>
+    </div>
+    <div style="padding:10px 0;cursor:pointer;" onclick="planosFaq(this)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;color:var(--ink);">O app funciona no celular?<span style="font-size:18px;color:var(--ink3);transition:transform .2s;">+</span></div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .3s;">Sim! Responsivo para celular, tablet e desktop. Adicione a tela inicial como app.</div>
+    </div>
+  </div>
+
+</div>
 
             <div class="page" id="page-f-cats">
               <div class="panel">
@@ -5657,6 +5832,37 @@ var IA_SUG = [
   'Dicas para economizar','Saldo em contas'
 ];
 
+
+function planosSel(tipo, el) {
+  el.parentNode.querySelectorAll('div[onclick]').forEach(function(d){
+    d.style.border='1px solid var(--border)';
+  });
+  el.style.border='2px solid var(--navy)';
+  document.getElementById('planos-pix').style.display    = tipo==='pix'     ? 'block' : 'none';
+  document.getElementById('planos-hotmart').style.display = tipo==='hotmart' ? 'block' : 'none';
+  document.getElementById('planos-kiwify').style.display  = tipo==='kiwify'  ? 'block' : 'none';
+}
+function planosCopiarPix() {
+  var key = document.getElementById('planos-pix-key').textContent;
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(key).then(function(){
+      var btn = document.getElementById('planos-copy-btn');
+      btn.textContent = 'Copiado!';
+      setTimeout(function(){ btn.textContent = 'Copiar chave Pix'; }, 2000);
+    });
+  }
+}
+function planosFaq(el) {
+  var ans = el.querySelector('div:last-child');
+  var icon = el.querySelector('span');
+  var isOpen = ans.style.maxHeight && ans.style.maxHeight !== '0px' && ans.style.maxHeight !== '';
+  el.parentNode.querySelectorAll('[onclick]').forEach(function(f){
+    f.querySelector('div:last-child').style.maxHeight='0';
+    f.querySelector('span').style.transform='';
+    f.querySelector('span').textContent='+';
+  });
+  if(!isOpen){ ans.style.maxHeight='200px'; ans.style.paddingTop='8px'; icon.textContent='\xD7'; }
+}
 </script>
 
 <!-- Drawer mobile sidebar financas -->
