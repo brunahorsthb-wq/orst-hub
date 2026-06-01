@@ -1,14 +1,11 @@
 {
   "name": "ORST Hub",
   "short_name": "ORST",
-  "description": "Gestao de financas, rotina e habitos — ORST Hub",
   "start_url": "/orst-hub/",
-  "scope": "/orst-hub/",
   "display": "standalone",
-  "background_color": "#0d2d4f",
+  "background_color": "#f5f0e8",
   "theme_color": "#0d2d4f",
   "orientation": "portrait-primary",
-  "lang": "pt-BR",
   "icons": [
     {
       "src": "icon-192.png",
@@ -21,26 +18,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "categories": [
-    "finance",
-    "productivity",
-    "lifestyle"
-  ],
-  "screenshots": [],
-  "shortcuts": [
-    {
-      "name": "Financas",
-      "short_name": "Financas",
-      "description": "Abrir gestao de financas",
-      "url": "/orst-hub/?sis=financas"
-    },
-    {
-      "name": "Planner",
-      "short_name": "Planner",
-      "description": "Abrir planner e rotina",
-      "url": "/orst-hub/?sis=planner"
     }
   ]
 }
